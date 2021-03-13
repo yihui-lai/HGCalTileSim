@@ -27,7 +27,7 @@ public:
   unsigned event_hash;
 
   double beam_x;
-  double beam_y;
+  double beam_z;
   int genphotons;
   int wlsphotons;
   std::vector<float> chan3_photon;
@@ -47,7 +47,7 @@ public:
     tree->Branch( "RunHash",      &run_hash     );
     tree->Branch( "EventHash",    &event_hash   );
     tree->Branch( "BeamX",        &beam_x       );
-    tree->Branch( "BeamY",        &beam_y       );
+    tree->Branch( "BeamZ",        &beam_z       );
     tree->Branch( "genphotons",   &genphotons   );
     tree->Branch( "wlsphotons",     &wlsphotons     );
     tree->Branch( "chan3_photon",     &chan3_photon     );
@@ -79,7 +79,7 @@ public:
     tree->SetBranchAddress( "RunHash",           &run_hash     );
     tree->SetBranchAddress( "EventHash",         &event_hash   );
     tree->SetBranchAddress( "BeamX",             &beam_x       );
-    tree->SetBranchAddress( "BeamY",             &beam_y       );
+    tree->SetBranchAddress( "BeamZ",             &beam_z       );
     tree->SetBranchAddress( "genphotons",        &genphotons   );
     tree->SetBranchAddress( "wlsphotons",          &wlsphotons     );
     tree->SetBranchAddress( "chan3_photon",     &chan3_photon     );
@@ -101,7 +101,7 @@ public:
   {
     event_hash = 0;
     event_hash = usr::Hash32Join( event_hash, usr::HashValue32( beam_x     ) );
-    event_hash = usr::Hash32Join( event_hash, usr::HashValue32( beam_y     ) );
+    event_hash = usr::Hash32Join( event_hash, usr::HashValue32( beam_z     ) );
     //event_hash = usr::Hash32Join( event_hash, usr::HashValue32( nphotons   ) );
     //event_hash = usr::Hash32Join( event_hash, usr::HashValue32( genphotons ) );
   }
@@ -134,7 +134,7 @@ public:
   double pcb_ref;
 
   double beam_x;
-  double beam_y;
+  double beam_z;
   double beam_w;
 
 
@@ -159,8 +159,8 @@ public:
     //tree->Branch( "PCBRad",     &pcb_rad      );
     //tree->Branch( "PCBRef",     &pcb_ref      );
     tree->Branch( "BeamX",      &beam_x       );
-    tree->Branch( "BeamY",      &beam_y       );
-    tree->Branch( "BeamZ",      &beam_w       );
+    tree->Branch( "BeamZ",      &beam_z       );
+    tree->Branch( "BeamW",      &beam_w       );
     tree->Branch( "RunHash",    &run_hash     );
   }
 
@@ -183,8 +183,8 @@ public:
     //tree->SetBranchAddress( "PCBRad",     &pcb_rad      );
     //tree->SetBranchAddress( "PCBRef",     &pcb_ref      );
     tree->SetBranchAddress( "BeamX",      &beam_x       );
-    tree->SetBranchAddress( "BeamY",      &beam_y       );
-    tree->SetBranchAddress( "BeamZ",      &beam_w       );
+    tree->SetBranchAddress( "BeamZ",      &beam_z       );
+    tree->SetBranchAddress( "BeamW",      &beam_w       );
     tree->SetBranchAddress( "RunHash",    &run_hash     );
 
     tree->BuildIndex( "RunHash" );
@@ -211,7 +211,7 @@ public:
     //run_hash = usr::Hash32Join( run_hash, usr::HashValue32( pcb_rad      ) );
     //run_hash = usr::Hash32Join( run_hash, usr::HashValue32( pcb_ref      ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( beam_x       ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( beam_y       ) );
+    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( beam_z       ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( beam_w       ) );
   }
 #endif

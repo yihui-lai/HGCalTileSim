@@ -392,13 +392,12 @@ MakeS_TiO2Surface()
   G4MaterialPropertiesTable* TiO2SurfaceProperty =
     new G4MaterialPropertiesTable();
 
-  std::vector<G4double> p_TiO2 = { 1.0 * eV, 6.0 * eV };
+  G4double p_TiO2[] = { 1.0 * eV, 6.0 * eV };
+  G4double refl_TiO2[] = { 1, 1 };
+  G4double effi_TiO2[] = { 0., 0. };
 
-  std::vector<G4double> refl_TiO2 = { 1, 1 };
-  std::vector<G4double> effi_TiO2 = { 0., 0. };
-
-  TiO2SurfaceProperty->AddProperty("REFLECTIVITY", p_TiO2, refl_TiO2);
-  TiO2SurfaceProperty->AddProperty("EFFICIENCY", p_TiO2, effi_TiO2);
+  TiO2SurfaceProperty->AddProperty("REFLECTIVITY", p_TiO2, refl_TiO2,2);
+  TiO2SurfaceProperty->AddProperty("EFFICIENCY", p_TiO2, effi_TiO2,2);
 
   TiO2Surface->SetMaterialPropertiesTable(TiO2SurfaceProperty);
 

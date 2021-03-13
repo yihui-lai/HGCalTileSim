@@ -44,6 +44,7 @@ public:
   void SetProtonGeneratorAction( LYSimProtonGeneratorAction* genaction )
   { protonAction = genaction; }
 
+
   void
   SetOutputFile( const std::string& x ){ filename = x;}
   std::string

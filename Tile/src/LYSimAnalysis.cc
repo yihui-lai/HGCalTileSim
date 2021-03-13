@@ -103,15 +103,15 @@ LYSimAnalysis::PrepareNewRun( const G4Run* )
 
   if( generatorAction ){
     runformat->beam_x = generatorAction->GetBeamX();
-    runformat->beam_y = generatorAction->GetBeamY();
+    runformat->beam_z = generatorAction->GetBeamY();
     runformat->beam_w = generatorAction->GetWidth();
   } else if( protonAction ){
     runformat->beam_x = protonAction->GetBeamX();
-    runformat->beam_y = protonAction->GetBeamZ();
+    runformat->beam_z = protonAction->GetBeamZ();
     runformat->beam_w = protonAction->GetWidth();
   } else {
     runformat->beam_x = 0;
-    runformat->beam_y = 0;
+    runformat->beam_z = 0;
     runformat->beam_w = 0;
   }
 
@@ -125,7 +125,7 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
 {
   // All primary vertex's in the event share the same x,y values
   format->beam_x   = event->GetPrimaryVertex()->GetX0();
-  format->beam_y   = event->GetPrimaryVertex()->GetY0();
+  format->beam_z   = event->GetPrimaryVertex()->GetZ0();
   format->run_hash = runformat->run_hash;
   format->genphotons = 0;
   format->wlsphotons = 0;
@@ -311,6 +311,7 @@ void LYSimAnalysis::addwlsphoton(){
   format->wlsphotons++;
 }
 void LYSimAnalysis::pushchan3(float t){
+  std::cout<<t<<std::endl;
   format->chan3_photon.push_back(t);
 }
 void LYSimAnalysis::pushchan4(float t){

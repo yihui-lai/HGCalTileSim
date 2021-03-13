@@ -4,7 +4,7 @@
 #include "HGCalTileSim/Tile/interface/LYSimPrimaryGeneratorAction.hh"
 #include "HGCalTileSim/Tile/interface/LYSimSteppingAction.hh"
 #include "HGCalTileSim/Tile/interface/LYSimTrackingAction.hh"
-
+#include "HGCalTileSim/Tile/interface/LYSimProtonGeneratorAction.hh"
 #include "UserUtils/Common/interface/ArgumentExtender.hpp"
 
 #include "G4RunManager.hh"
@@ -34,8 +34,8 @@ main( int argc, char** argv )
     //( "pcbreflect,p",  usr::po::defvalue<double>( 0.8 ),   "Average reflectivity of Exposed PCB back plane" )
     //( "pcbradius,b",   usr::po::defvalue<double>( 2.5 ),   "Radius of Exposed PCB back plane" )
     ( "NEvents,N",     usr::po::defvalue<unsigned>( 1 ),   "Number of events to run" )
-    ( "useProton",                                         "Flag to switch the source to a true proton source" )
-    ( "handwrap",                                         "Flag to switch to handwrap" )
+    ( "useProton,p",     usr::po::defvalue<int>( 1 ),  "Flag to switch the source to a true proton source" )
+    ( "handwrap,h",      usr::po::defvalue<int>( 0 ),    "Flag to switch to handwrap" )
     ( "output,o",      usr::po::defvalue<std::string>( "test.root" ), "output file" )
   ;
 
@@ -60,8 +60,8 @@ main( int argc, char** argv )
   //const double pcbref    = args.Arg<double>( "pcbreflect"  );
   //const double pcbrad    = args.Arg<double>( "pcbradius"   );
   const unsigned N       = args.Arg<unsigned>( "NEvents" );
-  const bool useProton   = args.HasArg( "useProton" );
-  const bool handwrap   = args.HasArg( "handwrap" );
+  const bool useProton   = args.Arg<int>( "useProton" );
+  const bool handwrap   = args.Arg<int>( "handwrap" );
   std::string filename   = args.Arg<std::string>( "output" );
   filename.insert( filename.length()-5, "_" + usr::RandomString( 6 ) );
 
@@ -104,7 +104,7 @@ main( int argc, char** argv )
     genaction->SetBeamX( x_center );
     genaction->SetBeamZ( z_center );
     genaction->SetWidth( width );
-    LYSimAnalysis::GetInstance()->SetGeneratorAction( genaction );
+    LYSimAnalysis::GetInstance()->SetProtonGeneratorAction( genaction );
     runManager->SetUserAction( genaction );
   }
 
