@@ -216,10 +216,10 @@ G4Material* Make_Y11(){
 
   // Add entries into properties table
   G4MaterialPropertiesTable* mptWLSfiber = new G4MaterialPropertiesTable();
-  mptWLSfiber->AddProperty("RINDEX", energySmall, refractiveIndexWLSfiber);
+  mptWLSfiber->AddProperty("RINDEX", energySmall, refractiveIndexWLSfiber, 2);
   mptWLSfiber->AddProperty("WLSCOMPONENT", photonEnergy, emissionFib, nEntries); //WLSCOMPONENT is the relative emission spectrum of the material as a function of the photon's momentum
   mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy, absWLSfiber, nEntries); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
-  mptWLSfiber->AddProperty("ABSLENGTH", energySmall, realabsWLSfiber); //ABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> real absorption
+  mptWLSfiber->AddProperty("ABSLENGTH", energySmall, realabsWLSfiber, 2); //ABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> real absorption
   mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 0 * ns); //accounts for any time delay which may occur between absorption and re-emission of the photon, defalt delta
   mptWLSfiber->AddConstProperty("FASTTIMECONSTANT", 11.5 * ns); //?
 
@@ -337,7 +337,7 @@ G4Material* Make_Polystyrene(){
     3.47 * eV
   };
   G4double energySmall[] = { 2.0 * eV, 3.47 * eV };
-  G4doublerefractiveIndexPS[] = { 1.50, 1.50 };
+  G4double refractiveIndexPS[] = { 1.50, 1.50 };
 
   G4double absPS[] = { 2. * cm, 2. * cm };
 
