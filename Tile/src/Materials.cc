@@ -161,8 +161,6 @@ G4Material* Make_Y11(){
   //--------------------------------------------------
 
   G4double density;
-  G4int ncomponents;
-  G4double fractionmass;
   std::vector<G4int> natoms;
   std::vector<G4double> fractionMass;
   std::vector<G4String> elements;
@@ -237,8 +235,6 @@ G4Material* Make_Y11(){
 G4Material* Make_Pethylene(){
 
   G4double density;
-  G4int ncomponents;
-  G4double fractionmass;
   std::vector<G4int> natoms;
   std::vector<G4double> fractionMass;
   std::vector<G4String> elements;
@@ -277,8 +273,6 @@ return fPethylene;
 G4Material* Make_FPethylene(){
 
   G4double density;
-  G4int ncomponents;
-  G4double fractionmass;
   std::vector<G4int> natoms;
   std::vector<G4double> fractionMass;
   std::vector<G4String> elements;
@@ -314,8 +308,6 @@ return fFPethylene;
 G4Material* Make_Polystyrene(){
 
   G4double density;
-  G4int ncomponents;
-  G4double fractionmass;
   std::vector<G4int> natoms;
   std::vector<G4double> fractionMass;
   std::vector<G4String> elements;
@@ -378,8 +370,6 @@ return fPolystyrene;
 G4Material* Make_Silicone(){
 
   G4double density;
-  G4int ncomponents;
-  G4double fractionmass;
   std::vector<G4int> natoms;
   std::vector<G4double> fractionMass;
   std::vector<G4String> elements;
@@ -417,8 +407,6 @@ G4Material* Make_Silicone(){
 G4Material* Make_TiO2(){
 
   G4double density;
-  G4int ncomponents;
-  G4double fractionmass;
   std::vector<G4int> natoms;
   std::vector<G4double> fractionMass;
   std::vector<G4String> elements;
