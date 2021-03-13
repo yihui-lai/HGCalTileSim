@@ -58,15 +58,15 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
 {
   fdetectorMessenger = new LYSimDetectorMessenger( this );
 
-  _tilex        = 30*mm;
-  _tiley        = 30*mm;
-  _tilez        = 3.0*mm;
+  _tilex        = 50*mm;
+  _tiley        = 10*mm;
+  _tilez        = 50.0*mm;  //200*mm
   _tile_x1      = 0.0*mm;
   _tile_x2      = 0.0*mm;
   wrapgap       = 0.1*mm;
   wrapthickness = 0.1*mm;
 
-  _absmult      = 1;
+  _absmult      = 1000; //SetTileAbsMult to 1m
   _wrap_reflect = 0.985;
   _tile_alpha   = 0.01;
   _dimple_alpha = 0.1;
@@ -78,12 +78,15 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   _sipm_rimwidth   = 0.3*mm;
   _sipm_glasswidth = 0.1*mm;
   _sipm_standz     = 0.3*mm;
+  _sipm_x          = 10*mm;
+  _sipm_y          = 10*mm;
+
 
   // Default Dimple settings
   _dimple_type   = SPHERICAL;
   _dimple_indent = 1.0*mm;
   _dimple_radius = 6.0*mm;// 3.4409*mm
-
+  
   // Default Hole settings
   _pcb_radius       = 2.5;
   _pcb_reflectivity = 0.8;
@@ -106,6 +109,27 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   fSiPMSurface            = MakeS_SiPM();
   fPCBSurface             = MakeS_PCBSurface();
   SetWrapReflect( _wrap_reflect );
+
+//wls
+_handwrap   = false;//true;
+
+_hole_radius = 1.0*mm;
+_hole_x1 = -12.5*mm;
+_hole_x2 = 12.5*mm;
+
+_WLSfiberR = 0.7*mm;
+_WLSfiber_clad_thick = 0.05*mm;
+
+_WLSfiberZ = 5.2*m;
+_WLS_zoff = 1.7*m;
+
+_WLSfiberZ = 5.2*cm;
+_WLS_zoff = 1.7*cm;
+mfiber  = Make_Y11();
+mfiber_clad = Make_Pethylene();
+fcoating = Make_Coating();
+fTiO2Surface = MakeS_TiO2Surface();
+
 }
 
 void
@@ -151,12 +175,23 @@ LYSimDetectorConstruction::Construct()
                                                   , 0
                                                   , checkOverlaps );
   ///////////////////////////////////////////////////////////////////////////////
-  // wrapping
+  // wrapping or clad
   ///////////////////////////////////////////////////////////////////////////////
-  G4VSolid* solidWrap = ConstructHollowWrapSolid();
+  G4VSolid* solidHoleBound = new G4Tubs( "TileDimpleBox"
+                                         , 0, _hole_radius
+                                         , _tilez*1.5
+                                         , 0, 2*pi  );
+  G4LogicalVolume* logicWrap;
 
-  // The matrial of the wrap isn't as important as the surface
-  G4LogicalVolume* logicWrap = new G4LogicalVolume( solidWrap, fEpoxy,  "Wrap" );
+  if(_handwrap){
+  G4VSolid* solidWrap0 = ConstructHollowWrapSolid();
+  G4VSolid* solidWrap1 = new G4SubtractionSolid( "solidWrap"
+                            , solidWrap0, solidHoleBound
+                            , 0, G4ThreeVector( _hole_x1, 0, 0 ) );
+  G4VSolid* solidWrap = new G4SubtractionSolid( "solidWrap"
+                            , solidWrap1, solidHoleBound
+                            , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
+  logicWrap = new G4LogicalVolume( solidWrap, fEpoxy,  "Wrap" );
 
   G4VPhysicalVolume* physWrap = new G4PVPlacement( 0
                                                  , G4ThreeVector( 0, 0, 0 )
@@ -166,26 +201,31 @@ LYSimDetectorConstruction::Construct()
                                                  , false
                                                  , 0
                                                  , checkOverlaps );
+  G4LogicalSkinSurface* WrapSurface =
+    new G4LogicalSkinSurface( "WrapSurface"
+                              , logicWrap, fESROpSurface );
 
-  // Exposed PCB Back plane
-  const G4ThreeVector pcb_offset( 0, 0
-                                , 0.5*_tilez + wrapgap + 2*wrapthickness );
+  }else{
+  G4VSolid* solidExtrusion = ConstructHollowWrapCladSolid();
 
-  G4VSolid* solidPCB = new G4Tubs( "PCBSolid"
-                                 , 0, _pcb_radius + 1*mm
-                                 , wrapthickness
-                                 , 0, 2*pi );
-  G4LogicalVolume* logicPCB = new G4LogicalVolume( solidPCB, fEpoxy, "PCB" );
+  logicWrap =
+    new G4LogicalVolume(solidExtrusion, fcoating, "Extrusion");
 
-  G4VPhysicalVolume* physPCB = new G4PVPlacement( 0, pcb_offset
-                                                , logicPCB, "PCB"
-                                                , logicWorld, false
-                                                , 0, checkOverlaps  );
-
+  G4VPhysicalVolume* physWrap = new G4PVPlacement( 0
+                                                 , G4ThreeVector( 0, 0, 0 )
+                                                 , logicWrap
+                                                 , "Wrap"
+                                                 , logicWorld
+                                                 , false
+                                                 , 0
+                                                 , checkOverlaps );
+                                                 
+  G4LogicalSkinSurface* WrapSurface =
+    new G4LogicalSkinSurface( "WrapSurface"
+                              , logicWrap, fTiO2Surface );
+  }
   ///////////////////////////////////////////////////////////////////////////////
-  // Subtracted Dimple Version (dimple sub from tile, an extra cylindrical
-  // bonding box is defined around the dimple to allow for the different surface
-  // properties)
+  // extruded scintillator
   ///////////////////////////////////////////////////////////////////////////////
   G4VSolid* solidTile = ConstructTrapazoidSolid( "TileTrap"
                                                , _tilex
@@ -193,37 +233,18 @@ LYSimDetectorConstruction::Construct()
                                                , _tilez
                                                , _tile_x1
                                                , _tile_x2 );
-
-  G4VSolid* solidDimpleBound = new G4Tubs( "TileDimpleBox"
-                                         , 0, _dimple_radius + 0.01*mm
-                                         , _dimple_indent + 0.01*mm
-                                         , 0, 2*pi  );
-
-  G4VSolid* solidDimple
-    = new G4IntersectionSolid( "TileDimpleCylinder"
-                             , solidTile, solidDimpleBound
-                             , 0
-                             , G4ThreeVector( 0, 0, _tilez *0.5 ) );
+  G4VSolid* tileBulk1
+    = new G4SubtractionSolid( "TileSolid_Bulk"
+                            , solidTile, solidHoleBound
+                            , 0, G4ThreeVector( _hole_x1, 0, 0 ) );
   G4VSolid* tileBulk
     = new G4SubtractionSolid( "TileSolid_Bulk"
-                            , solidTile, solidDimpleBound
-                            , 0, G4ThreeVector( 0, 0, _tilez*0.5 ) );
-
-  G4VSolid* solidTileSubtract = ConstructDimpleSubtract();
-
-  G4VSolid* tileDimple
-    = new G4SubtractionSolid( "TileSolid_Dimple"
-                            , solidDimple
-                            , solidTileSubtract
-                            , 0, CalcDimpleOffset() );
+                            , tileBulk1, solidHoleBound
+                            , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
 
   G4LogicalVolume* logicTileBulk = new G4LogicalVolume( tileBulk
                                                       , fEJ200
                                                       , "TileBulkLogic" );
-  G4LogicalVolume* logicTileDimp = new G4LogicalVolume( tileDimple
-                                                      , fEJ200
-                                                      , "TileDimpleLogic" );
-
   G4VPhysicalVolume* physTileBulk = new G4PVPlacement( 0
                                                      , G4ThreeVector( 0, 0, 0 )
                                                      , logicTileBulk
@@ -232,18 +253,45 @@ LYSimDetectorConstruction::Construct()
                                                      , false
                                                      , 0
                                                      , checkOverlaps );
-  G4VPhysicalVolume* physTileDimp = new G4PVPlacement( 0
-                                                     , G4ThreeVector( 0, 0, 0 )
-                                                     , logicTileDimp
-                                                     , "TileDimpPhysic"
-                                                     , logicWorld
-                                                     , false
-                                                     , 0
-                                                     , checkOverlaps );
 
   ///////////////////////////////////////////////////////////////////////////////
-  // SiPM
+  // fiber. single layer clad
   ///////////////////////////////////////////////////////////////////////////////
+  assert(_hole_radius>=_WLSfiberR+_WLSfiber_clad_thick); 
+  G4VSolid* solidWLSfiber = new G4Tubs("WLSFiber", 0., _WLSfiberR, _WLSfiberZ, 0., 2*pi);
+  G4VSolid* solidWLSfiber_clad = new G4Tubs("WLSFiber_clad", _WLSfiberR, _WLSfiberR+_WLSfiber_clad_thick, _WLSfiberZ, 0., 2*pi);
+  G4LogicalVolume* logicWLSfiber = new G4LogicalVolume( solidWLSfiber , mfiber,  "logicWLSfiber" );
+  G4LogicalVolume* logicWLSfiber_clad = new G4LogicalVolume( solidWLSfiber_clad , mfiber_clad,  "logicWLSfiber_clad" );
+  G4VPhysicalVolume* physWLSfiber = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
+                                                      , logicWLSfiber
+                                                      , "PhyhWLSfiber"
+                                                      , logicWorld
+                                                      , false
+                                                      , 0
+                                                      , checkOverlaps );
+  G4VPhysicalVolume* physWLSfiber_clad = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
+                                                      , logicWLSfiber_clad
+                                                      , "PhyhWLSfiber_cald"
+                                                      , logicWorld
+                                                      , false
+                                                      , 0
+                                                      , checkOverlaps );
+  //TODO: surface properties
+  /*
+  G4LogicalSkinSurface* FiberSurface =
+    new G4LogicalSkinSurface( "FiberSurface"
+                              , logicWLSfiber_clad, fTiO2Surface );  
+
+        new G4LogicalBorderSurface("surfaceClad1Out", physWLSfiber_clad,
+                                   physWorld, opSurface);
+        new G4LogicalBorderSurface("surfaceClad1In", physWorld, physWLSfiber_clad,
+                                   opSurface);
+                                   */
+  ///////////////////////////////////////////////////////////////////////////////
+  // realistic SiPM
+  ///////////////////////////////////////////////////////////////////////////////
+  
+  /*
   G4Box* solidSiPMDead = new G4Box( "SiPMDead"
                                   , 0.5*_sipm_deadwidth, 0.5*_sipm_deadwidth
                                   , _sipm_z );
@@ -301,16 +349,12 @@ LYSimDetectorConstruction::Construct()
 
   G4LogicalVolume* logicSiPMStand = new G4LogicalVolume( solidSiPMStand
                                                        , fEpoxy, "SiPMStand" );
+  
+  double Resinz = _WLSfiberZ - _WLS_zoff + 0.5*_sipm_z + _sipm_glasswidth;
+  const G4ThreeVector ResinOffset( _hole_x1, 0, Resinz );
 
-  const G4ThreeVector SiPMOffset( 0, 0
-                                , +0.5*_tilez - 0.5*_sipm_z - _sipm_standz
-                                  + wrapgap + wrapthickness );
-  const G4ThreeVector ResinOffset( 0, 0
-                                 , +0.5*_tilez - 0.5*_sipm_z - _sipm_standz
-                                   - _sipm_glasswidth
-                                   + wrapgap  + wrapthickness );
-  const G4ThreeVector StandOffset( 0, 0, +0.5*_tilez - 0.5*_sipm_standz
-                                   + wrapgap + wrapthickness );
+  const G4ThreeVector SiPMOffset( _hole_x1, 0, Resinz + _sipm_glasswidth);
+  const G4ThreeVector StandOffset( _hole_x1, 0, Resinz + 0.5*_sipm_z + 0.5*_sipm_standz + _sipm_glasswidth);
 
   G4VPhysicalVolume* physSiPMStand = new G4PVPlacement( 0, StandOffset
                                                       , logicSiPMStand
@@ -344,71 +388,60 @@ LYSimDetectorConstruction::Construct()
                                                  , 0
                                                  , checkOverlaps );
 
-  ///////////////////////////////////////////////////////////////////////////////
-  // SMD LED as a white box (assuming a 0603 component )
-  ///////////////////////////////////////////////////////////////////////////////
-  G4VSolid* solidLED        = new G4Box( "solidLED", 0.8, 0.4, 0.25 );
-  G4LogicalVolume* logicLED = new G4LogicalVolume( solidLED, fEpoxy
-                                                 , "logicLED" );
-
-  const G4ThreeVector LEDOffset( 0
-                               , _sipm_y*0.5 + _sipm_rimwidth + _sipm_glasswidth
-                                 + 0.4 + 0.2
-                               , 0.5*_tilez + wrapgap + wrapthickness - 0.25 );
-
-  G4VPhysicalVolume* physLED = new G4PVPlacement( 0
-                                                , LEDOffset
-                                                , logicLED
-                                                , "LED"
-                                                , logicWorld
-                                                , false
-                                                , 0
-                                                , checkOverlaps );
-
-  ///////////////////////////////////////////////////////////////////////////////
-  // Defining surfaces
-  ///////////////////////////////////////////////////////////////////////////////
-  G4LogicalBorderSurface* WrapAirSurface =
-    new G4LogicalBorderSurface( "WrapAirSurface"
-                              , physWorld
-                              , physWrap
-                              , fESROpSurface );
-
-  // Tile surfaces
-  G4LogicalBorderSurface* TileBulkSurface =
-    new G4LogicalBorderSurface( "TileBulkSurface"
-                              , physTileBulk
-                              , physWorld
-                              , fTileBulkSurface );
-
-  G4LogicalBorderSurface* TileTileSurface =
-    new G4LogicalBorderSurface( "TileBoundary"
-                              , physTileBulk
-                              , physTileDimp
-                              , fIdealPolishedOpSurface );
-
-  G4LogicalBorderSurface* TileDimpSurface =
-    new G4LogicalBorderSurface( "TileDimpBoundary"
-                              , physTileDimp
-                              , physWorld
-                              , fTileDimpleSurface );
-  std::cout << fTileBulkSurface << " " << fTileDimpleSurface << std::endl;
-
-  // Other optical surfaces
   G4LogicalSkinSurface* CaseSurface
     = new G4LogicalSkinSurface( "SiPMCaseSurface"
                               , logicSiPMCase, fIdealWhiteOpSurface );
   G4LogicalSkinSurface* StandSurface
     = new G4LogicalSkinSurface( "SiPMStandSurface"
                               , logicSiPMStand, fIdealWhiteOpSurface );
-  G4LogicalSkinSurface* LEDsurface
-    = new G4LogicalSkinSurface( "LEDSurface"
-                              , logicLED, fIdealWhiteOpSurface );
+  
   G4LogicalSkinSurface* SiPMSurface
     = new G4LogicalSkinSurface( "SiPMSurface", logicSiPM, fSiPMSurface );
+  
   G4LogicalSkinSurface* PCBSurface
     = new G4LogicalSkinSurface( "PCBSurface", logicPCB, fPCBSurface );
+  */
 
+  
+  ///////////////////////////////////////////////////////////////////////////////
+  // Simple version of SiPM
+  ///////////////////////////////////////////////////////////////////////////////
+  const G4ThreeVector SiPMOffset_chan3( _hole_x1, 0, _WLSfiberZ - _WLS_zoff + 0.8*_sipm_z);  
+  const G4ThreeVector SiPMOffset_chan4( _hole_x1, 0, -_WLSfiberZ - _WLS_zoff - 0.8*_sipm_z);
+  //G4Box* solidSiPMInnerBox = new G4Box( "solidSiPMInnerBox", 0.5*_sipm_x, 0.5*_sipm_y,  0.8*_sipm_z );
+  G4Tubs* solidSiPMInnerBox = new G4Tubs( "solidSiPMInnerBox", 0., _WLSfiberR+_WLSfiber_clad_thick, 0.8*_sipm_z , 0., 2*pi);
+  G4LogicalVolume* logicSiPM = new G4LogicalVolume( solidSiPMInnerBox
+                                                  , fBialkali,  "SiPM" );
+                                                  
+  G4VPhysicalVolume* physSiPM_chan3 = new G4PVPlacement( 0, SiPMOffset_chan3
+                                                 , logicSiPM
+                                                 , "physSiPM_chan3"
+                                                 , logicWorld
+                                                 , false
+                                                 , 0
+                                                 , checkOverlaps );
+  G4VPhysicalVolume* physSiPM_chan4 = new G4PVPlacement( 0, SiPMOffset_chan4
+                                                 , logicSiPM
+                                                 , "physSiPM_chan4"
+                                                 , logicWorld
+                                                 , false
+                                                 , 0
+                                                 , checkOverlaps );
+
+  ///////////////////////////////////////////////////////////////////////////////
+  // Defining surfaces
+  ///////////////////////////////////////////////////////////////////////////////
+  
+  // Tile surfaces
+  G4LogicalBorderSurface* TileBulkSurface =
+    new G4LogicalBorderSurface( "TileBulkSurface"
+                              , physTileBulk
+                              , physWorld
+                              , fTileBulkSurface );
+  std::cout << fTileBulkSurface << std::endl;
+
+  // Other optical surfaces
+  
   // Setting the sensitive detector
   if( !fPMTSD ){
     fPMTSD = new LYSimPMTSD( "/LYSimPMT" );
@@ -430,25 +463,26 @@ LYSimDetectorConstruction::Construct()
   G4VisAttributes* CaseVisAtt = new G4VisAttributes( G4Colour( 0.8, 0.8, 0.8 ) );
   CaseVisAtt->SetForceSolid( true );
   CaseVisAtt->SetVisibility( true );
-  logicSiPMCase->SetVisAttributes( CaseVisAtt );
-  logicSiPMStand->SetVisAttributes( CaseVisAtt );
+  //logicSiPMCase->SetVisAttributes( CaseVisAtt );
+  //logicSiPMStand->SetVisAttributes( CaseVisAtt );
 
   G4VisAttributes* ResinVisAtt = new G4VisAttributes( G4Colour( 0., 1., 1. ) );
   ResinVisAtt->SetForceWireframe( true );
   ResinVisAtt->SetVisibility( true );
-  logicSiPMResin->SetVisAttributes( ResinVisAtt );
+  //logicSiPMResin->SetVisAttributes( ResinVisAtt );
 
   G4VisAttributes* TileVisAtt = new G4VisAttributes( G4Colour( 0, 0, 1. ) );
   TileVisAtt->SetForceWireframe( true );
   TileVisAtt->SetVisibility( true );
   logicTileBulk->SetVisAttributes( TileVisAtt );
 
-  G4VisAttributes* DimpleVisAtt = new G4VisAttributes( G4Colour( 0, 0, 1 ) );
-  DimpleVisAtt->SetForceWireframe( true );
-  DimpleVisAtt->SetVisibility( true );
-  DimpleVisAtt->SetForceAuxEdgeVisible( true );
-  DimpleVisAtt->SetForceLineSegmentsPerCircle( 30 );
-  logicTileDimp->SetVisAttributes( DimpleVisAtt );
+  G4VisAttributes* fiberVisAtt = new G4VisAttributes( G4Colour( 0.5, 0.5, 0 ) );
+  fiberVisAtt->SetForceWireframe( true );
+  fiberVisAtt->SetVisibility( true );
+  fiberVisAtt->SetForceAuxEdgeVisible( true );
+  //fiberVisAtt->SetForceLineSegmentsPerCircle( 30 );
+  logicWLSfiber->SetVisAttributes( fiberVisAtt );
+  logicWLSfiber_clad->SetVisAttributes( fiberVisAtt );
 
   G4VisAttributes* WrapVisAtt = new G4VisAttributes( G4Colour( 0.5, 0.5, 1.0 ) );
   WrapVisAtt->SetForceWireframe( true );
@@ -459,7 +493,7 @@ LYSimDetectorConstruction::Construct()
   G4VisAttributes* PCBVisAtt = new G4VisAttributes( G4Colour( 0.0, 0.4, 0.1 ) );
   PCBVisAtt->SetForceSolid( true );
   PCBVisAtt->SetVisibility( true );
-  logicPCB->SetVisAttributes( PCBVisAtt );
+  //logicPCB->SetVisAttributes( PCBVisAtt );
 
   return physWorld;
 }
@@ -504,18 +538,29 @@ LYSimDetectorConstruction::ConstructHollowWrapSolid() const
                              , 0, 0 );
   G4VSolid* wrapbox = new G4SubtractionSolid( "WrapBox"
                                             , wrapOuter, wrapInner );
-  G4VSolid* wraphole = new G4Tubs( "WrapHole"
-                                 , 0, _pcb_radius
-                                 , 2*wrapthickness
-                                 , 0, 2*pi );
 
-  const G4ThreeVector offset( 0, 0, 0.5*_tilez + wrapgap + 0.5*wrapthickness );
-
-  return new G4SubtractionSolid( "WrapSolid"
-                               , wrapbox, wraphole
-                               , NULL, offset );
+  return wrapbox;
 }
 
+G4VSolid*
+LYSimDetectorConstruction::ConstructHollowWrapCladSolid() const
+{
+  G4VSolid* wrapOuter
+    = ConstructTrapazoidSolid( "WrapOuter"
+                             , _tilex  + 2*wrapthickness
+                             , _tiley  + 2*wrapthickness
+                             , _tilez
+                             , 0, 0 );
+  G4VSolid* wrapInner
+    = ConstructTrapazoidSolid( "WrapInner"
+                             , _tilex 
+                             , _tiley
+                             , _tilez*1.5
+                             , 0, 0 );
+  G4VSolid* wrapbox = new G4SubtractionSolid( "WrapBox"
+                                            , wrapOuter, wrapInner );
+  return wrapbox;
+}
 
 G4VSolid*
 LYSimDetectorConstruction::ConstructDimpleSubtract() const
@@ -594,26 +639,26 @@ LYSimDetectorConstruction::CalcDimpleOffset() const
 double
 LYSimDetectorConstruction::WorldHalfX() const
 {
-  return _tilex * 1.5;
+  return 1*m;
 }
 
 double
 LYSimDetectorConstruction::WorldHalfY() const
 {
-  return _tiley *1.5;
+  return 1*m;
 }
 
 double
 LYSimDetectorConstruction::WorldHalfZ() const
 {
-  return 100 * mm ;
+  return 10*m;
 }
 
 double
 LYSimDetectorConstruction::LocalTileZ( const double x, const double y ) const
 {
+  /*
   const double r = sqrt( x*x+y*y );
-
   if( r < _dimple_radius ){
     switch( _dimple_type ){
     case FLAT_DOME:
@@ -628,7 +673,16 @@ LYSimDetectorConstruction::LocalTileZ( const double x, const double y ) const
   } else {
     return _tilez;
   }
+  */
+  if(x<_tile_x1+_hole_radius && x>_tile_x1-_hole_radius){
+     return _tilez - 2*sqrt(pow(_hole_radius,2)-pow(x-_tile_x1,2));
+  } else if(x<_tile_x2+_hole_radius && x>_tile_x2-_hole_radius){
+    return _tilez - 2*sqrt(pow(_hole_radius,2)-pow(x-_tile_x2,2));
+  }else{
+    return _tilez;
+  }
 }
+
 
 double
 LYSimDetectorConstruction::LocalTileZFlatDome( const double r ) const
@@ -735,3 +789,5 @@ LYSimDetectorConstruction::SetDimpleAlpha( const double a )
   fTileDimpleSurface->SetSigmaAlpha( a );
   _dimple_alpha = a;
 }
+
+

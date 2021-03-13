@@ -55,6 +55,10 @@ public:
   void EndOfEvent( const G4Event* anEvent );
   void EndOfRun( const G4Run* aRun );
   void EndOfExperiment();
+  void addgenphoton();
+  void addwlsphoton();
+  void pushchan3(float t);
+  void pushchan4(float t);
 
   // Embedded class for RunAction handling
   class RunAction : public G4UserRunAction

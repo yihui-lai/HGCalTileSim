@@ -69,7 +69,7 @@ LYSimPrimaryGeneratorAction::RandomizePosition()
   // Randomizing position of the the source for each event.
   const double x = ( 2*G4UniformRand()-1 )*_width + _beamx;
   const double y = ( 2*G4UniformRand()-1 )*_width + _beamy;
-  const double z = fDetector->GetTileZ();
+  const double z = fDetector->GetTileY();
   const double t = fDetector->LocalTileZ( x, y );
   const int np   = G4Poisson( _photon_multiplier * CalcNumPhotons( t ) );
 
@@ -81,12 +81,17 @@ LYSimPrimaryGeneratorAction::RandomizePosition()
       G4OpticalPhoton::OpticalPhotonDefinition() );
 
     // Setting default spacial distribution
+    //TODO
     G4SPSPosDistribution* pos = particleSource->GetCurrentSource()->GetPosDist();
     pos->SetPosDisType( "Volume" );
     pos->SetPosDisShape( "Cylinder" );
     pos->SetRadius( 0.0001*CLHEP::mm );
-    pos->SetHalfZ( t/2 );
-    pos->SetCentreCoords( G4ThreeVector( x, y, -z/2 + t/2 ) );
+    pos->SetHalfZ( z/2 );
+    pos->SetPosRot2(G4ThreeVector( 0., 0, -1 ));
+    pos->SetCentreCoords( G4ThreeVector( x, 0, y ) );
+
+//std::cout<<"z/2: "<<z/2<<std::endl;
+//std::cout<<"("<<x<<" 0 "<<y<<")"<<std::endl;
 
     // Setting default angular distrution of particle  (isotropic)
     G4SPSAngDistribution* ang = particleSource->GetCurrentSource()->GetAngDist();
@@ -127,5 +132,5 @@ LYSimPrimaryGeneratorAction::NSources() const
 double
 CalcNumPhotons( const double thickness )
 {
-  return 6677.0 * thickness/3.0;
+  return 6677.0 * thickness/3000.0;
 }

@@ -20,4 +20,9 @@ extern G4OpticalSurface* MakeS_SiPM();
 extern G4OpticalSurface* MakeS_PCBSurface();
 extern G4OpticalSurface* MakeS_AirAir();
 
+//wls
+
+extern G4OpticalSurface* MakeS_TiO2Surface();
+
+
 #endif

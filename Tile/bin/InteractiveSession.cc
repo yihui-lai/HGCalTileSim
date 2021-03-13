@@ -49,9 +49,13 @@ main( int argc, char** argv )
     runManager->SetUserAction( new LYSimDebugGeneratorAction() );
   } else if( argc == 2 && std::string( argv[1] ) == "PROTON" ){
     LYSimProtonGeneratorAction* x = new LYSimProtonGeneratorAction();
-    runManager->SetUserAction( (G4VUserPrimaryGeneratorAction*)x );
+    runManager->SetUserAction( (LYSimProtonGeneratorAction*)x );
     LYSimAnalysis::GetInstance()->SetProtonGeneratorAction( x );
   } else {
+    /*LYSimProtonGeneratorAction* x = new LYSimProtonGeneratorAction();
+    runManager->SetUserAction( (LYSimProtonGeneratorAction*)x );
+    LYSimAnalysis::GetInstance()->SetProtonGeneratorAction( x );
+    */
     LYSimPrimaryGeneratorAction* x = new LYSimPrimaryGeneratorAction( detector );
     runManager->SetUserAction( (G4VUserPrimaryGeneratorAction*)x );
     LYSimAnalysis::GetInstance()->SetGeneratorAction( x );

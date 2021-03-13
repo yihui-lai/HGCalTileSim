@@ -12,5 +12,15 @@ extern void        Update_EJ200_AbsLength( G4Material*, const double x );
 
 extern G4Material* Make_Custom_Air();
 
+//wls
+extern G4Material* Make_PMMA();
+extern G4Material* Make_Y11();
+extern G4Material* Make_Pethylene();
+extern G4Material* Make_FPethylene();
+extern G4Material* Make_Polystyrene();
+extern G4Material* Make_Silicone();
+extern G4Material* Make_TiO2();
+extern G4Material* Make_Coating();
+
 
 #endif

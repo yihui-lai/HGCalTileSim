@@ -28,9 +28,9 @@ public:
   inline void
   SetBeamX( const double x ){ _beamx = x; }
   inline double
-  GetBeamY() const { return _beamy; }
+  GetBeamZ() const { return _beamz; }
   inline void
-  SetBeamY( const double x ){ _beamy = x; }
+  SetBeamZ( const double x ){ _beamz = x; }
   inline double
   GetWidth() const { return _width; }
   inline void
@@ -41,7 +41,7 @@ private:
   LYSimProtonGeneratorMessenger* messenger;
 
   double _beamx;
-  double _beamy;
+  double _beamz;
   double _width;
 
 };
@@ -62,7 +62,7 @@ private:
 
   G4UIdirectory* detDir;
   G4UIcmdWithADoubleAndUnit* SetBeamXCmd;
-  G4UIcmdWithADoubleAndUnit* SetBeamYCmd;
+  G4UIcmdWithADoubleAndUnit* SetBeamZCmd;
   G4UIcmdWithADoubleAndUnit* SetWidthCmd;
 };
 

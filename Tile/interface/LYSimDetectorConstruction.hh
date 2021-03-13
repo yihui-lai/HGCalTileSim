@@ -42,6 +42,7 @@ public:
   GetTileY() const {return _tiley;}
 
   // Get/Set functions of dimple geometry parameters
+  
   inline double
   GetDimpleRadius() const { return _dimple_radius; }
   inline void
@@ -54,6 +55,7 @@ public:
   GetDimpleType() const {return _dimple_type; }
   inline void
   SetDimpleType( const int x ){ _dimple_type = x; }
+  
 
   // Get/Set functions for SiPM geometry parameters
   inline double
@@ -120,6 +122,42 @@ public:
   inline G4OpticalSurface*
   GetSiPMSurface(){ return fSiPMSurface; }
 
+
+  //wls
+  void
+  Set_handwrap( const bool x ){ _handwrap = x; }
+  inline bool
+  Get_handwrap() const { return _handwrap; }
+  void
+  SetHoleRadius( const double x ){ _hole_radius = x; }
+  inline double
+  GetHoleRadius() const { return _hole_radius; }
+  void
+  SetHoleX1( const double x ){ _hole_x1 = x; }
+  inline double
+  GetHoleX1() const { return _hole_x1; }
+  void
+  SetHoleX2( const double x ){ _hole_x2 = x; }
+  inline double
+  GetHoleX2() const { return _hole_x2; }
+  void
+  SetFiberR( const double x ){ _WLSfiberR = x; }
+  inline double
+  GetFiberR() const { return _WLSfiberR; }
+  void
+  SetFiber_clad_thick( const double x ){ _WLSfiber_clad_thick = x; }
+  inline double
+  GetFiber_clad_thick() const { return _WLSfiber_clad_thick; }
+  void
+  SetFiberZ( const double x ){ _WLSfiberZ = x; }
+  inline double
+  GetFiberZ() const { return _WLSfiberZ; }
+  void
+  SetFiberZoff( const double x ){ _WLS_zoff = x; }
+  inline double
+  GetFiberZoff() const { return _WLS_zoff; }
+
+
 private:
   // Subfunctions for cleaner code
   G4VSolid* ConstructTrapazoidSolid(
@@ -132,6 +170,7 @@ private:
     ) const;
 
   G4VSolid* ConstructHollowWrapSolid() const;
+  G4VSolid* ConstructHollowWrapCladSolid() const;
 
   G4VSolid* ConstructDimpleSubtract() const;
 
@@ -203,6 +242,21 @@ private:
   double _sipm_standz;
   double _sipm_rimwidth;
   double _sipm_glasswidth;
+
+  //wls
+  bool _handwrap;
+  double _hole_radius;
+  double _hole_x1;
+  double _hole_x2;
+  double _WLSfiberR;
+  double _WLSfiberZ;
+  double _WLSfiber_clad_thick;
+  double _WLS_zoff;
+  G4Material* mfiber;
+  G4Material* mfiber_clad;
+  G4Material* fcoating;
+  G4OpticalSurface* fTiO2Surface;
+
 };
 
 #endif

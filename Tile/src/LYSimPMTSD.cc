@@ -58,6 +58,13 @@ LYSimPMTSD::ProcessHits_constStep( const G4Step*       aStep,
 
   fPMTHitsCollection->insert( hit );
 
+    G4StepPoint *thePostPointsd = aStep->GetPostStepPoint();
+    G4VPhysicalVolume *thePostPVsd = thePostPointsd->GetPhysicalVolume();
+    G4String thePostPVNamesd = thePostPVsd->GetName();
+    if (thePostPVNamesd.contains("physSiPM_chan3")) LYSimAnalysis::GetInstance()->pushchan3(aStep->GetPostStepPoint()->GetGlobalTime()); 
+    else if (thePostPVNamesd.contains("physSiPM_chan4")) LYSimAnalysis::GetInstance()->pushchan4(aStep->GetPostStepPoint()->GetGlobalTime()); 
+    else return false;
+
   return true;
 
 }

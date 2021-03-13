@@ -28,17 +28,19 @@ public:
 
   double beam_x;
   double beam_y;
-  unsigned nphotons;
-  unsigned genphotons;
+  int genphotons;
+  int wlsphotons;
+  std::vector<float> chan3_photon;
+  std::vector<float> chan4_photon;
+/*
   unsigned savedphotons;
-
   uint16_t NumWrapReflection[LYSIMFORMAT_MAX_PHOTONS];
   uint16_t OpticalLength[LYSIMFORMAT_MAX_PHOTONS];
   int16_t EndX[LYSIMFORMAT_MAX_PHOTONS];
   int16_t EndY[LYSIMFORMAT_MAX_PHOTONS];
   uint8_t NumPCBReflection[LYSIMFORMAT_MAX_PHOTONS];
   bool IsDetected[LYSIMFORMAT_MAX_PHOTONS];
-
+*/
   void
   AddToTree( TTree* tree )
   {
@@ -47,9 +49,10 @@ public:
     tree->Branch( "BeamX",        &beam_x       );
     tree->Branch( "BeamY",        &beam_y       );
     tree->Branch( "genphotons",   &genphotons   );
-    tree->Branch( "nphotons",     &nphotons     );
-    tree->Branch( "savedphotons", &savedphotons );
-
+    tree->Branch( "wlsphotons",     &wlsphotons     );
+    tree->Branch( "chan3_photon",     &chan3_photon     );
+    tree->Branch( "chan4_photon",     &chan4_photon     );
+/*
     tree->Branch( "NumWrapReflection"
                 , NumWrapReflection
                 , "NumWrapReflection[savedphotons]/s" );
@@ -67,7 +70,7 @@ public:
                 , "EndY[savedphotons]/S" );
     tree->Branch( "IsDetected"
                 , IsDetected
-                , "IsDetected[savedphotons]/O" );
+                , "IsDetected[savedphotons]/O" );*/
   }
 
   void
@@ -78,16 +81,17 @@ public:
     tree->SetBranchAddress( "BeamX",             &beam_x       );
     tree->SetBranchAddress( "BeamY",             &beam_y       );
     tree->SetBranchAddress( "genphotons",        &genphotons   );
-    tree->SetBranchAddress( "nphotons",          &nphotons     );
-    tree->SetBranchAddress( "savedphotons",      &savedphotons );
-
+    tree->SetBranchAddress( "wlsphotons",          &wlsphotons     );
+    tree->SetBranchAddress( "chan3_photon",     &chan3_photon     );
+    tree->SetBranchAddress( "chan4_photon",     &chan4_photon     );
+/*
     tree->SetBranchAddress( "NumWrapReflection", NumWrapReflection );
     tree->SetBranchAddress( "OpticalLength",     OpticalLength     );
     tree->SetBranchAddress( "NumPCBReflection",  NumPCBReflection  );
     tree->SetBranchAddress( "EndX",              EndX              );
     tree->SetBranchAddress( "EndY",              EndY              );
     tree->SetBranchAddress( "IsDetected",        IsDetected        );
-
+*/
     tree->BuildIndex( "RunHash", "EventHash" );
   }
 
@@ -98,8 +102,8 @@ public:
     event_hash = 0;
     event_hash = usr::Hash32Join( event_hash, usr::HashValue32( beam_x     ) );
     event_hash = usr::Hash32Join( event_hash, usr::HashValue32( beam_y     ) );
-    event_hash = usr::Hash32Join( event_hash, usr::HashValue32( nphotons   ) );
-    event_hash = usr::Hash32Join( event_hash, usr::HashValue32( genphotons ) );
+    //event_hash = usr::Hash32Join( event_hash, usr::HashValue32( nphotons   ) );
+    //event_hash = usr::Hash32Join( event_hash, usr::HashValue32( genphotons ) );
   }
 #endif
 
@@ -142,18 +146,18 @@ public:
     tree->Branch( "TileX",      &tile_x       );
     tree->Branch( "TileY",      &tile_y       );
     tree->Branch( "TileZ",      &tile_z       );
-    tree->Branch( "SiPMW",      &sipm_width   );
+    /*tree->Branch( "SiPMW",      &sipm_width   );
     tree->Branch( "SiPMR",      &sipm_rim     );
     tree->Branch( "SiPMS",      &sipm_stand   );
     tree->Branch( "DimpleType", &dimple_type  );
     tree->Branch( "DimpleRad",  &dimple_rad   );
-    tree->Branch( "DimpleInd",  &dimple_ind   );
+    tree->Branch( "DimpleInd",  &dimple_ind   );*/
     tree->Branch( "AbsMult",    &abs_mult     );
     tree->Branch( "WrapRef",    &wrap_ref     );
-    tree->Branch( "TileAlpha",  &tile_alpha   );
-    tree->Branch( "DimpAlpha",  &dimple_alpha );
-    tree->Branch( "PCBRad",     &pcb_rad      );
-    tree->Branch( "PCBRef",     &pcb_ref      );
+    //tree->Branch( "TileAlpha",  &tile_alpha   );
+    //tree->Branch( "DimpAlpha",  &dimple_alpha );
+    //tree->Branch( "PCBRad",     &pcb_rad      );
+    //tree->Branch( "PCBRef",     &pcb_ref      );
     tree->Branch( "BeamX",      &beam_x       );
     tree->Branch( "BeamY",      &beam_y       );
     tree->Branch( "BeamZ",      &beam_w       );
@@ -166,18 +170,18 @@ public:
     tree->SetBranchAddress( "TileX",      &tile_x       );
     tree->SetBranchAddress( "TileY",      &tile_y       );
     tree->SetBranchAddress( "TileZ",      &tile_z       );
-    tree->SetBranchAddress( "SiPMW",      &sipm_width   );
+    /*tree->SetBranchAddress( "SiPMW",      &sipm_width   );
     tree->SetBranchAddress( "SiPMR",      &sipm_rim     );
     tree->SetBranchAddress( "SiPMS",      &sipm_stand   );
     tree->SetBranchAddress( "DimpleType", &dimple_type  );
     tree->SetBranchAddress( "DimpleRad",  &dimple_rad   );
-    tree->SetBranchAddress( "DimpleInd",  &dimple_ind   );
+    tree->SetBranchAddress( "DimpleInd",  &dimple_ind   );*/
     tree->SetBranchAddress( "AbsMult",    &abs_mult     );
     tree->SetBranchAddress( "WrapRef",    &wrap_ref     );
-    tree->SetBranchAddress( "TileAlpha",  &tile_alpha   );
-    tree->SetBranchAddress( "DimpAlpha",  &dimple_alpha );
-    tree->SetBranchAddress( "PCBRad",     &pcb_rad      );
-    tree->SetBranchAddress( "PCBRef",     &pcb_ref      );
+    //tree->SetBranchAddress( "TileAlpha",  &tile_alpha   );
+    //tree->SetBranchAddress( "DimpAlpha",  &dimple_alpha );
+    //tree->SetBranchAddress( "PCBRad",     &pcb_rad      );
+    //tree->SetBranchAddress( "PCBRef",     &pcb_ref      );
     tree->SetBranchAddress( "BeamX",      &beam_x       );
     tree->SetBranchAddress( "BeamY",      &beam_y       );
     tree->SetBranchAddress( "BeamZ",      &beam_w       );
@@ -192,21 +196,20 @@ public:
   {
     run_hash = 0;
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( tile_x       ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( tile_x       ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( tile_y       ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( tile_z       ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( sipm_width   ) );
+    /*run_hash = usr::Hash32Join( run_hash, usr::HashValue32( sipm_width   ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( sipm_rim     ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( sipm_stand   ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( dimple_type  ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( dimple_rad   ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( dimple_ind   ) );
+    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( dimple_ind   ) );*/
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( abs_mult     ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( wrap_ref     ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( tile_alpha   ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( dimple_alpha ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( pcb_rad      ) );
-    run_hash = usr::Hash32Join( run_hash, usr::HashValue32( pcb_ref      ) );
+    //run_hash = usr::Hash32Join( run_hash, usr::HashValue32( tile_alpha   ) );
+    //run_hash = usr::Hash32Join( run_hash, usr::HashValue32( dimple_alpha ) );
+    //run_hash = usr::Hash32Join( run_hash, usr::HashValue32( pcb_rad      ) );
+    //run_hash = usr::Hash32Join( run_hash, usr::HashValue32( pcb_ref      ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( beam_x       ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( beam_y       ) );
     run_hash = usr::Hash32Join( run_hash, usr::HashValue32( beam_w       ) );

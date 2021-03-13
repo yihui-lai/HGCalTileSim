@@ -85,21 +85,21 @@ LYSimAnalysis::PrepareNewRun( const G4Run* )
   runformat->tile_y = DetectorConstruction->GetTileY();
   runformat->tile_z = DetectorConstruction->GetTileZ();
 
-  runformat->sipm_width = DetectorConstruction->GetSiPMX();
-  runformat->sipm_rim   = DetectorConstruction->GetSiPMRim();
-  runformat->sipm_stand = DetectorConstruction->GetSiPMStand();
+  //runformat->sipm_width = DetectorConstruction->GetSiPMX();
+  //runformat->sipm_rim   = DetectorConstruction->GetSiPMRim();
+  //runformat->sipm_stand = DetectorConstruction->GetSiPMStand();
 
-  runformat->dimple_rad  = DetectorConstruction->GetDimpleRadius();
-  runformat->dimple_ind  = DetectorConstruction->GetDimpleIndent();
-  runformat->dimple_type = DetectorConstruction->GetDimpleType();
+  //runformat->dimple_rad  = DetectorConstruction->GetDimpleRadius();
+  //runformat->dimple_ind  = DetectorConstruction->GetDimpleIndent();
+  //runformat->dimple_type = DetectorConstruction->GetDimpleType();
 
   runformat->abs_mult     = DetectorConstruction->GetTileAbsMult();
   runformat->wrap_ref     = DetectorConstruction->GetWrapReflect();
-  runformat->tile_alpha   = DetectorConstruction->GetTileAlpha();
-  runformat->dimple_alpha = DetectorConstruction->GetDimpleAlpha();
+  //runformat->tile_alpha   = DetectorConstruction->GetTileAlpha();
+  //runformat->dimple_alpha = DetectorConstruction->GetDimpleAlpha();
 
-  runformat->pcb_rad = DetectorConstruction->GetPCBRadius();
-  runformat->pcb_ref = DetectorConstruction->GetPCBReflect();
+  //runformat->pcb_rad = DetectorConstruction->GetPCBRadius();
+  //runformat->pcb_ref = DetectorConstruction->GetPCBReflect();
 
   if( generatorAction ){
     runformat->beam_x = generatorAction->GetBeamX();
@@ -107,7 +107,7 @@ LYSimAnalysis::PrepareNewRun( const G4Run* )
     runformat->beam_w = generatorAction->GetWidth();
   } else if( protonAction ){
     runformat->beam_x = protonAction->GetBeamX();
-    runformat->beam_y = protonAction->GetBeamY();
+    runformat->beam_y = protonAction->GetBeamZ();
     runformat->beam_w = protonAction->GetWidth();
   } else {
     runformat->beam_x = 0;
@@ -127,11 +127,15 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
   format->beam_x   = event->GetPrimaryVertex()->GetX0();
   format->beam_y   = event->GetPrimaryVertex()->GetY0();
   format->run_hash = runformat->run_hash;
+  format->genphotons = 0;
+  format->wlsphotons = 0;
+
 }
 
 void
 LYSimAnalysis::EndOfEvent( const G4Event* event )
 {
+  /*
   if( generatorAction ){
     format->genphotons = generatorAction->NSources();
   } else {
@@ -220,7 +224,7 @@ LYSimAnalysis::EndOfEvent( const G4Event* event )
     ++saveindex;
     assert( saveindex == num_hit_photons + num_los_photons );
   }
-
+*/
 #ifdef CMSSW_GIT_HASH
   format->UpdateHash();
 #endif
@@ -296,4 +300,19 @@ IsSiPMTrajectory( G4Navigator* nav, const G4ThreeVector& endpoint )
   } else {// Rare occassion that endvol is not found
     return false;
   }
+}
+
+
+void LYSimAnalysis::addgenphoton(){
+  format->genphotons++;
+}
+
+void LYSimAnalysis::addwlsphoton(){
+  format->wlsphotons++;
+}
+void LYSimAnalysis::pushchan3(float t){
+  format->chan3_photon.push_back(t);
+}
+void LYSimAnalysis::pushchan4(float t){
+  format->chan4_photon.push_back(t);
 }

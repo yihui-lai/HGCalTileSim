@@ -18,23 +18,25 @@ main( int argc, char** argv )
   usr::po::options_description desc( "Running a run with a certain geometry" );
   desc.add_options()
     ( "beamx,x",       usr::po::defvalue<double>( 0 ),     "x center of beam [mm]" )
-    ( "beamy,y",       usr::po::defvalue<double>( 0 ),     "y center of beam [mm]" )
-    ( "tilewidth,L",   usr::po::defvalue<double>( 30 ),    "Length of tile [mm]" )
+    ( "beamz,z",       usr::po::defvalue<double>( 0 ),     "z center of beam [mm]" )
+    ( "tileZ,L",   usr::po::defvalue<double>( 30 ),    "Length of tile [mm]" )
     ( "beamwidth,w",   usr::po::defvalue<double>( 1.5 ),   "width of beam [mm]" )
-    ( "dimplerad,r",   usr::po::defvalue<double>( 3.0 ),   "Dimple radius [mm]" )
-    ( "dimpleind,d",   usr::po::defvalue<double>( 1.5 ),   "Dimple indent [mm]" )
-    ( "dimpletype,T",  usr::po::defvalue<int>( 0 ),        "Dimple Type (0:Spherical, 1:Ellipsoid, 2:FlatDome, 3:Cylinder" )
-    ( "sipmwidth,W",   usr::po::defvalue<double>( 2.0 ),   "SiPM active width [mm]" )
-    ( "sipmrim,R",     usr::po::defvalue<double>( 0.1 ),   "SiPM Rim width [mm]" )
-    ( "sipmstand,S",   usr::po::defvalue<double>( 0.3 ),   "SiPM stand [mm]" )
-    ( "absmult,a",     usr::po::defvalue<double>( 1 ),     "Multple of inbuilt absorption length" )
+    //( "dimplerad,r",   usr::po::defvalue<double>( 3.0 ),   "Dimple radius [mm]" )
+    //( "dimpleind,d",   usr::po::defvalue<double>( 1.5 ),   "Dimple indent [mm]" )
+    //( "dimpletype,T",  usr::po::defvalue<int>( 0 ),        "Dimple Type (0:Spherical, 1:Ellipsoid, 2:FlatDome, 3:Cylinder" )
+    //( "sipmwidth,W",   usr::po::defvalue<double>( 2.0 ),   "SiPM active width [mm]" )
+    //( "sipmrim,R",     usr::po::defvalue<double>( 0.1 ),   "SiPM Rim width [mm]" )
+    //( "sipmstand,S",   usr::po::defvalue<double>( 0.3 ),   "SiPM stand [mm]" )
+    ( "absmult,a",     usr::po::defvalue<double>( 1000 ),     "absorption length at 425nm, unit mm" )
     ( "wrapreflect,m", usr::po::defvalue<double>( 0.985 ), "Wrap reflectivity" )
-    ( "tilealpha,A",   usr::po::defvalue<double>( 0.01 ),  "Tile surface alpha value" )
-    ( "dimplealpha,D", usr::po::defvalue<double>( 0.1 ),   "Dimple surface alpha value" )
-    ( "pcbreflect,p",  usr::po::defvalue<double>( 0.8 ),   "Average reflectivity of Exposed PCB back plane" )
-    ( "pcbradius,b",   usr::po::defvalue<double>( 2.5 ),   "Radius of Exposed PCB back plane" )
+    ( "wrapreflect,m", usr::po::defvalue<double>( 0.985 ), "Wrap reflectivity" )
+    //( "tilealpha,A",   usr::po::defvalue<double>( 0.01 ),  "Tile surface alpha value" )
+    //( "dimplealpha,D", usr::po::defvalue<double>( 0.1 ),   "Dimple surface alpha value" )
+    //( "pcbreflect,p",  usr::po::defvalue<double>( 0.8 ),   "Average reflectivity of Exposed PCB back plane" )
+    //( "pcbradius,b",   usr::po::defvalue<double>( 2.5 ),   "Radius of Exposed PCB back plane" )
     ( "NEvents,N",     usr::po::defvalue<unsigned>( 1 ),   "Number of events to run" )
     ( "useProton",                                         "Flag to switch the source to a true proton source" )
+    ( "handwrap",                                         "Flag to switch to handwrap" )
     ( "output,o",      usr::po::defvalue<std::string>( "test.root" ), "output file" )
   ;
 
@@ -43,23 +45,24 @@ main( int argc, char** argv )
   args.ParseOptions( argc, argv );
 
   const double x_center  = args.Arg<double>( "beamx"       );
-  const double y_center  = args.Arg<double>( "beamy"       );
-  const double tilewidth = args.Arg<double>( "tilewidth"   );
+  const double z_center  = args.Arg<double>( "beamz"       );
+  const double tileZ = args.Arg<double>( "tileZ"   );
   const double width     = args.Arg<double>( "beamwidth"   );
-  const double dimplerad = args.Arg<double>( "dimplerad"   );
-  const double dimpleind = args.Arg<double>( "dimpleind"   );
-  const int dimpletype   = args.Arg<int>( "dimpletype"  );
-  const double sipmwidth = args.Arg<double>( "sipmwidth"   );
-  const double sipmrim   = args.Arg<double>( "sipmrim"     );
-  const double sipmstand = args.Arg<double>( "sipmstand"   );
+  //const double dimplerad = args.Arg<double>( "dimplerad"   );
+  //const double dimpleind = args.Arg<double>( "dimpleind"   );
+  //const int dimpletype   = args.Arg<int>( "dimpletype"  );
+  //const double sipmwidth = args.Arg<double>( "sipmwidth"   );
+  //const double sipmrim   = args.Arg<double>( "sipmrim"     );
+  //const double sipmstand = args.Arg<double>( "sipmstand"   );
   const double absmult   = args.Arg<double>( "absmult"     );
   const double wrapref   = args.Arg<double>( "wrapreflect" );
-  const double tilealpha = args.Arg<double>( "tilealpha"   );
-  const double dimpalpha = args.Arg<double>( "dimplealpha" );
-  const double pcbref    = args.Arg<double>( "pcbreflect"  );
-  const double pcbrad    = args.Arg<double>( "pcbradius"   );
+  //const double tilealpha = args.Arg<double>( "tilealpha"   );
+  //const double dimpalpha = args.Arg<double>( "dimplealpha" );
+  //const double pcbref    = args.Arg<double>( "pcbreflect"  );
+  //const double pcbrad    = args.Arg<double>( "pcbradius"   );
   const unsigned N       = args.Arg<unsigned>( "NEvents" );
   const bool useProton   = args.HasArg( "useProton" );
+  const bool handwrap   = args.HasArg( "handwrap" );
   std::string filename   = args.Arg<std::string>( "output" );
   filename.insert( filename.length()-5, "_" + usr::RandomString( 6 ) );
 
@@ -68,21 +71,21 @@ main( int argc, char** argv )
   LYSimPhysicsList* physlist = new LYSimPhysicsList();
   // Overriding the detector parameters
   LYSimDetectorConstruction* detector = new LYSimDetectorConstruction();
-  detector->SetDimpleRadius( dimplerad );
-  detector->SetDimpleIndent( dimpleind );
-  detector->SetDimpleType( dimpletype );
-  detector->SetTileX( tilewidth );
-  detector->SetTileY( tilewidth );
+  //detector->SetDimpleRadius( dimplerad );
+  //detector->SetDimpleIndent( dimpleind );
+  //detector->SetDimpleType( dimpletype );
+  detector->SetTileZ( tileZ );
   detector->SetTileAbsMult( absmult );
   detector->SetWrapReflect( wrapref );
-  detector->SetTileAlpha( tilealpha );
-  detector->SetDimpleAlpha( dimpalpha );
-  detector->SetSiPMX( sipmwidth );
-  detector->SetSiPMY( sipmwidth );
-  detector->SetSiPMRim( sipmrim );
-  detector->SetSiPMStand( sipmstand );
-  detector->SetPCBReflect( pcbref );
-  detector->SetPCBRadius( pcbrad );
+  //detector->SetTileAlpha( tilealpha );
+  //detector->SetDimpleAlpha( dimpalpha );
+  //detector->SetSiPMX( sipmwidth );
+  //detector->SetSiPMY( sipmwidth );
+  //detector->SetSiPMRim( sipmrim );
+  //detector->SetSiPMStand( sipmstand );
+  //detector->SetPCBReflect( pcbref );
+  //detector->SetPCBRadius( pcbrad );
+  detector->Set_handwrap( handwrap );
 
   runManager->SetUserInitialization( detector );
   runManager->SetUserInitialization( physlist );
@@ -92,7 +95,7 @@ main( int argc, char** argv )
     LYSimPrimaryGeneratorAction* genaction
       = new LYSimPrimaryGeneratorAction( detector );
     genaction->SetBeamX( x_center );
-    genaction->SetBeamY( y_center );
+    genaction->SetBeamY( z_center );
     genaction->SetWidth( width );
     LYSimAnalysis::GetInstance()->SetGeneratorAction( genaction );
     runManager->SetUserAction( genaction );
@@ -100,7 +103,7 @@ main( int argc, char** argv )
     LYSimProtonGeneratorAction* genaction
       = new LYSimProtonGeneratorAction();
     genaction->SetBeamX( x_center );
-    genaction->SetBeamY( y_center );
+    genaction->SetBeamZ( z_center );
     genaction->SetWidth( width );
     LYSimAnalysis::GetInstance()->SetGeneratorAction( genaction );
     runManager->SetUserAction( genaction );

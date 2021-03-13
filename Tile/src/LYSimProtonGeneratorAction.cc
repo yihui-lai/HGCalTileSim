@@ -12,6 +12,7 @@
 #include "G4ParticleTypes.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+#include "TMath.h"
 
 LYSimProtonGeneratorAction::LYSimProtonGeneratorAction() :
   particleSource( new G4GeneralParticleSource() ),
@@ -33,10 +34,10 @@ LYSimProtonGeneratorAction::LYSimProtonGeneratorAction() :
 
   G4SPSAngDistribution* ang = particleSource->GetCurrentSource()->GetAngDist();
   ang->SetAngDistType( "iso" );
-  ang->SetMinTheta( 0 );
-  ang->SetMaxTheta( 0 );
-  ang->SetMinPhi( 0 );
-  ang->SetMaxPhi( 0 );
+  ang->SetMinTheta( TMath::Pi()/2 );
+  ang->SetMaxTheta( TMath::Pi()/2 );
+  ang->SetMinPhi( TMath::Pi()/2 );
+  ang->SetMaxPhi( TMath::Pi()/2 );
 
   // Energy distribution.
   G4SPSEneDistribution* ene = particleSource->GetCurrentSource()->GetEneDist();
@@ -57,9 +58,9 @@ LYSimProtonGeneratorAction::GeneratePrimaries( G4Event* anEvent )
   G4SPSPosDistribution* pos = particleSource->GetCurrentSource()->GetPosDist();
   pos->SetPosDisType( "Plane" );
   pos->SetPosDisShape( "Square" );
-  pos->SetCentreCoords( G4ThreeVector(_beamx, _beamy, -95.0 *mm) );
+  pos->SetCentreCoords( G4ThreeVector(_beamx, 90*mm, _beamz) );
   pos->SetHalfX( 0.5 * _width );
-  pos->SetHalfY( 0.5 * _width );
+  pos->SetHalfZ( 0.5 * _width );
 
   particleSource->GeneratePrimaryVertex( anEvent );
 }
@@ -83,12 +84,12 @@ LYSimProtonGeneratorMessenger::LYSimProtonGeneratorMessenger( LYSimProtonGenerat
   SetBeamXCmd->SetDefaultUnit( "mm" );
   SetBeamXCmd->AvailableForStates( G4State_PreInit, G4State_Idle );
 
-  SetBeamYCmd = new G4UIcmdWithADoubleAndUnit( "/LYSim/SetBeamY", this );
-  SetBeamYCmd->SetGuidance( "Set central Y position of the beam" );
-  SetBeamYCmd->SetParameterName( "BeamY", false );
-  SetBeamYCmd->SetUnitCategory( "Length" );
-  SetBeamYCmd->SetDefaultUnit( "mm" );
-  SetBeamYCmd->AvailableForStates( G4State_PreInit, G4State_Idle );
+  SetBeamZCmd = new G4UIcmdWithADoubleAndUnit( "/LYSim/SetBeamZ", this );
+  SetBeamZCmd->SetGuidance( "Set central Z position of the beam" );
+  SetBeamZCmd->SetParameterName( "BeamZ", false );
+  SetBeamZCmd->SetUnitCategory( "Length" );
+  SetBeamZCmd->SetDefaultUnit( "mm" );
+  SetBeamZCmd->AvailableForStates( G4State_PreInit, G4State_Idle );
 
   SetWidthCmd = new G4UIcmdWithADoubleAndUnit( "/LYSim/SetBeamWidth", this );
   SetWidthCmd->SetGuidance( "Set Width of Beam" );
@@ -103,7 +104,7 @@ LYSimProtonGeneratorMessenger::~LYSimProtonGeneratorMessenger()
 {
   delete detDir;
   delete SetBeamXCmd;
-  delete SetBeamYCmd;
+  delete SetBeamZCmd;
   delete SetWidthCmd;
 }
 
@@ -112,8 +113,8 @@ LYSimProtonGeneratorMessenger::SetNewValue( G4UIcommand* command, G4String val )
 {
   if( command == SetBeamXCmd ){
     genaction->SetBeamX( G4UIcmdWithADoubleAndUnit::GetNewDoubleValue( val ) );
-  } else if( command == SetBeamYCmd ){
-    genaction->SetBeamY( G4UIcmdWithADoubleAndUnit::GetNewDoubleValue( val ) );
+  } else if( command == SetBeamZCmd ){
+    genaction->SetBeamZ( G4UIcmdWithADoubleAndUnit::GetNewDoubleValue( val ) );
   } else if( command == SetWidthCmd ){
     genaction->SetWidth( G4UIcmdWithADoubleAndUnit::GetNewDoubleValue( val ) );
   }
