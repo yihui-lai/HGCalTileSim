@@ -175,7 +175,7 @@ G4Material* Make_Y11(){
 
   G4Material* fPMMA = G4NistManager::Instance()->ConstructNewMaterial("PMMA", elements, natoms, density);
 
-
+/*
   G4double photonEnergy[] =
   {2.00*eV,2.03*eV,2.06*eV,2.09*eV,2.12*eV,
    2.15*eV,2.18*eV,2.21*eV,2.24*eV,2.27*eV,
@@ -188,8 +188,6 @@ G4Material* Make_Y11(){
    3.20*eV,3.23*eV,3.26*eV,3.29*eV,3.32*eV,
    3.35*eV,3.38*eV,3.41*eV,3.44*eV,3.47*eV};
 
-  const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
-
   G4double absWLSfiber[] =
   {5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,
    5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,
@@ -197,28 +195,66 @@ G4Material* Make_Y11(){
    1.10*m,1.10*m,1.10*m,1.10*m,1.10*m,1.10*m, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
     1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm};
 
-  
-  //for(int i=0;i<absWLSfiber.size();i++){
-  //  absWLSfiber.at(i)/=100;
-  //}
-  
   G4double emissionFib[] =
   {0.05, 0.10, 0.30, 0.50, 0.75, 1.00, 1.50, 1.85, 2.30, 2.75,
    3.25, 3.80, 4.50, 5.20, 6.00, 7.00, 8.50, 9.50, 11.1, 12.4,
    12.9, 13.0, 12.8, 12.3, 11.1, 11.0, 12.0, 11.0, 17.0, 16.9,
    15.0, 9.00, 2.50, 1.00, 0.05, 0.00, 0.00, 0.00, 0.00, 0.00,
    0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
+*/
+  G4double photonEnergy[] ={
+2.862439029	*eV,2.840778923	*eV,2.815225831	*eV,2.788754124	*eV,2.756033268	*eV,
+2.741312912	*eV,2.729395813	*eV,2.721518432	*eV,2.707216697	*eV,2.707181235	*eV,
+2.693076188	*eV,2.693035246	*eV,2.67778668	*eV,2.669025741	*eV,2.668951059	*eV,
+2.665291033	*eV,2.66035048	*eV,2.660327649	*eV,2.659175227	*eV,2.659141012	*eV,
+2.651703078	*eV,2.645581665	*eV,2.645536511	*eV,2.640663232	*eV,2.63824174	*eV,
+2.634587028	*eV,2.632171074	*eV,2.626078227	*eV,2.624888601	*eV,2.616425667	*eV,
+2.616398064	*eV,2.609196999	*eV,2.599591613	*eV,2.59122036	*eV,2.585261508	*eV,
+2.584054715	*eV,2.578123376	*eV,2.57219786	*eV,2.560459892	*eV,2.553442102	*eV,
+2.541874304	*eV,2.53611406	*eV,2.530385027	*eV,2.516790443	*eV,2.507816703	*eV,
+2.494493004	*eV,2.482417875	*eV,2.469386576	*eV,2.457557584	*eV,2.447961085	*eV,
+2.438420061	*eV,2.42893409	*eV,2.418492889	*eV,2.417422599	*eV,2.408094304	*eV,
+2.397807939	*eV,2.394710008	*eV,2.386565943	*eV,2.37846796	*eV,2.376439519	*eV,
+2.370420214	*eV,2.366412214	*eV,2.360430055	*eV,2.354482536	*eV,2.348564913	*eV,
+2.343655498	*eV,2.331984293	*eV,2.322358317	*eV,2.312811483	*eV,2.301457528	*eV,
+2.293013889	*eV,2.27724336	*eV,2.266230965	*eV,2.259854057	*eV,2.249910639	*eV,
+2.243625119	*eV,2.232938727	*eV,2.221477748	*eV,2.213613724	*eV,2.203206732	*eV,
+2.188647275	*eV,2.182698942	*eV,2.174263731	*eV,2.161739991	*eV,2.146903611	*eV,
+2.130661072	*eV,2.114658849	*eV,2.091108237	*eV,2.081064162	*eV,2.059000322	*eV,
+2.041098506	*eV,2.032993517	*eV,2.019869653	*eV,2.006917391	*eV,1.992012672	*eV,
+1.962177447	*eV,1.948600936	*eV}
 
+  G4double emissionFib[] =
+  {0.0063, 0.00248, 0.0025, 0.00638, 0.01987, 0.04296, 0.07182, 0.09491, 0.16223, 0.13146, 
+  0.2334, 0.20455, 0.28919, 0.38535, 0.32573, 0.42766, 0.50267, 0.48151, 0.56613, 0.53728, 
+  0.59691, 0.67768, 0.64499, 0.71423, 0.75654, 0.79308, 0.82962, 0.86424, 0.89309, 0.95079, 
+  0.92579, 0.9835, 1.00658, 1.00467, 0.99314, 0.97391, 0.96045, 0.92585, 0.88355, 0.83741, 
+  0.79511, 0.76243, 0.73551, 0.70668, 0.69708, 0.6971, 0.71442, 0.73751, 0.75676, 0.76639, 
+  0.76448, 0.73949, 0.72604, 0.6972, 0.67029, 0.63184, 0.59338, 0.56263, 0.5261, 0.50687, 
+  0.4838, 0.46073, 0.42805, 0.39536, 0.37037, 0.34346, 0.31463, 0.30118, 0.28389, 0.26659, 
+  0.25315, 0.23971, 0.21665, 0.2032, 0.18783, 0.17245, 0.15516, 0.13787, 0.12635, 0.10713, 
+  0.09562, 0.08024, 0.06872, 0.0572, 0.04761, 0.03995, 0.03228, 0.02848, 0.02658, 0.01892, 
+  0.01704, 0.01513, 0.00938, 0.00749, 0.00559, 0.00181, -0.00201};
+
+  const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
+
+  for(int i=0;i<nEntries;i++){
+    absWLSfiber[i]/=100;
+  }
 
   G4double energySmall[]= { 1.0 * eV, 6.0 * eV };
   G4double refractiveIndexWLSfiber[] = { 1.764, 1.764 }; //to make c/n = 1.7
   G4double realabsWLSfiber[] = { 4*m, 4*m}; 
 
+  G4double photonEnergy2[] = {1*eV, 2.6499*eV, 2.65*eV, 2.6501*eV, 6.0 * eV };
+  G4double absWLSfiber[] = {5.40*m, 5.40*m, 2.7*m, 1.*mm, 1.*mm};
+
   // Add entries into properties table
   G4MaterialPropertiesTable* mptWLSfiber = new G4MaterialPropertiesTable();
   mptWLSfiber->AddProperty("RINDEX", energySmall, refractiveIndexWLSfiber, 2);
   mptWLSfiber->AddProperty("WLSCOMPONENT", photonEnergy, emissionFib, nEntries); //WLSCOMPONENT is the relative emission spectrum of the material as a function of the photon's momentum
-  mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy, absWLSfiber, nEntries); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
+  //mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy, absWLSfiber, nEntries); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
+  mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy2, absWLSfiber, 5); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
   mptWLSfiber->AddProperty("ABSLENGTH", energySmall, realabsWLSfiber, 2); //ABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> real absorption
   mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 0 * ns); //accounts for any time delay which may occur between absorption and re-emission of the photon, defalt delta
   mptWLSfiber->AddConstProperty("FASTTIMECONSTANT", 11.5 * ns); //?
