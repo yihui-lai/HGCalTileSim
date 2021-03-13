@@ -1,0 +1,11 @@
+<use name="roofit"/>
+<use name="boost"/>
+<use name="boost_program_options"/>
+<use name="DataFormats/FWLite"/> <!--Required for boost excpetions-->
+
+<flags CXXFLAGS="-g -std=c++17"/>
+<lib name="stdc++fs"/>
+
+<export>
+  <lib name="1"/>
+</export>

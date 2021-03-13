@@ -1,0 +1,236 @@
+// Stylising the search box.
+
+$searchheight: 20px;
+
+#MSearchBox {
+  white-space: nowrap;
+  float: none;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  right: 0px;
+  width: 170px;
+  height: $searchheight;
+  z-index: 102;
+  background: $maincolor;
+
+  .left {
+    display: block;
+    position: absolute;
+    left: 10px;
+    width: 20px;
+    height: $searchheight;
+    background: $background;
+  }
+}
+
+// That little search icon.
+#MSearchSelect {
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: $searchheight;
+  z-index: 105;
+  left: 4px;
+}
+
+// The main search field.
+#MSearchField {
+  display: block;
+  position: absolute;
+  height: $searchheight;
+  background: $background;
+  border: none;
+  width: 115px;
+  //margin-left: 20px;
+  padding-left: 24px;
+  color: black;
+  outline: none;
+  font-family: $mainfont;
+  font-size: 0.6em;
+}
+
+#FSearchBox #MSearchField {
+  margin-left: 15px;
+}
+
+#MSearchBox .right {
+  display: block;
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  width: 20px;
+  height: 19px;
+  background: url('search_r.png') no-repeat;
+  background-position: left;
+}
+
+#MSearchClose {
+  display: none;
+  position: absolute;
+  top: 4px;
+  background: none;
+  border: none;
+  margin: 0px 4px 0px 0px;
+  padding: 0px 0px;
+  outline: none;
+}
+
+.left #MSearchClose {
+  left: 6px;
+}
+
+.right #MSearchClose {
+  right: 2px;
+}
+
+.MSearchBoxActive #MSearchField {
+  color: #000000;
+}
+
+/*---------------- Search filter selection */
+
+// Filter windoes
+#MSearchSelectWindow {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 1px solid lighten($maincolor,10);
+  background-color: $filllight;
+  z-index: 10001;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 4px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+}
+
+span.SelectionMark {
+  margin-right: 4px;
+  font-family: monospace;
+  outline-style: none;
+  text-decoration: none;
+}
+
+a.SelectItem {
+  font-size: 0.6em;
+  border: 0px;
+  display: block;
+  outline-style: none;
+  color: #000000;
+  text-decoration: none;
+  padding-left: 6px;
+  padding-right: 12px;
+
+  &:hover {
+    color: $background;
+    background-color: $maincolor;
+    cursor: pointer;
+    display: block;
+  }
+}
+
+/*---------------- Search results window */
+
+// Not setting a dimension for the results box
+// Letting results entry determine.
+iframe#MSearchResults {
+  min-width: 10em;
+  min-height: 10em;
+}
+
+#MSearchResultsWindow {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 1px solid $maincolor;
+  background-color: $filllight;
+  z-index: 10000;
+}
+
+#SRIndex {
+  clear: both;
+  padding-bottom: 15px;
+}
+
+.SREntry {
+  padding: 1px 5px;
+}
+
+body.SRPage {
+  padding: 1px 5px;
+  margin: 5px 2px;
+}
+
+.SRChildren {
+  padding-left: 3ex;
+  padding-bottom: 0.5em;
+}
+
+.SRPage .SRChildren {
+  display: none;
+}
+
+.SRSymbol {
+  color: $maincolor;
+  font-size: 0.6em;
+  &:hover, &:focus, &:active {
+    text-decoration: underline;
+  }
+}
+
+.SRScope {
+  display: block;
+  color: black;
+  padding-left: 4px;
+  &hover, &:focus, &:active {
+    text-decoration: underline;
+  }
+}
+
+.SRPage .SRStatus {
+  padding: 2px 5px;
+  font-size: 8pt;
+  font-style: italic;
+}
+
+.SRResult {
+  display: none;
+}
+
+DIV.searchresults {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/*---------------- External search page results */
+
+.searchresult {
+  background-color: #F0F3F8;
+}
+
+.pages {
+  b {
+    color: white;
+    padding: 5px 5px 3px 5px;
+    background-image: url("../tab_a.png");
+    background-repeat: repeat-x;
+    text-shadow: 0 1px 1px #000000;
+  }
+
+  line-height: 17px;
+  margin-left: 4px;
+  text-decoration: none;
+}
+
+.hl {
+  font-weight: bold;
+}
+
+#searchresults {
+  margin-bottom: 20px;
+}
+
+.searchpages {
+  margin-top: 10px;
+}

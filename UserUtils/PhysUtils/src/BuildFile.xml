@@ -1,0 +1,12 @@
+<use name="root"/>
+<use name="CondFormats/BTauObjects" />
+<use name="CondTools/BTau" />
+<use name="DataFormats/PatCandidates"/>
+<use name="DataFormats/RecoCandidate"/>
+
+<use name="UserUtils/Common"/>
+
+<flags CXXFLAGS="-g"/>
+<export>
+  <lib   name="1"/>
+</export>

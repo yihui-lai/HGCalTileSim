@@ -1,0 +1,72 @@
+{
+  "channel": {
+    "MuonBaseline": {
+      "Root Name": "1#mu, #geq 4 jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/tstarbaseline/Muon",
+      "Data Prefix": "DataMuon"
+    },
+    "ElectronBaseline": {
+      "Root Name": "1e, #geq 4 jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/tstarbaseline/Electron",
+      "Data Prefix": "DataElectron"
+    },
+    "MuonTopLike": {
+      "Root Name": "1#mu, #geq 4 jets, 2 b jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/toplike/Muon",
+      "Data Prefix": "DataMuon"
+    },
+    "ElectronTopLike": {
+      "Root Name": "1e, #geq 4jets, 2 b jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/toplike/Electron",
+      "Data Prefix": "DataElectron"
+    },
+    "MuonSignal": {
+      "Root Name": "1#mu, #geq 6 jets, 2 b jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/massreco/MuonSignal",
+      "Data Prefix": "DataMuon"
+    },
+    "ElectronSignal": {
+      "Root Name": "1e, #geq 6 jets, 2 b jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/massreco/ElectronSignal",
+      "Data Prefix": "DataElectron"
+    },
+    "MuonControl": {
+      "Root Name": "1#mu, #geq 6 jets, 0 b jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/massreco/MuonControl",
+      "Data Prefix": "DataMuon"
+    },
+    "ElectronControl": {
+      "Root Name": "1e, #geq 6 jets, 0 b jets",
+      "EDM path": "/wk_cms2/yichen/TstarAnalysis/EDMStore_New/massreco/ElectronControl",
+      "Data Prefix": "DataElectron"
+    },
+    "SignalMerge": {
+      "Root Name": "1 lep, #geq 6 jets, 2 b jets",
+      "EDM path": "/dummy/path/",
+      "Data Prefix": "DummyPrefix"
+    }
+  },
+
+  "era": {
+    "Rereco": {
+      "Data Postfix": "All",
+      "Lumi": 35867.060,
+      "EleLumi": 35685.424
+    },
+    "ICHEP": {
+      "Data Postfix": "ICHEP",
+      "Lumi": 12933.109,
+      "EleLumi": 12933.109
+    },
+    "PostHIP": {
+      "Data Postfix": "PostHIP",
+      "Lumi": 7554.454,
+      "EleLumi": 7554.454
+    },
+    "Early": {
+      "Data Postfix": "Early",
+      "Lumi": 5933.692,
+      "EleLumi": 5933.692
+    }
+  }
+}

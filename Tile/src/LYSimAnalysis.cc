@@ -279,7 +279,7 @@ LYSimAnalysis::GetNPhotons( const G4Event* event )
 
   unsigned EventPhotonCount = 0;
 
-  for( int i = 0; i < hits->entries(); ++i ){
+  for( size_t i = 0; i < hits->entries(); ++i ){
     assert( ( *hits )[i]->GetPhotonCount() == 1 );
     ++EventPhotonCount;
   }

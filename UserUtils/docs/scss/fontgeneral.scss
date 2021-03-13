@@ -1,0 +1,29 @@
+// General font settings
+body {
+  font-family: $mainfont;
+  font-size: $fontsize;
+  color: black;
+  background-color: $background;
+}
+
+a {
+  color: $maincolor;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.contents a:visited {
+  color: lighten($maincolor, 10 );
+}
+
+a {
+  &.el {
+    font-weight: bold;
+  }
+
+  &.code, &.line, &.codeRef, &.lineRef {
+    color: #4665A2;
+  }
+}

@@ -1,0 +1,39 @@
+# General C++ exclusion
+*.o
+*.so
+
+# General Python exclusion
+*.pyc
+
+# Swap files
+*.swp
+
+# General data file exclusions
+*.txt
+*.root
+*.log
+log*
+*.cmake
+Makefile
+CMakeFiles/
+CMakeCache.txt
+
+## Python binding-auto generation files
+**/plugins/*.*
+!**/plugins/*.hpp
+!**/plugins/*.xml
+
+# Specific file exclusion
+# [relative/path/to/file]
+docs/html/
+.remote-sync.json
+.vscode/**
+docs/style.css
+docs/style.css.map
+.sass-cache
+testbin/**
+docs/image/**
+
+# Specific file inclusion
+# ![relative/path/to/file]
+!**/CMakeLists.txt

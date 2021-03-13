@@ -1,0 +1,5 @@
+<use name="root"/>
+<use name="DataFormats/FWLite"/>
+<flags CXXFLAGS="-g"/>
+
+<bin name="usrutil_weight_ratio" file="usrutil_weight_ratio.cc"/>

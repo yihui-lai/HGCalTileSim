@@ -25,9 +25,9 @@ inbuilt plotting scripts.
 
 ```bash
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-export SCRAM_ARCH=slc6_amd64_gcc700
-cmsrel CMSSW_10_3_1_patch1
-cd CMSSW_10_3_1_patch1/src
+export SCRAM_ARCH=slc7_amd64_gcc900
+cmsrel CMSSW_11_3_0_pre4
+cd CMSSW_11_3_0_pre4/src
 cmsenv
 
 git clone https://github.com/yimuchen/HGCal-Dimple-Tile.git HGCalTileSim
@@ -83,7 +83,7 @@ In the CMSSW, one has can run the program
 `$CMSSW_BASE/bin/${SCRAM_ARCH}/LYSim_SquareTrigger` with multiple options:
 
 ```bash
->> $CMSSW_BASE/bin/slc6_amd64_gcc700/LYSim_SquareTrigger --help
+>> $CMSSW_BASE/bin/slc7_amd64_gcc900/LYSim_SquareTrigger --help
   -h [ --help ]                     print help options and exit program
 
 Running a run with a certain geometry:

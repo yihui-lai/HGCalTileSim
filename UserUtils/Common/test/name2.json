@@ -1,0 +1,43 @@
+{
+  "fitfunc": {
+    "Fermi": {
+      "Full Name": "Fermi",
+      "Root Name": "N #left(  1+ exp#left( #frac{m-a}{b} #right) #right)"
+    },
+    "Exo": {
+      "Full Name": "Di-jet 0^{th} order",
+      "Root Name": "N #left( (1-x)^{p_{1}} / x^{p_{2}} #right)"
+    },
+    "Lognorm": {
+      "Full Name": "Log-normal",
+      "Root Name": "#frac{N}{m #sigma#sqrt{2#pi}} exp#left(-#frac{ln^{2}(m/m_{0})}{2#sigma^{2}}#right)"
+    },
+    "Landau": {
+      "Full Name": "Landau",
+      "Latex Name": "",
+      "Root Name": "Landau function"
+    },
+    "LogExt3": {
+      "Full Name": "Logn (3^{rd} Order)",
+      "Root Name": "#frac{N}x^{a} exp#left( b #ln^{2}(x) + c #ln^{3}(x) #right)"
+    },
+    "LogExt4": {
+      "Full Name": "Logn (4^{th} Order)",
+      "Root Name": "#frac{N}x^{a} exp#left( b #ln^{2}(x) + c #ln^{3}(x) + d #ln^{4}(x) #right)"
+    },
+    "LogExt5": {
+      "Full Name": "Logn (5^{th} Order)",
+      "Root Name": "#frac{N}x^{a} exp#left( b #ln^{2}(x) + c #ln^{3}(x) + d #ln^{4}(x) #right)"
+    },
+    "Trial": {
+      "Full Name": "Trial",
+      "Root Name": "Trial"
+    }
+  },
+
+  "combine": {
+    "Asymptotic": {
+      "Full Name": "Asymptotic"
+    }
+  }
+}

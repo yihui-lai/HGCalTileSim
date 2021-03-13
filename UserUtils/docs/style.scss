@@ -1,0 +1,21 @@
+// Master style sheet
+// Variable setting and additional imports
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
+
+$mainfont: 'Noto Sans',
+sans-serif;
+$fontsize: 14pt;
+$maincolor: #000088;
+$background: #F8F8F8;
+$maxwidth: 1000px;
+$filllight: #D9F8F8;
+
+// Importing individual components
+@import 'scss/fontgeneral';
+@import 'scss/misc';
+@import 'scss/layout';
+@import 'scss/tabs';
+@import 'scss/search';
+@import "scss/summary";
+@import 'scss/members';
+@import 'scss/directory';
