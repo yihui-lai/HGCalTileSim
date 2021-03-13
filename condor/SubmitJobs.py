@@ -11,95 +11,51 @@ parser.add_argument('--beamx',
                     nargs='+',
                     required=True,
                     help='List of x values of beam center')
-parser.add_argument('--beamy',
-                    '-y',
+parser.add_argument('--beamz',
+                    '-z',
                     type=float,
                     nargs='+',
                     default=[0],
-                    help='List of y values of beam center')
+                    help='List of z values of beam center')
 parser.add_argument('--tilewidth',
-                    '-L',
+                    '-l',
                     type=float,
                     nargs='+',
                     default=[30],
                     help='Tile width')
-parser.add_argument('--dimplerad',
-                    '-r',
+parser.add_argument('--beamidth',
+                    '-w',
                     type=float,
                     nargs='+',
-                    default=[6.0],
-                    help='List of dimple radius to try out')
-parser.add_argument('--dimpleind',
-                    '-d',
-                    type=float,
-                    nargs='+',
-                    default=[0.9],
-                    help='List of dimple indents to try out')
-parser.add_argument('--dimpletype',
-                    '-T',
-                    type=int,
-                    nargs='+',
-                    default=[0],
-                    help='Type of dimple to test out')
-parser.add_argument('--sipmwidth',
-                    '-W',
-                    type=float,
-                    nargs='+',
-                    default=[2.0],
-                    help='SiPM width parameter')
-parser.add_argument('--sipmrim',
-                    '-R',
-                    type=float,
-                    nargs='+',
-                    default=[0.1],
-                    help='SiPM inactive rim width parameter')
-parser.add_argument('--sipmstand',
-                    '-S',
-                    type=float,
-                    nargs='+',
-                    default=[0.3],
-                    help='SiPM stand height')
+                    default=[1.5],
+                    help='beam width parameter')
 parser.add_argument('--absmult',
                     '-a',
                     type=float,
                     nargs='+',
-                    default=[1.],
-                    help='List of tile absorption length multiple')
+                    default=[1000.],
+                    help='List of tile absorption length')
 parser.add_argument('--wrapreflect',
-                    '-w',
+                    '-m',
                     type=float,
                     nargs='+',
                     default=[0.985],
                     help='List of wrap reflectivity')
-parser.add_argument('--tilealpha',
-                    '-A',
-                    type=float,
-                    nargs='+',
-                    default=[0.01],
-                    help='Bulk Tile microfacet alpha value')
-parser.add_argument('--dimplealpha',
-                    '-D',
-                    type=float,
-                    nargs='+',
-                    default=[0.1],
-                    help='Dimple surface Tile microfacet alpha value')
-parser.add_argument('--pcbreflect',
-                    '-p',
-                    type=float,
-                    nargs='+',
-                    default=[0.8],
-                    help='List of pcb reflectivities to test')
-parser.add_argument('--pcbradius',
-                    '-b',
-                    type=float,
-                    nargs='+',
-                    default=[2.5],
-                    help='List of pcb exposed radii to test')
 parser.add_argument('--NEvents',
                     '-N',
                     type=int,
                     default=100,
                     help='Number of events to run')
+parser.add_argument('--useProton',
+                    '-P',
+                    type=int,
+                    default=1,
+                    help='useProton')
+parser.add_argument('--handwrap',
+                    '-H',
+                    type=int,
+                    default=1,
+                    help='handwrap')
 parser.add_argument('--prefix',
                     type=str,
                     default='',
@@ -124,23 +80,19 @@ Arguments             = {2}
 Queue
 """
 
-for x, y, L, r, d, T, a, w, W, p, b, R, S, A, D in [
-    (x, y, L, r, d, T, a, w, W, p, b, R, S, A, D) for x in args.beamx
-    for y in args.beamy for L in args.tilewidth for r in args.dimplerad
-    for d in args.dimpleind for T in args.dimpletype for a in args.absmult
-    for w in args.wrapreflect for W in args.sipmwidth for p in args.pcbreflect
-    for b in args.pcbradius for R in args.sipmrim for S in args.sipmstand
-    for A in args.tilealpha for D in args.dimplealpha
+for x, z, l, w, a, m, in [
+    (x, z, l, w, a, m,) for x in args.beamx
+    for z in args.beamz for l in args.tilewidth 
+    for w in args.beamidth for a in args.absmult
+    for m in args.wrapreflect 
 ]:
 
   def make_str(prefix):
     args_string = '_'.join([
-        'x{0:.1f}'.format(x), 'y{0:.1f}'.format(y), 'L{0:.1f}'.format(L),
-        'r{0:.1f}'.format(r), 'd{0:.1f}'.format(d), 'T{0:d}'.format(T),
-        'a{0:.1f}'.format(a * 100), 'm{0:.1f}'.format(
-            w * 100), 'A{0:0.3f}'.format(A), 'D{0:0.3f}'.format(D),
-        'W{0:.1f}'.format(W), 'P{:.1f}'.format(p * 100), 'Pr{:.1f}'.format(b),
-        'R{0:.1f}'.format(R), 'S{0:.2f}'.format(S),
+        'beamx{0:.1f}'.format(x), 'beamz{0:.1f}'.format(z), 'beamw{0:.1f}'.format(w),
+        'Tilel{0:.1f}'.format(l), 'abs{0:.1f}'.format(a), 'handwrap{0:.0f}'.format(args.handwrap), 
+        'wrapref{0:.1f}'.format(m),
+        'useP{0:.0f}'.format(args.useProton), 
     ])
     return prefix + args.prefix + '_' + args_string.replace('.', 'p')
 
@@ -148,11 +100,9 @@ for x, y, L, r, d, T, a, w, W, p, b, R, S, A, D in [
                                   make_str('hgcal_tilesim') + '.root')
 
   condor_args = ' '.join([
-      '-x {}'.format(x), '-y {}'.format(y), '-L {}'.format(L), '-w 1.5',
-      '-r {}'.format(r), '-d {}'.format(d), '-T {}'.format(T), '-a {}'.format(a),
-      '-m {}'.format(w), '-W {}'.format(W), '-A {}'.format(A), '-D {}'.format(D),
-      '-p {}'.format(p), '-b {}'.format(b), '-R {}'.format(R),
-      '-S {}'.format(S), '-N {}'.format(args.NEvents), '-o {}'.format(
+      '-x {}'.format(x), '-z {}'.format(z), '-l {}'.format(l), '-w {}'.format(w),
+      '-a {}'.format(a), '-m {}'.format(m), '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
+      '-N {}'.format(args.NEvents), '-o {}'.format(
           os.path.abspath(save_filename)),
   ])
 
