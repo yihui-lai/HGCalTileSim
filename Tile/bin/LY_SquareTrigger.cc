@@ -21,8 +21,10 @@ main( int argc, char** argv )
     ( "beamz,z",       usr::po::defvalue<double>( 0 ),     "z center of beam [mm]" )
     ( "tileZ,l",   usr::po::defvalue<double>( 30 ),    "Length of tile [mm]" )
     ( "beamwidth,w",   usr::po::defvalue<double>( 1.5 ),   "width of beam [mm]" )
+    ( "fiberZ,f",   usr::po::defvalue<float>( 5.2 ),   "fiber length [m]" )
+    ( "fiberZshift,s",   usr::po::defvalue<double>( 1.7 ),   "fiber shift [m]" )
     ( "absmult,a",     usr::po::defvalue<double>( 1000 ),     "absorption length at 425nm, unit mm" )
-    ( "wrapreflect,m", usr::po::defvalue<double>( 0.985 ), "Wrap reflectivity" )
+    ( "wrapreflect,m", usr::po::defvalue<float>( 0.985 ), "Wrap reflectivity" )
     ( "NEvents,N",     usr::po::defvalue<unsigned>( 1 ),   "Number of events to run" )
     ( "useProton,P",     usr::po::defvalue<int>( 1 ),  "Flag to switch the source to a true proton source" )
     ( "handwrap,H",      usr::po::defvalue<int>( 0 ),    "Flag to switch to handwrap" )
@@ -37,14 +39,10 @@ main( int argc, char** argv )
   const double z_center  = args.Arg<double>( "beamz"       );
   const double tileZ = args.Arg<double>( "tileZ"   );
   const double width     = args.Arg<double>( "beamwidth"   );
-  //const double dimplerad = args.Arg<double>( "dimplerad"   );
-  //const double dimpleind = args.Arg<double>( "dimpleind"   );
-  //const int dimpletype   = args.Arg<int>( "dimpletype"  );
-  //const double sipmwidth = args.Arg<double>( "sipmwidth"   );
-  //const double sipmrim   = args.Arg<double>( "sipmrim"     );
-  //const double sipmstand = args.Arg<double>( "sipmstand"   );
+  const double fiberZ     = args.Arg<float>( "fiberZ"   );
+  const double fiberZshift     = args.Arg<double>( "fiberZshift"   );
   const double absmult   = args.Arg<double>( "absmult"     );
-  const double wrapref   = args.Arg<double>( "wrapreflect" );
+  const double wrapref   = args.Arg<float>( "wrapreflect" );
   //const double tilealpha = args.Arg<double>( "tilealpha"   );
   //const double dimpalpha = args.Arg<double>( "dimplealpha" );
   //const double pcbref    = args.Arg<double>( "pcbreflect"  );
@@ -64,6 +62,8 @@ main( int argc, char** argv )
   //detector->SetDimpleIndent( dimpleind );
   //detector->SetDimpleType( dimpletype );
   detector->SetTileZ( tileZ );
+  detector->SetFiberZ( fiberZ );
+  detector->SetFiberZoff( fiberZshift );
   detector->SetTileAbsMult( absmult );
   detector->SetWrapReflect( wrapref );
   //detector->SetTileAlpha( tilealpha );

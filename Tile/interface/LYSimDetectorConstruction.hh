@@ -149,11 +149,11 @@ public:
   inline double
   GetFiber_clad_thick() const { return _WLSfiber_clad_thick; }
   void
-  SetFiberZ( const double x ){ _WLSfiberZ = x; }
+  SetFiberZ( const double x ){ _WLSfiberZ = x*CLHEP::m; }
   inline double
   GetFiberZ() const { return _WLSfiberZ; }
   void
-  SetFiberZoff( const double x ){ _WLS_zoff = x; }
+  SetFiberZoff( const double x ){ _WLS_zoff = x*CLHEP::m; }
   inline double
   GetFiberZoff() const { return _WLS_zoff; }
 

@@ -1,0 +1,11 @@
+
+universe              = vanilla
+Executable            = /data/users/yihuilai/Jim_wls/CMSSW_11_3_0_pre4/src/HGCalTileSim/condor/condor-LYSquareTrigger_CMSSW.sh
+should_transfer_files = NO
+Requirements          = TARGET.FileSystemDomain == "privnet"
+request_memory        = 1 GB
+Output                = /data/users/yihuilai/Jim_wls/CMSSW_11_3_0_pre4/src/HGCalTileSim/condor/results/log/log_tilesim_beamx0p0_beamz0p0_beamw1p5_Tilel30p0_FiberL5p2_FiberShift1p7_abs1000p0_handwrap1_wrapref1p0_useP1.stdout
+Error                 = /data/users/yihuilai/Jim_wls/CMSSW_11_3_0_pre4/src/HGCalTileSim/condor/results/log/log_tilesim_beamx0p0_beamz0p0_beamw1p5_Tilel30p0_FiberL5p2_FiberShift1p7_abs1000p0_handwrap1_wrapref1p0_useP1.stderr
+Log                   = /data/users/yihuilai/Jim_wls/CMSSW_11_3_0_pre4/src/HGCalTileSim/condor/results/log/log_tilesim_beamx0p0_beamz0p0_beamw1p5_Tilel30p0_FiberL5p2_FiberShift1p7_abs1000p0_handwrap1_wrapref1p0_useP1.condor
+Arguments             = -x 0.0 -z 0 -l 30 -w 1.5 -f 5.2 -s 1.7 -a 1000.0 -m 0.985 -P 1 -H 1 -N 100 -o /data/users/yihuilai/Jim_wls/CMSSW_11_3_0_pre4/src/HGCalTileSim/condor/results/root/extruded__beamx0p0_beamz0p0_beamw1p5_Tilel30p0_FiberL5p2_FiberShift1p7_abs1000p0_handwrap1_wrapref1p0_useP1.root
+Queue

@@ -29,6 +29,18 @@ parser.add_argument('--beamidth',
                     nargs='+',
                     default=[1.5],
                     help='beam width parameter')
+parser.add_argument('--fiberZ',
+                    '-f',
+                    type=float,
+                    nargs='+',
+                    default=[5.2],
+                    help='fiber length [m]')
+parser.add_argument('--fiberZshift',
+                    '-s',
+                    type=float,
+                    nargs='+',
+                    default=[1.7],
+                    help='fiber z shift [m]')
 parser.add_argument('--absmult',
                     '-a',
                     type=float,
@@ -80,27 +92,32 @@ Arguments             = {2}
 Queue
 """
 
-for x, z, l, w, a, m, in [
-    (x, z, l, w, a, m,) for x in args.beamx
+for x, z, l, w, f, s, a, m, in [
+    (x, z, l, w, f, s, a, m,) for x in args.beamx
     for z in args.beamz for l in args.tilewidth 
-    for w in args.beamidth for a in args.absmult
+    for w in args.beamidth 
+    for f in args.fiberZ
+    for s in args.fiberZshift
+    for a in args.absmult
     for m in args.wrapreflect 
 ]:
 
   def make_str(prefix):
     args_string = '_'.join([
         'beamx{0:.1f}'.format(x), 'beamz{0:.1f}'.format(z), 'beamw{0:.1f}'.format(w),
-        'Tilel{0:.1f}'.format(l), 'abs{0:.1f}'.format(a), 'handwrap{0:.0f}'.format(args.handwrap), 
+        'Tilel{0:.1f}'.format(l), 'FiberL{0:.1f}'.format(f), 
+        'FiberShift{0:.1f}'.format(s),
+        'abs{0:.1f}'.format(a), 'handwrap{0:.0f}'.format(args.handwrap), 
         'wrapref{0:.1f}'.format(m),
         'useP{0:.0f}'.format(args.useProton), 
     ])
     return prefix + args.prefix + '_' + args_string.replace('.', 'p')
 
   save_filename = os.path.abspath(DATA_DIR + '/root/' + '/' +
-                                  make_str('hgcal_tilesim') + '.root')
+                                  make_str('extruded_') + '.root')
 
   condor_args = ' '.join([
-      '-x {}'.format(x), '-z {}'.format(z), '-l {}'.format(l), '-w {}'.format(w),
+      '-x {}'.format(x), '-z {}'.format(z), '-l {}'.format(l), '-w {}'.format(w), '-f {}'.format(f), '-s {}'.format(s),
       '-a {}'.format(a), '-m {}'.format(m), '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
       '-N {}'.format(args.NEvents), '-o {}'.format(
           os.path.abspath(save_filename)),
