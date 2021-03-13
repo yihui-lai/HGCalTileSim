@@ -311,7 +311,7 @@ void LYSimAnalysis::addwlsphoton(){
   format->wlsphotons++;
 }
 void LYSimAnalysis::pushchan3(float t){
-  std::cout<<t<<std::endl;
+  //std::cout<<t<<std::endl;
   format->chan3_photon.push_back(t);
 }
 void LYSimAnalysis::pushchan4(float t){

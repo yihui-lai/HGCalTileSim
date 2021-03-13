@@ -353,8 +353,15 @@ MakeS_SiPM()
 
   G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable();
 
-  table->AddProperty( "EFFICIENCY",   phoE,  efficiency,   nentries );
-  table->AddProperty( "REFLECTIVITY", phoE2, reflectivity, ref_ent  );
+  G4double p_perfectSIPM[] = { 1.0 * eV, 6.0 * eV };
+  G4double refl_perfectSIPM[] = { 0, 0 };
+  G4double effi_perfectSIPM[] = { 1., 1. };
+
+  table->AddProperty("REFLECTIVITY", p_perfectSIPM, refl_perfectSIPM,2);
+  table->AddProperty("EFFICIENCY", p_perfectSIPM, effi_perfectSIPM,2);
+
+  //table->AddProperty( "EFFICIENCY",   phoE,  efficiency,   nentries );
+  //table->AddProperty( "REFLECTIVITY", phoE2, reflectivity, ref_ent  );
   surface->SetMaterialPropertiesTable( table );
   return surface;
 }

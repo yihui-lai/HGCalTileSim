@@ -73,6 +73,7 @@ LYSimSteppingAction::UserSteppingAction( const G4Step* step )
         pmtSD->ProcessHits_constStep( step, NULL );
       }
       break;
+      step->GetTrack()->SetTrackStatus( fStopAndKill );
     }
     default:
       break;
@@ -88,27 +89,33 @@ LYSimSteppingAction::UserSteppingAction( const G4Step* step )
 
 
   G4StepPoint *thePrePoint = step->GetPreStepPoint();
-  G4StepPoint *thePostPoint = step->GetPostStepPoint();
+  //G4StepPoint *thePostPoint = step->GetPostStepPoint();
   G4VPhysicalVolume *thePrePV = thePrePoint->GetPhysicalVolume();
-  G4VPhysicalVolume *thePostPV = thePostPoint->GetPhysicalVolume();
+  //G4VPhysicalVolume *thePostPV = thePostPoint->GetPhysicalVolume();
   G4String thePrePVName = "";
   if (thePrePV) thePrePVName = thePrePV->GetName();
-  G4String thePostPVName = "";
-  if (thePostPV) thePostPVName = thePostPV->GetName();
+  //G4String thePostPVName = "";
+  //if (thePostPV) thePostPVName = thePostPV->GetName();
 
   G4Track *theTrack = step->GetTrack();
-  G4ParticleDefinition *particleType = theTrack->GetDefinition();
 
+  
+  if(theTrack){
+    
+  G4ParticleDefinition *particleType = theTrack->GetDefinition();
   if (particleType == G4OpticalPhoton::OpticalPhotonDefinition()){
-    if(thePrePVName.contains("TileBulkPhysic") && theTrack->GetCurrentStepNumber()==1 && theTrack->GetCreatorProcess()->GetProcessName()=="Scintillation"){
+    
+    if(thePrePVName.contains("TileBulkPhysic") && theTrack->GetCurrentStepNumber()==1 ){ //&& theTrack->GetCreatorProcess()->GetProcessName()=="Scintillation"
          LYSimAnalysis::GetInstance()->addgenphoton();
     }
+    
     if(thePrePVName.contains("PhyhWLSfiber") && theTrack->GetCurrentStepNumber()==1 ){
          LYSimAnalysis::GetInstance()->addwlsphoton();
     }
+    
   }
 
-
+  }
 
 
 }

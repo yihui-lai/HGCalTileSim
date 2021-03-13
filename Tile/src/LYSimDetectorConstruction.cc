@@ -102,16 +102,16 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
 
   // Defining surface list.
   fESROpSurface           = MakeS_RoughMirror();
-  fIdealPolishedOpSurface = MakeS_IdealPolished();
+  //fIdealPolishedOpSurface = MakeS_IdealPolished();
   fTileBulkSurface        = MakeS_RoughInterface( _tile_alpha );
-  fTileDimpleSurface      = MakeS_RoughInterface( _dimple_alpha );
-  fIdealWhiteOpSurface    = MakeS_IdealWhiteSurface();
+  //fTileDimpleSurface      = MakeS_RoughInterface( _dimple_alpha );
+  //fIdealWhiteOpSurface    = MakeS_IdealWhiteSurface();
   fSiPMSurface            = MakeS_SiPM();
-  fPCBSurface             = MakeS_PCBSurface();
+  //fPCBSurface             = MakeS_PCBSurface();
   SetWrapReflect( _wrap_reflect );
 
 //wls
-_handwrap   = false;//true;
+_handwrap   = true;
 
 _hole_radius = 1.0*mm;
 _hole_x1 = -12.5*mm;
@@ -395,9 +395,6 @@ LYSimDetectorConstruction::Construct()
     = new G4LogicalSkinSurface( "SiPMStandSurface"
                               , logicSiPMStand, fIdealWhiteOpSurface );
   
-  G4LogicalSkinSurface* SiPMSurface
-    = new G4LogicalSkinSurface( "SiPMSurface", logicSiPM, fSiPMSurface );
-  
   G4LogicalSkinSurface* PCBSurface
     = new G4LogicalSkinSurface( "PCBSurface", logicPCB, fPCBSurface );
   */
@@ -428,6 +425,8 @@ LYSimDetectorConstruction::Construct()
                                                  , 0
                                                  , checkOverlaps );
 
+  G4LogicalSkinSurface* SiPMSurface
+    = new G4LogicalSkinSurface( "SiPMSurface", logicSiPM, fSiPMSurface );
   ///////////////////////////////////////////////////////////////////////////////
   // Defining surfaces
   ///////////////////////////////////////////////////////////////////////////////

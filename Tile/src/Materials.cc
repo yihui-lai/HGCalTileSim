@@ -1,5 +1,4 @@
 #include "G4NistManager.hh"
-
 #ifdef CMSSW_GIT_HASH
 #include "HGCalTileSim/Tile/interface/Materials.hh"
 #else
@@ -116,7 +115,7 @@ Make_EJ200()
   G4MaterialPropertiesTable *table = new G4MaterialPropertiesTable();
   table->AddProperty("RINDEX", photonE, refrac_idx, flatentries);
   table->AddProperty("FASTCOMPONENT", FAST_Energy, FAST_COMPONENT, NUMENTRIES_1);
-  table->AddConstProperty("SCINTILLATIONYIELD", 10. / keV);
+  table->AddConstProperty("SCINTILLATIONYIELD", 10. / MeV);
   table->AddConstProperty("RESOLUTIONSCALE", 1.0);
   table->AddConstProperty("FASTTIMECONSTANT", 2.5 * ns);
   table->AddConstProperty("YIELDRATIO", 1.0);
