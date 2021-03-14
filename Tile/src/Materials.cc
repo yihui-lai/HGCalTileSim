@@ -256,8 +256,7 @@ G4Material* Make_Y11(){
   //mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy, absWLSfiber, nEntries); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
   mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy2, absWLSfiber, 5); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
   //mptWLSfiber->AddProperty("ABSLENGTH", energySmall, realabsWLSfiber, 2); //ABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> real absorption
-  mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 0 * ns); //accounts for any time delay which may occur between absorption and re-emission of the photon, defalt delta
-  //mptWLSfiber->AddConstProperty("FASTTIMECONSTANT", 11.5 * ns); //?
+  mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 11.5 * ns); //accounts for any time delay which may occur between absorption and re-emission of the photon, defalt delta
 
   fPMMA->SetMaterialPropertiesTable(mptWLSfiber);
 

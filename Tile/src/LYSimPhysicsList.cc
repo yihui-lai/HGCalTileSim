@@ -232,7 +232,8 @@ LYSimPhysicsList::ConstructOp()
   theScintillationProcess->SetScintillationYieldFactor( 1. );
   theScintillationProcess->SetTrackSecondariesFirst( true );
 
-  theWLSProcess->UseTimeProfile( "delta" );
+  //theWLSProcess->UseTimeProfile( "delta" );
+  theWLSProcess->UseTimeProfile( "exponential" );
 
   G4ParticleTable::G4PTblDicIterator* theParticleIterator
     = theParticleTable->GetIterator();

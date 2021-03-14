@@ -129,7 +129,8 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
   format->run_hash = runformat->run_hash;
   format->genphotons = 0;
   format->wlsphotons = 0;
-
+  format->chan3_photon.clear();
+  format->chan4_photon.clear();
 }
 
 void
