@@ -92,6 +92,7 @@ public:
 
   // Material updating functions
   void SetTileAbsMult( const double x );
+  void SetTileScintillation( const double x );
   inline double
   GetTileAbsMult() const { return _absmult; }
 
@@ -252,6 +253,7 @@ private:
   double _WLSfiberZ;
   double _WLSfiber_clad_thick;
   double _WLS_zoff;
+  double _ScintiN;
   G4Material* mfiber;
   G4Material* mfiber_clad;
   G4Material* fcoating;

@@ -47,6 +47,12 @@ parser.add_argument('--absmult',
                     nargs='+',
                     default=[1000.],
                     help='List of tile absorption length')
+parser.add_argument('--LY',
+                    '-y',
+                    type=float,
+                    nargs='+',
+                    default=[10.],
+                    help='light yield /keV')
 parser.add_argument('--wrapreflect',
                     '-m',
                     type=float,
@@ -77,7 +83,7 @@ args = parser.parse_args()
 
 BASE_DIR = os.path.abspath(os.environ['CMSSW_BASE'] + '/src/' +
                            '/HGCalTileSim/condor/')
-DATA_DIR = os.path.abspath(BASE_DIR + '/results/')
+DATA_DIR = os.path.abspath(BASE_DIR + '/test_LY/')
 
 CONDOR_JDL_TEMPLATE = """
 universe              = vanilla
@@ -92,13 +98,15 @@ Arguments             = {2}
 Queue
 """
 
-for x, z, l, w, f, s, a, m, in [
-    (x, z, l, w, f, s, a, m,) for x in args.beamx
-    for z in args.beamz for l in args.tilewidth 
+for x, z, l, w, f, s, a, y, m, in [
+    (x, z, l, w, f, s, a, y, m,) for x in args.beamx
+    for z in args.beamz 
+    for l in args.tilewidth 
     for w in args.beamidth 
     for f in args.fiberZ
     for s in args.fiberZshift
     for a in args.absmult
+    for y in args.LY
     for m in args.wrapreflect 
 ]:
 
@@ -107,7 +115,8 @@ for x, z, l, w, f, s, a, m, in [
         'beamx{0:.1f}'.format(x), 'beamz{0:.1f}'.format(z), 'beamw{0:.1f}'.format(w),
         'Tilel{0:.1f}'.format(l), 'FiberL{0:.1f}'.format(f), 
         'FiberShift{0:.1f}'.format(s),
-        'abs{0:.1f}'.format(a), 'handwrap{0:.0f}'.format(args.handwrap), 
+        'abs{0:.1f}'.format(a), 'LY{0:.1f}'.format(y),
+        'handwrap{0:.0f}'.format(args.handwrap), 
         'wrapref{0:.1f}'.format(m),
         'useP{0:.0f}'.format(args.useProton), 
     ])
@@ -118,7 +127,7 @@ for x, z, l, w, f, s, a, m, in [
 
   condor_args = ' '.join([
       '-x {}'.format(x), '-z {}'.format(z), '-l {}'.format(l), '-w {}'.format(w), '-f {}'.format(f), '-s {}'.format(s),
-      '-a {}'.format(a), '-m {}'.format(m), '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
+      '-a {}'.format(a), '-y {}'.format(y), '-m {}'.format(m), '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
       '-N {}'.format(args.NEvents), '-o {}'.format(
           os.path.abspath(save_filename)),
   ])

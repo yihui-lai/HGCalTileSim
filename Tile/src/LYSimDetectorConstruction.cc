@@ -67,6 +67,7 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   wrapthickness = 0.1*mm;
 
   _absmult      = 1000; //SetTileAbsMult to 1m
+  _ScintiN      = 10; //Set scintillation to 10 /keV
   _wrap_reflect = 0.985;
   _tile_alpha   = 0.01;
   _dimple_alpha = 0.1;
@@ -99,6 +100,7 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   fEJ200    = Make_EJ200();
   fResin    = Make_Resin();
   SetTileAbsMult( _absmult );
+  SetTileScintillation( _ScintiN ); // N/keV
 
   // Defining surface list.
   fESROpSurface           = MakeS_RoughMirror();
@@ -734,6 +736,12 @@ LYSimDetectorConstruction::SetTileAbsMult( const double mult )
   Update_EJ200_AbsLength( fEJ200, _absmult );
 }
 
+void
+LYSimDetectorConstruction::SetTileScintillation( const double mult )
+{
+  _ScintiN = mult;
+  Update_EJ200_Scinti( fEJ200, _ScintiN );
+}
 void
 LYSimDetectorConstruction::SetWrapReflect( const double r )
 {

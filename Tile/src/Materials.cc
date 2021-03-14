@@ -115,7 +115,7 @@ Make_EJ200()
   G4MaterialPropertiesTable *table = new G4MaterialPropertiesTable();
   table->AddProperty("RINDEX", photonE, refrac_idx, flatentries);
   table->AddProperty("FASTCOMPONENT", FAST_Energy, FAST_COMPONENT, NUMENTRIES_1);
-  table->AddConstProperty("SCINTILLATIONYIELD", 10. / MeV);
+  table->AddConstProperty("SCINTILLATIONYIELD", 10. / keV);
   table->AddConstProperty("RESOLUTIONSCALE", 1.0);
   table->AddConstProperty("FASTTIMECONSTANT", 2.5 * ns);
   table->AddConstProperty("YIELDRATIO", 1.0);
@@ -127,8 +127,18 @@ Make_EJ200()
   material->GetIonisation()->SetBirksConstant( 0.126*mm/MeV );
 
   Update_EJ200_AbsLength( material, 1 );
-
+  Update_EJ200_Scinti( material, 10 );
   return material;
+}
+
+void
+Update_EJ200_Scinti(G4Material* material, const double mult)
+{
+
+  G4MaterialPropertiesTable *tabler = material->GetMaterialPropertiesTable();
+  tabler->RemoveConstProperty("SCINTILLATIONYIELD");
+  tabler->AddConstProperty("SCINTILLATIONYIELD", mult / keV);
+
 }
 
 void
