@@ -30,7 +30,7 @@ public:
   inline double
   GetBeamZ() const { return _beamz; }
   inline void
-  SetBeamZ( const double x ){ _beamz = x; }
+  SetBeamZ( const double x ){ _beamz = x;}
   inline double
   GetWidth() const { return _width; }
   inline void

@@ -126,6 +126,7 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
   // All primary vertex's in the event share the same x,y values
   format->beam_x   = event->GetPrimaryVertex()->GetX0();
   format->beam_z   = event->GetPrimaryVertex()->GetZ0();
+  //std::cout<<"(x,y,z)=("<<event->GetPrimaryVertex()->GetX0()<<" "<<event->GetPrimaryVertex()->GetY0()<<" "<<event->GetPrimaryVertex()->GetZ0()<<")"<<std::endl;
   format->run_hash = runformat->run_hash;
   format->genphotons = 0;
   format->wlsphotons = 0;

@@ -34,10 +34,10 @@ LYSimProtonGeneratorAction::LYSimProtonGeneratorAction() :
 
   G4SPSAngDistribution* ang = particleSource->GetCurrentSource()->GetAngDist();
   ang->SetAngDistType( "iso" );
-  ang->SetMinTheta( TMath::Pi()/2 );
-  ang->SetMaxTheta( TMath::Pi()/2 );
-  ang->SetMinPhi( TMath::Pi()/2 );
-  ang->SetMaxPhi( TMath::Pi()/2 );
+  ang->SetMinTheta( 0 );
+  ang->SetMaxTheta( 0 );
+  //ang->SetMinPhi( TMath::Pi()/2 );
+  //ang->SetMaxPhi( TMath::Pi()/2 );
 
   // Energy distribution.
   G4SPSEneDistribution* ene = particleSource->GetCurrentSource()->GetEneDist();
@@ -58,9 +58,10 @@ LYSimProtonGeneratorAction::GeneratePrimaries( G4Event* anEvent )
   G4SPSPosDistribution* pos = particleSource->GetCurrentSource()->GetPosDist();
   pos->SetPosDisType( "Plane" );
   pos->SetPosDisShape( "Square" );
-  pos->SetCentreCoords( G4ThreeVector(_beamx, 90*mm, _beamz) );
   pos->SetHalfX( 0.5 * _width );
-  pos->SetHalfZ( 0.5 * _width );
+  pos->SetHalfY( 0.5 * _width );
+  pos->SetPosRot2(G4ThreeVector( 0., 0, -1 ));
+  pos->SetCentreCoords( G4ThreeVector(_beamx, 90*mm, _beamz) );
 
   particleSource->GeneratePrimaryVertex( anEvent );
 }
