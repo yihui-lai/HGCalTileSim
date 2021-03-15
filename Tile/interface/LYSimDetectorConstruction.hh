@@ -95,6 +95,8 @@ public:
   void SetTileScintillation( const double x );
   inline double
   GetTileAbsMult() const { return _absmult; }
+  double
+  GetTileScintillation() const { return _ScintiN; }
 
   void SetWrapReflect( const double x );
   inline double

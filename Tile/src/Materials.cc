@@ -137,7 +137,7 @@ Update_EJ200_Scinti(G4Material* material, const double mult)
 
   G4MaterialPropertiesTable *tabler = material->GetMaterialPropertiesTable();
   tabler->RemoveConstProperty("SCINTILLATIONYIELD");
-  tabler->AddConstProperty("SCINTILLATIONYIELD", mult / keV);
+  tabler->AddConstProperty("SCINTILLATIONYIELD", mult / MeV);
 
 }
 
