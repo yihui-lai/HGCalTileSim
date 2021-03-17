@@ -111,7 +111,6 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   fSiPMSurface            = MakeS_SiPM();
   //fPCBSurface             = MakeS_PCBSurface();
 
-  SetWrapReflect( _wrap_reflect );
 
 //wls
 _handwrap   = true;
@@ -133,6 +132,7 @@ mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
 
+  SetWrapReflect( _wrap_reflect );
 
 }
 
