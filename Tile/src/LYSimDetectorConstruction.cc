@@ -110,6 +110,7 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   //fIdealWhiteOpSurface    = MakeS_IdealWhiteSurface();
   fSiPMSurface            = MakeS_SiPM();
   //fPCBSurface             = MakeS_PCBSurface();
+
   SetWrapReflect( _wrap_reflect );
 
 //wls
@@ -131,6 +132,7 @@ mfiber  = Make_Y11();
 mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
+
 
 }
 
@@ -760,6 +762,16 @@ LYSimDetectorConstruction::SetWrapReflect( const double r )
     table->AddProperty( "REFLECTIVITY", phoE, reflectivity, nentries );
     fESROpSurface->SetMaterialPropertiesTable( table );
   }
+  G4MaterialPropertiesTable* table2 = fTiO2Surface->GetMaterialPropertiesTable();
+  if( table2 ){
+    table2->RemoveProperty( "REFLECTIVITY" );
+    table2->AddProperty( "REFLECTIVITY", phoE, reflectivity, nentries );
+  } else {
+    table2 = new G4MaterialPropertiesTable();
+    table2->AddProperty( "REFLECTIVITY", phoE, reflectivity, nentries );
+    fTiO2Surface->SetMaterialPropertiesTable( table );
+  }
+  
 }
 
 void
