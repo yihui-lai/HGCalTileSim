@@ -17,6 +17,18 @@ parser.add_argument('--beamz',
                     nargs='+',
                     default=[0],
                     help='List of z values of beam center')
+parser.add_argument('--TileX',
+                    '-X',
+                    type=float,
+                    nargs='+',
+                    default=[50],
+                    help='List of x values of Tile X')
+parser.add_argument('--TileY',
+                    '-Y',
+                    type=float,
+                    nargs='+',
+                    default=[10],
+                    help='List of Y values of Tile X')
 parser.add_argument('--tilewidth',
                     '-l',
                     type=float,
@@ -52,7 +64,7 @@ parser.add_argument('--LY',
                     type=float,
                     nargs='+',
                     default=[10.],
-                    help='light yield /keV')
+                    help='light yield /MeV')
 parser.add_argument('--wrapreflect',
                     '-m',
                     type=float,
@@ -83,7 +95,7 @@ args = parser.parse_args()
 
 BASE_DIR = os.path.abspath(os.environ['CMSSW_BASE'] + '/src/' +
                            '/HGCalTileSim/condor/')
-DATA_DIR = os.path.abspath(BASE_DIR + '/test_LY/')
+DATA_DIR = os.path.abspath(BASE_DIR + '/test_paper/')
 
 CONDOR_JDL_TEMPLATE = """
 universe              = vanilla
@@ -91,16 +103,18 @@ Executable            = {0}/condor-LYSquareTrigger_CMSSW.sh
 should_transfer_files = NO
 Requirements          = TARGET.FileSystemDomain == "privnet"
 request_memory        = 1 GB
-Output                = {1}.stdout
-Error                 = {1}.stderr
-Log                   = {1}.condor
+Output                = {1}.$(ClusterId).$(ProcId).stdout
+Error                 = {1}.$(ClusterId).$(ProcId).stderr
+Log                   = {1}.$(ClusterId).$(ProcId).condor
 Arguments             = {2}
-Queue
+Queue 50
 """
 
-for x, z, l, w, f, s, a, y, m, in [
-    (x, z, l, w, f, s, a, y, m,) for x in args.beamx
+for x, z,X,Y, l, w, f, s, a, y, m, in [
+    (x, z,X,Y, l, w, f, s, a, y, m,) for x in args.beamx
     for z in args.beamz 
+    for X in args.TileX
+    for Y in args.TileY
     for l in args.tilewidth 
     for w in args.beamidth 
     for f in args.fiberZ
@@ -113,7 +127,7 @@ for x, z, l, w, f, s, a, y, m, in [
   def make_str(prefix):
     args_string = '_'.join([
         'beamx{0:.1f}'.format(x), 'beamz{0:.1f}'.format(z), 'beamw{0:.1f}'.format(w),
-        'Tilel{0:.1f}'.format(l), 'FiberL{0:.1f}'.format(f), 
+        'Tilel{0:.1f}'.format(l), 'TileX{0:.1f}'.format(X),'TileY{0:.1f}'.format(Y),'FiberL{0:.1f}'.format(f), 
         'FiberShift{0:.1f}'.format(s),
         'abs{0:.1f}'.format(a), 'LY{0:.1f}'.format(y),
         'handwrap{0:.0f}'.format(args.handwrap), 
@@ -126,7 +140,7 @@ for x, z, l, w, f, s, a, y, m, in [
                                   make_str('extruded_') + '.root')
 
   condor_args = ' '.join([
-      '-x {}'.format(x), '-z {}'.format(z), '-l {}'.format(l), '-w {}'.format(w), '-f {}'.format(f), '-s {}'.format(s),
+      '-x {}'.format(x), '-z {}'.format(z), '-X {}'.format(X),'-Y {}'.format(Y),'-l {}'.format(l), '-w {}'.format(w), '-f {}'.format(f), '-s {}'.format(s),
       '-a {}'.format(a), '-y {}'.format(y), '-m {}'.format(m), '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
       '-N {}'.format(args.NEvents), '-o {}'.format(
           os.path.abspath(save_filename)),
@@ -135,7 +149,7 @@ for x, z, l, w, f, s, a, y, m, in [
   log_filename = os.path.abspath(DATA_DIR + '/log/' + '/' +
                                  make_str('log_tilesim'))
   jdl_filename = os.path.abspath(DATA_DIR + '/condor/' + '/' +
-                                 make_str('hgcal_tilesim') + '.jdl')
+                                 make_str('extruded_') + '.jdl')
   jdl_content = CONDOR_JDL_TEMPLATE.format(BASE_DIR, log_filename, condor_args)
 
   ## Writing jdl files

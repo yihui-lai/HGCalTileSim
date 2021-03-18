@@ -20,6 +20,8 @@ main( int argc, char** argv )
     ( "beamx,x",       usr::po::defvalue<double>( 0 ),     "x center of beam [mm]" )
     ( "beamz,z",       usr::po::defvalue<double>( 0 ),     "z center of beam [mm]" )
     ( "tileZ,l",   usr::po::defvalue<double>( 30 ),    "Length of tile [mm]" )
+    ( "tileX,X",   usr::po::defvalue<double>( 50 ),    "X of tile [mm]" )
+    ( "tileY,Y",   usr::po::defvalue<double>( 10 ),    "Y of tile [mm]" )
     ( "beamwidth,w",   usr::po::defvalue<double>( 1.5 ),   "width of beam [mm]" )
     ( "fiberZ,f",   usr::po::defvalue<float>( 5.2 ),   "fiber length [m]" )
     ( "fiberZshift,s",   usr::po::defvalue<double>( 1.7 ),   "fiber shift [m]" )
@@ -39,6 +41,8 @@ main( int argc, char** argv )
   const double x_center  = args.Arg<double>( "beamx"       );
   const double z_center  = args.Arg<double>( "beamz"       );
   const double tileZ = args.Arg<double>( "tileZ"   );
+  const double tileX = args.Arg<double>( "tileX"   );
+  const double tileY = args.Arg<double>( "tileY"   );
   const double width     = args.Arg<double>( "beamwidth"   );
   const double fiberZ     = args.Arg<float>( "fiberZ"   );
   const double fiberZshift     = args.Arg<double>( "fiberZshift"   );
@@ -64,6 +68,8 @@ main( int argc, char** argv )
   //detector->SetDimpleIndent( dimpleind );
   //detector->SetDimpleType( dimpletype );
   detector->SetTileZ( tileZ );
+  detector->SetTileX( tileX );
+  detector->SetTileY( tileY );
   detector->SetFiberZ( fiberZ );
   detector->SetFiberZoff( fiberZshift );
   detector->SetTileAbsMult( absmult );

@@ -27,8 +27,8 @@ LYSimProtonGeneratorAction::LYSimProtonGeneratorAction() :
    * session, look at:
    * http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/GettingStarted/generalParticleSource.html
    */
-  particleSource->SetParticleDefinition(
-    G4Proton::ProtonDefinition() );
+  particleSource->SetParticleDefinition( G4Proton::ProtonDefinition() );
+  //particleSource->SetParticleDefinition( G4Muon::MuonDefinition() );
   particleSource->GetCurrentSource()->SetNumberOfParticles( 1 );
 
 
@@ -42,7 +42,7 @@ LYSimProtonGeneratorAction::LYSimProtonGeneratorAction() :
   // Energy distribution.
   G4SPSEneDistribution* ene = particleSource->GetCurrentSource()->GetEneDist();
   ene->SetEnergyDisType( "Mono" );
-  ene->SetMonoEnergy( 120 * GeV );
+  ene->SetMonoEnergy( 1 * GeV );
 }
 
 LYSimProtonGeneratorAction::~LYSimProtonGeneratorAction()

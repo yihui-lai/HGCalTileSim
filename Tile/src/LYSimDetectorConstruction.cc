@@ -116,7 +116,7 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
 _handwrap   = true;
 
 _hole_radius = 1.0*mm;
-_hole_x1 = -12.5*mm;
+_hole_x1 = 0;//-12.5*mm;
 _hole_x2 = 12.5*mm;
 
 _WLSfiberR = 0.7*mm;
@@ -192,9 +192,11 @@ LYSimDetectorConstruction::Construct()
   G4VSolid* solidWrap1 = new G4SubtractionSolid( "solidWrap"
                             , solidWrap0, solidHoleBound
                             , 0, G4ThreeVector( _hole_x1, 0, 0 ) );
+
   G4VSolid* solidWrap = new G4SubtractionSolid( "solidWrap"
                             , solidWrap1, solidHoleBound
                             , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
+
   logicWrap = new G4LogicalVolume( solidWrap, fEpoxy,  "Wrap" );
 
   G4VPhysicalVolume* physWrap = new G4PVPlacement( 0
@@ -241,12 +243,13 @@ LYSimDetectorConstruction::Construct()
     = new G4SubtractionSolid( "TileSolid_Bulk"
                             , solidTile, solidHoleBound
                             , 0, G4ThreeVector( _hole_x1, 0, 0 ) );
+/*
   G4VSolid* tileBulk
     = new G4SubtractionSolid( "TileSolid_Bulk"
                             , tileBulk1, solidHoleBound
                             , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
-
-  G4LogicalVolume* logicTileBulk = new G4LogicalVolume( tileBulk
+*/
+  G4LogicalVolume* logicTileBulk = new G4LogicalVolume( tileBulk1
                                                       , fEJ200
                                                       , "TileBulkLogic" );
   G4VPhysicalVolume* physTileBulk = new G4PVPlacement( 0
@@ -654,7 +657,7 @@ LYSimDetectorConstruction::WorldHalfY() const
 double
 LYSimDetectorConstruction::WorldHalfZ() const
 {
-  return 10*m;
+  return 40*m;
 }
 
 double

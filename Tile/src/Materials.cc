@@ -256,7 +256,7 @@ G4Material* Make_Y11(){
 
   G4double realabs_e[]={2.469788905	*eV,2.46085797	*eV,2.450328967	*eV,2.441473547	*eV,2.431120857	*eV,2.422141814	*eV,2.4119624	*eV,2.403099844	*eV,2.393371904	*eV,2.384929095	*eV,2.375382911	*eV,2.365587418	*eV,2.356763874	*eV,2.348034364	*eV,2.339321619	*eV,2.321568287	*eV,2.295443157	*eV,2.278841635	*eV,2.253935662	*eV,2.2134774	*eV,2.174693096	*eV,};
   G4double realabsWLSfiber[] = { 2.64495	*m,2.40574	*m,2.80068	*m,3.07617	*m,3.37919	*m,3.26865	*m,3.48896	*m,3.58062	*m,3.87446	*m,4.09481	*m,4.09454	*m,4.3516	*m,4.48921	*m,4.37866	*m,4.68171	*m,4.8742	*m,5.11237	*m,5.78281	*m,5.98422	*m,5.97371	*m,5.98159	*m,}; 
-
+  const G4int nEntries_realabs = sizeof(realabs_e)/sizeof(G4double);
 
   // Add entries into properties table
   G4MaterialPropertiesTable* mptWLSfiber = new G4MaterialPropertiesTable();
@@ -264,7 +264,7 @@ G4Material* Make_Y11(){
   mptWLSfiber->AddProperty("WLSCOMPONENT", photonEnergy, emissionFib, nEntries); //WLSCOMPONENT is the relative emission spectrum of the material as a function of the photon's momentum
   //mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy, absWLSfiber, nEntries); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
   mptWLSfiber->AddProperty("WLSABSLENGTH", photonEnergy2, absWLSfiber, 5); //WLSABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> re-emit
-  mptWLSfiber->AddProperty("ABSLENGTH", realabs_e, realabsWLSfiber, 2); //ABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> real absorption
+  mptWLSfiber->AddProperty("ABSLENGTH", realabs_e, realabsWLSfiber,nEntries_realabs); //ABSLENGTH is the absorption length of the material as a function of the photon's momentum. -> real absorption
   mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 11.5 * ns); //accounts for any time delay which may occur between absorption and re-emission of the photon, defalt delta
 
   fPMMA->SetMaterialPropertiesTable(mptWLSfiber);
