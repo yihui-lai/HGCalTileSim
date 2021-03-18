@@ -268,7 +268,7 @@ LYSimDetectorConstruction::Construct()
   ///////////////////////////////////////////////////////////////////////////////
   assert(_hole_radius>=_WLSfiberR+_WLSfiber_clad_thick); 
   //fiber hole
-  G4VSolid* solidHole = new G4Tubs("Hole", 0., _hole_radius, _tilez, 0. * deg, 360. * deg);
+  G4VSolid* solidHole = new G4Tubs("Hole", _WLSfiberR+_WLSfiber_clad_thick, _hole_radius, _tilez*0.5, 0. * deg, 360. * deg);
   G4LogicalVolume* fLogicHole = new G4LogicalVolume(solidHole, fholemat, "Hole");
   G4VPhysicalVolume* fPhysiHole = new G4PVPlacement(0, G4ThreeVector(_hole_x1, 0, 0), fLogicHole, "Hole", logicWorld, false, 0);
 
@@ -279,14 +279,14 @@ LYSimDetectorConstruction::Construct()
   G4VPhysicalVolume* physWLSfiber = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
                                                       , logicWLSfiber
                                                       , "PhyhWLSfiber"
-                                                      , fLogicHole
+                                                      , logicWorld
                                                       , false
                                                       , 0
                                                       , checkOverlaps );
   G4VPhysicalVolume* physWLSfiber_clad = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
                                                       , logicWLSfiber_clad
                                                       , "PhyhWLSfiber_cald"
-                                                      , fLogicHole
+                                                      , logicWorld
                                                       , false
                                                       , 0
                                                       , checkOverlaps );
