@@ -248,8 +248,8 @@ G4Material* Make_Y11(){
   //}
 
   G4double energySmall[]= { 1.0 * eV, 6.0 * eV };
-  G4double refractiveIndexWLSfiber[] = { 1.764, 1.764 }; //to make c/n = 1.7
-
+  //G4double refractiveIndexWLSfiber[] = { 1.764, 1.764 }; //to make c/n = 1.7
+  G4double refractiveIndexWLSfiber[] = { 1.875, 1.875 }; //to make c/n = 1.6
   //cut at 500nm
   G4double photonEnergy2[] = {1*eV, 2.4799*eV, 2.48*eV, 2.4801*eV, 6.0 * eV };
   G4double absWLSfiber[] = {5.40*m, 5.40*m, 2.7*m, 1.*mm, 1.*mm};

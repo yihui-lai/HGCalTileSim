@@ -192,12 +192,12 @@ LYSimDetectorConstruction::Construct()
   G4VSolid* solidWrap1 = new G4SubtractionSolid( "solidWrap"
                             , solidWrap0, solidHoleBound
                             , 0, G4ThreeVector( _hole_x1, 0, 0 ) );
-
+/*
   G4VSolid* solidWrap = new G4SubtractionSolid( "solidWrap"
                             , solidWrap1, solidHoleBound
                             , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
-
-  logicWrap = new G4LogicalVolume( solidWrap, fEpoxy,  "Wrap" );
+*/
+  logicWrap = new G4LogicalVolume( solidWrap1, fEpoxy,  "Wrap" );
 
   G4VPhysicalVolume* physWrap = new G4PVPlacement( 0
                                                  , G4ThreeVector( 0, 0, 0 )

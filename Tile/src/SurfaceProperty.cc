@@ -355,7 +355,7 @@ MakeS_SiPM()
 
   G4double p_perfectSIPM[] = { 1.0 * eV, 6.0 * eV };
   G4double refl_perfectSIPM[] = { 0, 0 };
-  G4double effi_perfectSIPM[] = { 1., 1. };
+  G4double effi_perfectSIPM[] = { 0.3, 0.3 };
 
   table->AddProperty("REFLECTIVITY", p_perfectSIPM, refl_perfectSIPM,2);
   table->AddProperty("EFFICIENCY", p_perfectSIPM, effi_perfectSIPM,2);
