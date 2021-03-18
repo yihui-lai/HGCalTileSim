@@ -131,8 +131,10 @@ mfiber  = Make_Y11();
 mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
-
-  SetWrapReflect( _wrap_reflect );
+opSurface =  new G4OpticalSurface("RoughSurface", glisur, ground, dielectric_dielectric, 1);
+//fholemat = Make_Custom_Air();
+fholemat = Make_Resin();
+SetWrapReflect( _wrap_reflect );
 
 }
 
@@ -265,6 +267,11 @@ LYSimDetectorConstruction::Construct()
   // fiber. single layer clad
   ///////////////////////////////////////////////////////////////////////////////
   assert(_hole_radius>=_WLSfiberR+_WLSfiber_clad_thick); 
+  //fiber hole
+  G4VSolid* solidHole = new G4Tubs("Hole", 0., _hole_radius, _tilez, 0. * deg, 360. * deg);
+  G4LogicalVolume* fLogicHole = new G4LogicalVolume(solidHole, fholemat, "Hole");
+  G4VPhysicalVolume* fPhysiHole = new G4PVPlacement(0, G4ThreeVector(_hole_x1, 0, 0), fLogicHole, "Hole", logicWorld, false, 0);
+
   G4VSolid* solidWLSfiber = new G4Tubs("WLSFiber", 0., _WLSfiberR, _WLSfiberZ, 0., 2*pi);
   G4VSolid* solidWLSfiber_clad = new G4Tubs("WLSFiber_clad", _WLSfiberR, _WLSfiberR+_WLSfiber_clad_thick, _WLSfiberZ, 0., 2*pi);
   G4LogicalVolume* logicWLSfiber = new G4LogicalVolume( solidWLSfiber , mfiber,  "logicWLSfiber" );
@@ -272,19 +279,18 @@ LYSimDetectorConstruction::Construct()
   G4VPhysicalVolume* physWLSfiber = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
                                                       , logicWLSfiber
                                                       , "PhyhWLSfiber"
-                                                      , logicWorld
+                                                      , fLogicHole
                                                       , false
                                                       , 0
                                                       , checkOverlaps );
   G4VPhysicalVolume* physWLSfiber_clad = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
                                                       , logicWLSfiber_clad
                                                       , "PhyhWLSfiber_cald"
-                                                      , logicWorld
+                                                      , fLogicHole
                                                       , false
                                                       , 0
                                                       , checkOverlaps );
-  //TODO: surface properties
-  /*
+  //TODO: surface properties    
   G4LogicalSkinSurface* FiberSurface =
     new G4LogicalSkinSurface( "FiberSurface"
                               , logicWLSfiber_clad, fTiO2Surface );  
@@ -293,7 +299,7 @@ LYSimDetectorConstruction::Construct()
                                    physWorld, opSurface);
         new G4LogicalBorderSurface("surfaceClad1In", physWorld, physWLSfiber_clad,
                                    opSurface);
-                                   */
+                                   
   ///////////////////////////////////////////////////////////////////////////////
   // realistic SiPM
   ///////////////////////////////////////////////////////////////////////////////

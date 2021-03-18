@@ -259,8 +259,9 @@ private:
   G4Material* mfiber;
   G4Material* mfiber_clad;
   G4Material* fcoating;
+  G4Material* fholemat;
   G4OpticalSurface* fTiO2Surface;
-
+  G4OpticalSurface* opSurface;
 };
 
 #endif

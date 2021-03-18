@@ -130,7 +130,8 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
   format->run_hash = runformat->run_hash;
   format->genphotons = 0;
   format->wlsphotons = 0;
-  format->detectphotons = 0;
+  format->detectphotons3 = 0;
+  format->detectphotons4 = 0;
   format->chan3_photon.clear();
   format->chan4_photon.clear();
 }
@@ -316,11 +317,11 @@ void LYSimAnalysis::addwlsphoton(){
 void LYSimAnalysis::pushchan3(float t){
   //std::cout<<t<<std::endl;
   format->chan3_photon.push_back(t);
-  format->detectphotons++;
+  format->detectphotons3++;
 }
 void LYSimAnalysis::pushchan4(float t){
   format->chan4_photon.push_back(t);
-  format->detectphotons++;
+  format->detectphotons4++;
 }
 
 

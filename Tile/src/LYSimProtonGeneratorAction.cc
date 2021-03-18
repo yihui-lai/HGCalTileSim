@@ -42,7 +42,7 @@ LYSimProtonGeneratorAction::LYSimProtonGeneratorAction() :
   // Energy distribution.
   G4SPSEneDistribution* ene = particleSource->GetCurrentSource()->GetEneDist();
   ene->SetEnergyDisType( "Mono" );
-  ene->SetMonoEnergy( 1 * GeV );
+  ene->SetMonoEnergy( 10 * GeV );
 }
 
 LYSimProtonGeneratorAction::~LYSimProtonGeneratorAction()

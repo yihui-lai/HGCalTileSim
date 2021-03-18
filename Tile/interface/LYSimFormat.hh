@@ -30,7 +30,8 @@ public:
   double beam_z;
   int genphotons;
   int wlsphotons;
-  int detectphotons;
+  int detectphotons3;
+  int detectphotons4;
   std::vector<float> chan3_photon;
   std::vector<float> chan4_photon;
 /*
@@ -51,7 +52,8 @@ public:
     tree->Branch( "BeamZ",        &beam_z       );
     tree->Branch( "genphotons",   &genphotons   );
     tree->Branch( "wlsphotons",     &wlsphotons     );
-    tree->Branch( "detectphotons",     &detectphotons     );
+    tree->Branch( "detectphotons3",     &detectphotons3     );
+    tree->Branch( "detectphotons4",     &detectphotons4     );
     tree->Branch( "chan3_photon",     &chan3_photon     );
     tree->Branch( "chan4_photon",     &chan4_photon     );
 /*
@@ -84,7 +86,8 @@ public:
     tree->SetBranchAddress( "BeamZ",             &beam_z       );
     tree->SetBranchAddress( "genphotons",        &genphotons   );
     tree->SetBranchAddress( "wlsphotons",          &wlsphotons     );
-    tree->SetBranchAddress( "detectphotons",          &detectphotons     );
+    tree->SetBranchAddress( "detectphotons3",          &detectphotons3     );
+    tree->SetBranchAddress( "detectphotons4",          &detectphotons4     );
     tree->SetBranchAddress( "chan3_photon",     &chan3_photon     );
     tree->SetBranchAddress( "chan4_photon",     &chan4_photon     );
 /*
