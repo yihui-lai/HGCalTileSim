@@ -131,7 +131,7 @@ mfiber  = Make_Y11();
 mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
-opSurface =  new G4OpticalSurface("RoughSurface", glisur, ground, dielectric_dielectric, 1);
+opSurface =  MakeS_Mirror();//new G4OpticalSurface("RoughSurface", glisur, ground, dielectric_dielectric, 1);
 //fholemat = Make_Custom_Air();
 fholemat = Make_Resin();
 SetWrapReflect( _wrap_reflect );
@@ -185,7 +185,7 @@ LYSimDetectorConstruction::Construct()
   ///////////////////////////////////////////////////////////////////////////////
   G4VSolid* solidHoleBound = new G4Tubs( "TileDimpleBox"
                                          , 0, _hole_radius
-                                         , _tilez*1.5
+                                         , _tilez*2
                                          , 0, 2*pi  );
   G4LogicalVolume* logicWrap;
 
@@ -272,8 +272,8 @@ LYSimDetectorConstruction::Construct()
   G4LogicalVolume* fLogicHole = new G4LogicalVolume(solidHole, fholemat, "Hole");
   G4VPhysicalVolume* fPhysiHole = new G4PVPlacement(0, G4ThreeVector(_hole_x1, 0, 0), fLogicHole, "Hole", logicWorld, false, 0);
 
-  G4VSolid* solidWLSfiber = new G4Tubs("WLSFiber", 0., _WLSfiberR, _WLSfiberZ, 0., 2*pi);
-  G4VSolid* solidWLSfiber_clad = new G4Tubs("WLSFiber_clad", _WLSfiberR, _WLSfiberR+_WLSfiber_clad_thick, _WLSfiberZ, 0., 2*pi);
+  G4VSolid* solidWLSfiber = new G4Tubs("WLSFiber", 0., _WLSfiberR, _WLSfiberZ*0.5, 0., 2*pi);
+  G4VSolid* solidWLSfiber_clad = new G4Tubs("WLSFiber_clad", _WLSfiberR, _WLSfiberR+_WLSfiber_clad_thick, _WLSfiberZ*0.5, 0., 2*pi);
   G4LogicalVolume* logicWLSfiber = new G4LogicalVolume( solidWLSfiber , mfiber,  "logicWLSfiber" );
   G4LogicalVolume* logicWLSfiber_clad = new G4LogicalVolume( solidWLSfiber_clad , mfiber_clad,  "logicWLSfiber_clad" );
   G4VPhysicalVolume* physWLSfiber = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
@@ -291,6 +291,11 @@ LYSimDetectorConstruction::Construct()
                                                       , 0
                                                       , checkOverlaps );
   //TODO: surface properties    
+        new G4LogicalBorderSurface("surfaceClad1Out", physWLSfiber,
+                                   physWLSfiber_clad, opSurface);
+        new G4LogicalBorderSurface("surfaceClad1in", physWLSfiber_clad,
+                                   physWLSfiber, opSurface);
+/*
   G4LogicalSkinSurface* FiberSurface =
     new G4LogicalSkinSurface( "FiberSurface"
                               , logicWLSfiber_clad, fTiO2Surface );  
@@ -299,7 +304,7 @@ LYSimDetectorConstruction::Construct()
                                    physWorld, opSurface);
         new G4LogicalBorderSurface("surfaceClad1In", physWorld, physWLSfiber_clad,
                                    opSurface);
-                                   
+*/                                   
   ///////////////////////////////////////////////////////////////////////////////
   // realistic SiPM
   ///////////////////////////////////////////////////////////////////////////////
@@ -416,10 +421,9 @@ LYSimDetectorConstruction::Construct()
   ///////////////////////////////////////////////////////////////////////////////
   // Simple version of SiPM
   ///////////////////////////////////////////////////////////////////////////////
-  const G4ThreeVector SiPMOffset_chan3( _hole_x1, 0, _WLSfiberZ - _WLS_zoff + 0.8*_sipm_z);  
-  const G4ThreeVector SiPMOffset_chan4( _hole_x1, 0, -_WLSfiberZ - _WLS_zoff - 0.8*_sipm_z);
-  //G4Box* solidSiPMInnerBox = new G4Box( "solidSiPMInnerBox", 0.5*_sipm_x, 0.5*_sipm_y,  0.8*_sipm_z );
-  G4Tubs* solidSiPMInnerBox = new G4Tubs( "solidSiPMInnerBox", 0., _WLSfiberR+_WLSfiber_clad_thick, 0.8*_sipm_z , 0., 2*pi);
+  const G4ThreeVector SiPMOffset_chan3( _hole_x1, 0, _WLSfiberZ - _WLS_zoff + 0.5*_sipm_z);  
+  const G4ThreeVector SiPMOffset_chan4( _hole_x1, 0, -_WLSfiberZ - _WLS_zoff - 0.5*_sipm_z);
+  G4Tubs* solidSiPMInnerBox = new G4Tubs( "solidSiPMInnerBox", 0., _WLSfiberR+_WLSfiber_clad_thick, _sipm_z*0.5, 0., 2*pi);
   G4LogicalVolume* logicSiPM = new G4LogicalVolume( solidSiPMInnerBox
                                                   , fBialkali,  "SiPM" );
                                                   
@@ -437,9 +441,14 @@ LYSimDetectorConstruction::Construct()
                                                  , false
                                                  , 0
                                                  , checkOverlaps );
-
+/*
   G4LogicalSkinSurface* SiPMSurface
     = new G4LogicalSkinSurface( "SiPMSurface", logicSiPM, fSiPMSurface );
+*/
+    new G4LogicalBorderSurface("SiPMSurface3_out", physWLSfiber,
+                                   physSiPM_chan3, fSiPMSurface);
+    new G4LogicalBorderSurface("SiPMSurface4_out", physWLSfiber,
+                                   physSiPM_chan4, fSiPMSurface);
   ///////////////////////////////////////////////////////////////////////////////
   // Defining surfaces
   ///////////////////////////////////////////////////////////////////////////////

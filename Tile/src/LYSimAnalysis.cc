@@ -116,7 +116,7 @@ LYSimAnalysis::PrepareNewRun( const G4Run* )
   }
 
 #ifdef CMSSW_GIT_HASH
-  runformat->UpdateHash();
+  //runformat->UpdateHash();
 #endif
 }
 
@@ -127,11 +127,12 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
   format->beam_x   = event->GetPrimaryVertex()->GetX0();
   format->beam_z   = event->GetPrimaryVertex()->GetZ0();
   //std::cout<<"(x,y,z)=("<<event->GetPrimaryVertex()->GetX0()<<" "<<event->GetPrimaryVertex()->GetY0()<<" "<<event->GetPrimaryVertex()->GetZ0()<<")"<<std::endl;
-  format->run_hash = runformat->run_hash;
+  //format->run_hash = runformat->run_hash;
   format->genphotons = 0;
   format->wlsphotons = 0;
   format->detectphotons3 = 0;
   format->detectphotons4 = 0;
+  format->dt_firstphoton = -999;
   format->chan3_photon.clear();
   format->chan4_photon.clear();
 }
@@ -229,8 +230,17 @@ LYSimAnalysis::EndOfEvent( const G4Event* event )
     assert( saveindex == num_hit_photons + num_los_photons );
   }
 */
+
+      if(format->chan3_photon.size()!=0&&format->chan4_photon.size()!=0){
+          double t_mean1=format->chan3_photon.at(0);
+          double t_mean2=format->chan4_photon.at(0);
+          for( unsigned i=1;i<format->chan3_photon.size();i++ ){if(t_mean1>format->chan3_photon.at(i)) t_mean1=format->chan3_photon.at(i);}
+          for( unsigned i=1;i<format->chan4_photon.size();i++ ){if(t_mean2>format->chan4_photon.at(i)) t_mean2=format->chan4_photon.at(i);}
+          format->dt_firstphoton = t_mean2-t_mean1 ;
+      }
+
 #ifdef CMSSW_GIT_HASH
-  format->UpdateHash();
+  //format->UpdateHash();
 #endif
 
   // Filling the tree
@@ -249,7 +259,7 @@ void
 LYSimAnalysis::EndOfRun( const G4Run* )
 {
   runtree->Fill();
-  runtree->Write( NULL, TObject::kOverwrite );
+  //runtree->Write();// NULL, TObject::kOverwrite );
 }
 
 void
@@ -260,8 +270,8 @@ LYSimAnalysis::EndOfExperiment()
     runtree->Fill();
   }
 
-  runtree->Write( NULL, TObject::kOverwrite );
-  tree->Write( NULL, TObject::kOverwrite );
+  runtree->Write();// NULL, TObject::kOverwrite );
+  tree->Write();// NULL, TObject::kOverwrite );
   file->Close();
 }
 

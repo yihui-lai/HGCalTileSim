@@ -188,7 +188,7 @@ MakeS_Mirror()
 {
   const unsigned nentries       = 2;
   double phoE[nentries]         = {1.0*eV, 6.0*eV};
-  double reflectivity[nentries] = {0.9, 0.9};
+  double reflectivity[nentries] = {1.0, 1.0};
   //////////////////////////////////
   // Mirror surface
   //////////////////////////////////
@@ -389,7 +389,6 @@ MakeS_PCBSurface()
 
 
 //wls
-
 G4OpticalSurface*
 MakeS_TiO2Surface()
 {
@@ -411,3 +410,5 @@ MakeS_TiO2Surface()
 
   return TiO2Surface;
 }
+
+
