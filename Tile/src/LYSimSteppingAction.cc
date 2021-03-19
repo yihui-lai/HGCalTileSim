@@ -100,21 +100,12 @@ LYSimSteppingAction::UserSteppingAction( const G4Step* step )
   G4Track *theTrack = step->GetTrack();
 
   
-  if(theTrack){
-    
+  if(theTrack){ 
   G4ParticleDefinition *particleType = theTrack->GetDefinition();
-  if (particleType == G4OpticalPhoton::OpticalPhotonDefinition()){
-    
-    if(thePrePVName.contains("TileBulkPhysic") && theTrack->GetCurrentStepNumber()==1 ){ //&& theTrack->GetCreatorProcess()->GetProcessName()=="Scintillation"
-         LYSimAnalysis::GetInstance()->addgenphoton();
-    }
-    
-    if(thePrePVName.contains("PhyhWLSfiber") && theTrack->GetCurrentStepNumber()==1 ){
-         LYSimAnalysis::GetInstance()->addwlsphoton();
-    }
-    
+  if (particleType == G4OpticalPhoton::OpticalPhotonDefinition() && theTrack->GetCurrentStepNumber()==1 ){
+      if(thePrePVName.contains("PhyhWLSfiber")) LYSimAnalysis::GetInstance()->addwlsphoton();
+      else LYSimAnalysis::GetInstance()->addgenphoton();
   }
-
   }
 
 

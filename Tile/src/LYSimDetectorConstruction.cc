@@ -416,7 +416,6 @@ LYSimDetectorConstruction::Construct()
   G4LogicalSkinSurface* PCBSurface
     = new G4LogicalSkinSurface( "PCBSurface", logicPCB, fPCBSurface );
   */
-
   
   ///////////////////////////////////////////////////////////////////////////////
   // Simple version of SiPM
