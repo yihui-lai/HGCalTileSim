@@ -359,7 +359,15 @@ MakeS_SiPM()
   //G4double effi_perfectSIPM[] = { 0.3, 0.3 };
 
   table->AddProperty("REFLECTIVITY", p_perfectSIPM, refl_perfectSIPM,2);
-  table->AddProperty("EFFICIENCY", p_perfectSIPM, effi_perfectSIPM,2);
+  //table->AddProperty("EFFICIENCY", p_perfectSIPM, effi_perfectSIPM,2);
+
+  //31
+  G4double p_perfect_APD[] = { 
+3.103118634*eV, 3.024729604*eV, 2.951657094*eV, 2.884854745*eV, 2.818303518*eV, 2.756027142*eV, 2.695224454*eV, 2.640595752*eV, 2.582429483*eV, 2.528955521*eV, 2.480798817*eV, 2.432436144*eV, 2.383982712*eV, 2.338369628*eV, 2.293569497*eV, 2.253046155*eV, 2.215603207*eV, 2.174530635*eV, 2.134192518*eV, 2.103584576*eV, 2.060016248*eV, 2.031491393*eV, 1.998285342*eV, 1.967466981*eV, 1.935661122*eV, 1.907348985*eV, 1.877456591*eV, 1.849653041*eV, 1.823231796*eV, 1.795352932*eV, 1.771527271*eV,   };
+
+  G4double effi_perfect_APD[] = { 
+0.047921, 0.058314, 0.077945, 0.099885, 0.122402, 0.150115, 0.172055, 0.198037, 0.230947, 0.258661, 0.286374, 0.306005, 0.325635, 0.338915, 0.353349, 0.365473, 0.377598, 0.396651, 0.40358, 0.413395, 0.417436, 0.421478, 0.42552, 0.430716, 0.438222, 0.443995, 0.440531, 0.437644, 0.429561, 0.422633, 0.408199,   };
+  table->AddProperty("EFFICIENCY", p_perfect_APD, effi_perfect_APD,31);
 
   //table->AddProperty( "EFFICIENCY",   phoE,  efficiency,   nentries );
   //table->AddProperty( "REFLECTIVITY", phoE2, reflectivity, ref_ent  );
