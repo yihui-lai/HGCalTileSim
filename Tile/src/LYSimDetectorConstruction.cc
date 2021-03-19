@@ -125,8 +125,8 @@ _WLSfiber_clad_thick = 0.05*mm;
 _WLSfiberZ = 5.2*m;
 _WLS_zoff = 1.7*m;
 
-_WLSfiberZ = 5.2*cm;
-_WLS_zoff = 1.7*cm;
+_WLSfiberZ = _tilez*1.1;
+_WLS_zoff = 0;
 mfiber  = Make_Y11();
 mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
@@ -421,8 +421,8 @@ LYSimDetectorConstruction::Construct()
   ///////////////////////////////////////////////////////////////////////////////
   // Simple version of SiPM
   ///////////////////////////////////////////////////////////////////////////////
-  const G4ThreeVector SiPMOffset_chan3( _hole_x1, 0, _WLSfiberZ - _WLS_zoff + 0.5*_sipm_z);  
-  const G4ThreeVector SiPMOffset_chan4( _hole_x1, 0, -_WLSfiberZ - _WLS_zoff - 0.5*_sipm_z);
+  const G4ThreeVector SiPMOffset_chan3( _hole_x1, 0, _WLSfiberZ*0.5 - _WLS_zoff + 0.5*_sipm_z);  
+  const G4ThreeVector SiPMOffset_chan4( _hole_x1, 0, -_WLSfiberZ*0.5 - _WLS_zoff - 0.5*_sipm_z);
   G4Tubs* solidSiPMInnerBox = new G4Tubs( "solidSiPMInnerBox", 0., _WLSfiberR+_WLSfiber_clad_thick, _sipm_z*0.5, 0., 2*pi);
   G4LogicalVolume* logicSiPM = new G4LogicalVolume( solidSiPMInnerBox
                                                   , fBialkali,  "SiPM" );
