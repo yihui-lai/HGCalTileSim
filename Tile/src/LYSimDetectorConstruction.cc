@@ -131,11 +131,12 @@ mfiber  = Make_Y11();
 mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
-opSurface =  MakeS_Mirror();//new G4OpticalSurface("RoughSurface", glisur, ground, dielectric_dielectric, 1);
+opSurface =  MakeS_IdealPolished();//MakeS_Mirror();
 //fholemat = Make_Custom_Air();
 fholemat = Make_Resin();
 SetWrapReflect( _wrap_reflect );
-
+_y11_decaytime = 11.5;//ns
+SetY11decaytime( _y11_decaytime );
 }
 
 void
@@ -760,6 +761,12 @@ LYSimDetectorConstruction::SetTileScintillation( const double mult )
 {
   _ScintiN = mult;
   Update_EJ200_Scinti( fEJ200, _ScintiN );
+}
+void
+LYSimDetectorConstruction::SetY11decaytime( const double mult )
+{
+  _y11_decaytime = mult*ns;
+  Update_Y11_timeconstant( mfiber, _y11_decaytime );
 }
 void
 LYSimDetectorConstruction::SetWrapReflect( const double r )

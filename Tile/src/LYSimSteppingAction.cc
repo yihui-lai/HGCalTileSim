@@ -103,8 +103,12 @@ LYSimSteppingAction::UserSteppingAction( const G4Step* step )
   if(theTrack){ 
   G4ParticleDefinition *particleType = theTrack->GetDefinition();
   if (particleType == G4OpticalPhoton::OpticalPhotonDefinition() && theTrack->GetCurrentStepNumber()==1 ){
-      if(thePrePVName.contains("PhyhWLSfiber")) LYSimAnalysis::GetInstance()->addwlsphoton();
-      else LYSimAnalysis::GetInstance()->addgenphoton();
+      if(thePrePVName.contains("PhyhWLSfiber")){
+          LYSimAnalysis::GetInstance()->addwlsphoton();
+          //std::cout<<"generate a wls from "<<theTrack->GetCreatorProcess()->GetProcessName()<<std::endl;
+      }else{
+          LYSimAnalysis::GetInstance()->addgenphoton();
+      }
   }
   }
 

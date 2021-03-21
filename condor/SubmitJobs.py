@@ -71,6 +71,12 @@ parser.add_argument('--wrapreflect',
                     nargs='+',
                     default=[0.985],
                     help='List of wrap reflectivity')
+parser.add_argument('--Y11decayTime',
+                    '-d',
+                    type=float,
+                    nargs='+',
+                    default=[11.5],
+                    help='Y11 time constant')
 parser.add_argument('--NEvents',
                     '-N',
                     type=int,
@@ -95,23 +101,26 @@ args = parser.parse_args()
 
 BASE_DIR = os.path.abspath(os.environ['CMSSW_BASE'] + '/src/' +
                            '/HGCalTileSim/condor/')
-DATA_DIR = os.path.abspath(BASE_DIR + '/test_paper/')
+DATA_DIR = os.path.abspath(BASE_DIR + '/test_paper5_/')
 
 CONDOR_JDL_TEMPLATE = """
 universe              = vanilla
 Executable            = {0}/condor-LYSquareTrigger_CMSSW.sh
 should_transfer_files = NO
-Requirements          = TARGET.FileSystemDomain == "privnet"
+Requirements          = TARGET.FileSystemDomain == "privnet" 
+Requirements          = TARGET.Machine =?= "hepcms-hn2.umd.edu"
+#Requirements = TARGET.Machine =!= "r510-0-1.privnet" && TARGET.Machine =!= "r510-0-10.privnet" && TARGET.Machine =!= "r510-0-11.privnet" && TARGET.Machine =!= "r510-0-4.privnet" && TARGET.Machine =!= "r510-0-5.privnet" && TARGET.Machine =!= "r510-0-6.privnet" && TARGET.Machine =!= "r510-0-9.privnet" && TARGET.Machine =!= "r540-0-20.privnet" && TARGET.Machine =!= "r540-0-21.privnet" && TARGET.Machine =!= "r720-0-1.privnet" && TARGET.Machine =!= "r720-0-2.privnet" && TARGET.Machine =!= "compute-0-11.privnet" && TARGET.Machine =!= "compute-0-5.privnet" &&  TARGET.Machine =!= "compute-0-7.privnet" &&  TARGET.Machine =!= "hepcms-namenode2.umd.edu"
 request_memory        = 1 GB
-Output                = {1}.$(ClusterId).$(ProcId).stdout
+Output                = {1}.$(ClusterId).stdout
 Error                 = {1}.$(ClusterId).$(ProcId).stderr
-Log                   = {1}.$(ClusterId).$(ProcId).condor
+Log                   = {1}.$(ClusterId).condor
 Arguments             = {2}
-Queue 50
+Queue 10
 """
+#Requirements = TARGET.Machine =!= "r510-0-1.privnet" && TARGET.Machine =!= "r510-0-10.privnet" && TARGET.Machine =!= "r510-0-11.privnet" && TARGET.Machine =!= "r510-0-4.privnet" && TARGET.Machine =!= "r510-0-5.privnet" && TARGET.Machine =!= "r510-0-6.privnet" && TARGET.Machine =!= "r510-0-9.privnet" && TARGET.Machine =!= "r540-0-20.privnet" && TARGET.Machine =!= "r540-0-21.privnet" && TARGET.Machine =!= "r720-0-1.privnet" && TARGET.Machine =!= "r720-0-2.privnet" && TARGET.Machine =!= "compute-0-11.privnet" && TARGET.Machine =!= "compute-0-5.privnet" &&  TARGET.Machine =!= "compute-0-7.privnet" &&  TARGET.Machine =!= "hepcms-namenode2.umd.edu"
 
-for x, z,X,Y, l, w, f, s, a, y, m, in [
-    (x, z,X,Y, l, w, f, s, a, y, m,) for x in args.beamx
+for x, z,X,Y, l, w, f, s, a, y, m, d, in [
+    (x, z,X,Y, l, w, f, s, a, y, m, d,) for x in args.beamx
     for z in args.beamz 
     for X in args.TileX
     for Y in args.TileY
@@ -122,6 +131,7 @@ for x, z,X,Y, l, w, f, s, a, y, m, in [
     for a in args.absmult
     for y in args.LY
     for m in args.wrapreflect 
+    for d in args.Y11decayTime
 ]:
 
   def make_str(prefix):
@@ -131,17 +141,19 @@ for x, z,X,Y, l, w, f, s, a, y, m, in [
         'FiberShift{0:.1f}'.format(s),
         'abs{0:.1f}'.format(a), 'LY{0:.1f}'.format(y),
         'handwrap{0:.0f}'.format(args.handwrap), 
-        'wrapref{0:.1f}'.format(m),
+        'wrapref{0:.1f}'.format(m), 'Y11Time{0:.1f}'.format(d),
         'useP{0:.0f}'.format(args.useProton), 
     ])
     return prefix + args.prefix + '_' + args_string.replace('.', 'p')
 
-  save_filename = os.path.abspath(DATA_DIR + '/root/' + '/' +
+  save_filename = os.path.abspath('/data3/yihuilai/' + '/' + #DATA_DIR + '/root/' + '/' +
                                   make_str('extruded_') + '.root')
 
   condor_args = ' '.join([
-      '-x {}'.format(x), '-z {}'.format(z), '-X {}'.format(X),'-Y {}'.format(Y),'-l {}'.format(l), '-w {}'.format(w), '-f {}'.format(f), '-s {}'.format(s),
-      '-a {}'.format(a), '-y {}'.format(y), '-m {}'.format(m), '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
+      '-x {}'.format(x), '-z {}'.format(z), '-X {}'.format(X),'-Y {}'.format(Y),
+      '-l {}'.format(l), '-w {}'.format(w), '-f {}'.format(f), '-s {}'.format(s),
+      '-a {}'.format(a), '-y {}'.format(y), '-m {}'.format(m),  '-d {}'.format(d),
+      '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
       '-N {}'.format(args.NEvents), '-o {}'.format(
           os.path.abspath(save_filename)),
   ])

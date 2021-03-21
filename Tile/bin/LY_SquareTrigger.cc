@@ -28,6 +28,7 @@ main( int argc, char** argv )
     ( "absmult,a",     usr::po::defvalue<double>( 1000 ),     "absorption length at 425nm, unit mm" )
     ( "yield,y",     usr::po::defvalue<double>( 10 ),     "light yield / MeV" )
     ( "wrapreflect,m", usr::po::defvalue<float>( 0.985 ), "Wrap reflectivity" )
+    ( "Y11decayTime,d", usr::po::defvalue<float>( 11.5 ), "Y11 WLS time constant" )
     ( "NEvents,N",     usr::po::defvalue<unsigned>( 1 ),   "Number of events to run" )
     ( "useProton,P",     usr::po::defvalue<int>( 1 ),  "Flag to switch the source to a true proton source" )
     ( "handwrap,H",      usr::po::defvalue<int>( 0 ),    "Flag to switch to handwrap" )
@@ -49,6 +50,7 @@ main( int argc, char** argv )
   const double absmult   = args.Arg<double>( "absmult"     );
   const double yield   = args.Arg<double>( "yield"     );
   const double wrapref   = args.Arg<float>( "wrapreflect" );
+  const double Y11decayTime   = args.Arg<float>( "Y11decayTime" );
   //const double tilealpha = args.Arg<double>( "tilealpha"   );
   //const double dimpalpha = args.Arg<double>( "dimplealpha" );
   //const double pcbref    = args.Arg<double>( "pcbreflect"  );
@@ -74,6 +76,7 @@ main( int argc, char** argv )
   detector->SetFiberZoff( fiberZshift );
   detector->SetTileAbsMult( absmult );
   detector->SetTileScintillation(yield);
+  detector->SetY11decaytime(Y11decayTime);
   detector->SetWrapReflect( wrapref );
   //detector->SetTileAlpha( tilealpha );
   //detector->SetDimpleAlpha( dimpalpha );

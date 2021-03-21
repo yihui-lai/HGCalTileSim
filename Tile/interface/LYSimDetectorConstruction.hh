@@ -97,6 +97,9 @@ public:
   GetTileAbsMult() const { return _absmult; }
   double
   GetTileScintillation() const { return _ScintiN; }
+  void SetY11decaytime( const double x );
+  double
+  GetY11decaytime() const { return _y11_decaytime; }
 
   void SetWrapReflect( const double x );
   inline double
@@ -256,6 +259,7 @@ private:
   double _WLSfiber_clad_thick;
   double _WLS_zoff;
   double _ScintiN;
+  double _y11_decaytime;
   G4Material* mfiber;
   G4Material* mfiber_clad;
   G4Material* fcoating;
