@@ -258,7 +258,7 @@ LYSimAnalysis::EndOfEvent( const G4Event* event )
 void
 LYSimAnalysis::EndOfRun( const G4Run* )
 {
-  runtree->Fill();
+  //runtree->Fill();
   //runtree->Write();// NULL, TObject::kOverwrite );
 }
 

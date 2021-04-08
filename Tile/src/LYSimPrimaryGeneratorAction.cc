@@ -69,7 +69,7 @@ LYSimPrimaryGeneratorAction::RandomizePosition()
   // Randomizing position of the the source for each event.
   const double x = ( 2*G4UniformRand()-1 )*_width + _beamx;
   const double y = ( 2*G4UniformRand()-1 )*_width + _beamy;
-  const double z = 0.1*CLHEP::mm;//fDetector->GetTileY();
+  const double z = fDetector->GetTileY();//0.1*CLHEP::mm;//fDetector->GetTileY();
   const double t = fDetector->GetTileScintillation();//LocalTileZ( x, y );
   const int np   = t;//G4Poisson(_photon_multiplier* CalcNumPhotons( t ) );
 

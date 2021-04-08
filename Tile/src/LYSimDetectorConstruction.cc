@@ -90,7 +90,7 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   
   // Default Hole settings
   _pcb_radius       = 2.5;
-  _pcb_reflectivity = 0.8;
+  _sipm_eff = 1;
 
 
   // Defining material list.
@@ -108,7 +108,8 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   fTileBulkSurface        = MakeS_RoughInterface( _tile_alpha );
   //fTileDimpleSurface      = MakeS_RoughInterface( _dimple_alpha );
   //fIdealWhiteOpSurface    = MakeS_IdealWhiteSurface();
-  fSiPMSurface            = MakeS_SiPM();
+  fSiPMSurface3            = MakeS_SiPM();
+  fSiPMSurface4            = MakeS_SiPM();
   //fPCBSurface             = MakeS_PCBSurface();
 
 
@@ -131,12 +132,14 @@ mfiber  = Make_Y11();
 mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
-opSurface =  MakeS_IdealPolished();//MakeS_Mirror();
-//fholemat = Make_Custom_Air();
-fholemat = Make_Resin();
+opSurface =  MakeS_IdealPolished();
+//opSurface = MakeS_Mirror();
+fholemat = Make_Custom_Air();
+//fholemat = Make_Resin();
 SetWrapReflect( _wrap_reflect );
 _y11_decaytime = 11.5;//ns
 SetY11decaytime( _y11_decaytime );
+
 }
 
 void
@@ -446,9 +449,9 @@ LYSimDetectorConstruction::Construct()
     = new G4LogicalSkinSurface( "SiPMSurface", logicSiPM, fSiPMSurface );
 */
     new G4LogicalBorderSurface("SiPMSurface3_out", physWLSfiber,
-                                   physSiPM_chan3, fSiPMSurface);
+                                   physSiPM_chan3, fSiPMSurface3);
     new G4LogicalBorderSurface("SiPMSurface4_out", physWLSfiber,
-                                   physSiPM_chan4, fSiPMSurface);
+                                   physSiPM_chan4, fSiPMSurface4);
   ///////////////////////////////////////////////////////////////////////////////
   // Defining surfaces
   ///////////////////////////////////////////////////////////////////////////////
@@ -799,23 +802,24 @@ LYSimDetectorConstruction::SetWrapReflect( const double r )
 }
 
 void
-LYSimDetectorConstruction::SetPCBReflect( const double r )
+LYSimDetectorConstruction::SetSiPMReflect( const double r )
 {
   // Add entries into properties table
-  _pcb_reflectivity = r;
+  _sipm_eff = r;
   static const unsigned nentries = 2;
   static double phoE[nentries]   = {1.0*eV, 6.0*eV};
-  double reflectivity[nentries]  = {r, r};
+  double efficiency[nentries]  = {r, r};
 
-  G4MaterialPropertiesTable* table = fPCBSurface->GetMaterialPropertiesTable();
+  G4MaterialPropertiesTable* table = fSiPMSurface3->GetMaterialPropertiesTable();
   if( table ){
-    table->RemoveProperty( "REFLECTIVITY" );
-    table->AddProperty( "REFLECTIVITY", phoE, reflectivity, nentries );
+    table->RemoveProperty( "EFFICIENCY" );
+    table->AddProperty( "EFFICIENCY", phoE, efficiency, nentries );
   } else {
     table = new G4MaterialPropertiesTable();
-    table->AddProperty( "REFLECTIVITY", phoE, reflectivity, nentries );
-    fPCBSurface->SetMaterialPropertiesTable( table );
+    table->AddProperty( "EFFICIENCY", phoE, efficiency, nentries );
+    fSiPMSurface3->SetMaterialPropertiesTable( table );
   }
+
 }
 
 

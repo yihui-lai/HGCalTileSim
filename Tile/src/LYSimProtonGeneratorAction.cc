@@ -27,8 +27,8 @@ LYSimProtonGeneratorAction::LYSimProtonGeneratorAction() :
    * session, look at:
    * http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/GettingStarted/generalParticleSource.html
    */
-  particleSource->SetParticleDefinition( G4Proton::ProtonDefinition() );
-  //particleSource->SetParticleDefinition( G4Muon::MuonDefinition() );
+  //particleSource->SetParticleDefinition( G4Proton::ProtonDefinition() );
+  particleSource->SetParticleDefinition( G4MuonPlus::MuonPlusDefinition() );
   particleSource->GetCurrentSource()->SetNumberOfParticles( 1 );
 
 

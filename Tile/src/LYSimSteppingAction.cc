@@ -23,7 +23,7 @@ using namespace CLHEP;
 
 LYSimSteppingAction::LYSimSteppingAction( LYSimAnalysis* ana )
   : G4UserSteppingAction(),
-  maxtracklength( 500000.*mm ),
+  maxtracklength( 100000.*mm ),
   messenger( new LYSimSteppingMessenger( this ) ),
   analysis( ana )
 {

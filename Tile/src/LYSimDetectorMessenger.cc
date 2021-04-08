@@ -194,7 +194,7 @@ LYSimDetectorMessenger::SetNewValue( G4UIcommand* command, G4String val )
     Detector->SetPCBRadius(
       G4UIcmdWithADoubleAndUnit::GetNewDoubleValue( val ) );
   } else if( command == SetPCBReflectCmd ){
-    Detector->SetPCBReflect( G4UIcmdWithADouble::GetNewDoubleValue( val ) );
+    Detector->SetSiPMReflect( G4UIcmdWithADouble::GetNewDoubleValue( val ) );
   } else if( command == SetTileAbsMultCmd ){
     Detector->SetTileAbsMult( G4UIcmdWithADouble::GetNewDoubleValue( val ) );
   } else if( command == SetWrapReflectCmd ){

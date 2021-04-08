@@ -118,15 +118,15 @@ public:
   inline double
   GetPCBRadius() const { return _pcb_radius; }
 
-  void SetPCBReflect( const double x );
+  void SetSiPMReflect( const double x );
   inline double
-  GetPCBReflect() const { return _pcb_reflectivity; }
+  GetSiPMReflect() const { return _sipm_eff; }
 
   // Accesing Custom Materials
   inline G4Material*
   GetEJ200(){ return fEJ200; }
   inline G4OpticalSurface*
-  GetSiPMSurface(){ return fSiPMSurface; }
+  GetSiPMSurface(){ return fSiPMSurface3; }
 
 
   //wls
@@ -209,7 +209,8 @@ private:
   G4OpticalSurface* fTileBulkSurface;
   G4OpticalSurface* fTileDimpleSurface;
   G4OpticalSurface* fIdealWhiteOpSurface;
-  G4OpticalSurface* fSiPMSurface;
+  G4OpticalSurface* fSiPMSurface3;
+  G4OpticalSurface* fSiPMSurface4;
   G4OpticalSurface* fPCBSurface;
 
   // Pointers for access to Sensitive Detector
@@ -239,7 +240,7 @@ private:
 
   // Parameters for plate behind SiPM
   double _pcb_radius;
-  double _pcb_reflectivity;
+  double _sipm_eff;
 
   double _sipm_deadwidth;
   double _sipm_x;
