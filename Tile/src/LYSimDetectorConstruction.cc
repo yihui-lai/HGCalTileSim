@@ -59,8 +59,8 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   fdetectorMessenger = new LYSimDetectorMessenger( this );
 
   _tilex        = 50*mm;
-  _tiley        = 10*mm;
-  _tilez        = 50.0*mm;  //200*mm
+  _tiley        = 20*mm;
+  _tilez        = 900.0*mm;  //200*mm
   _tile_x1      = 0.0*mm;
   _tile_x2      = 0.0*mm;
   wrapgap       = 0.1*mm;
@@ -134,8 +134,8 @@ fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
 opSurface =  MakeS_IdealPolished();
 //opSurface = MakeS_Mirror();
-fholemat = Make_Custom_Air();
-//fholemat = Make_Resin();
+//fholemat = Make_Custom_Air();
+fholemat = Make_Resin();
 SetWrapReflect( _wrap_reflect );
 _y11_decaytime = 11.5;//ns
 SetY11decaytime( _y11_decaytime );
@@ -198,11 +198,16 @@ LYSimDetectorConstruction::Construct()
   G4VSolid* solidWrap1 = new G4SubtractionSolid( "solidWrap"
                             , solidWrap0, solidHoleBound
                             , 0, G4ThreeVector( _hole_x1, 0, 0 ) );
+
+
+//second hole
 /*
   G4VSolid* solidWrap = new G4SubtractionSolid( "solidWrap"
                             , solidWrap1, solidHoleBound
                             , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
+
 */
+
   logicWrap = new G4LogicalVolume( solidWrap1, fEpoxy,  "Wrap" );
 
   G4VPhysicalVolume* physWrap = new G4PVPlacement( 0
@@ -249,6 +254,8 @@ LYSimDetectorConstruction::Construct()
     = new G4SubtractionSolid( "TileSolid_Bulk"
                             , solidTile, solidHoleBound
                             , 0, G4ThreeVector( _hole_x1, 0, 0 ) );
+
+//second hole
 /*
   G4VSolid* tileBulk
     = new G4SubtractionSolid( "TileSolid_Bulk"
@@ -280,6 +287,7 @@ LYSimDetectorConstruction::Construct()
   G4VSolid* solidWLSfiber_clad = new G4Tubs("WLSFiber_clad", _WLSfiberR, _WLSfiberR+_WLSfiber_clad_thick, _WLSfiberZ*0.5, 0., 2*pi);
   G4LogicalVolume* logicWLSfiber = new G4LogicalVolume( solidWLSfiber , mfiber,  "logicWLSfiber" );
   G4LogicalVolume* logicWLSfiber_clad = new G4LogicalVolume( solidWLSfiber_clad , mfiber_clad,  "logicWLSfiber_clad" );
+
   G4VPhysicalVolume* physWLSfiber = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
                                                       , logicWLSfiber
                                                       , "PhyhWLSfiber"
@@ -287,6 +295,7 @@ LYSimDetectorConstruction::Construct()
                                                       , false
                                                       , 0
                                                       , checkOverlaps );
+
   G4VPhysicalVolume* physWLSfiber_clad = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
                                                       , logicWLSfiber_clad
                                                       , "PhyhWLSfiber_cald"
@@ -765,12 +774,28 @@ LYSimDetectorConstruction::SetTileScintillation( const double mult )
   _ScintiN = mult;
   Update_EJ200_Scinti( fEJ200, _ScintiN );
 }
+
 void
 LYSimDetectorConstruction::SetY11decaytime( const double mult )
 {
-  _y11_decaytime = mult*ns;
-  Update_Y11_timeconstant( mfiber, _y11_decaytime );
+  //_y11_decaytime = mult*ns;
+  //std::cout<<"SetY11decaytime:"<<_y11_decaytime<<" ns"<<std::endl;
+  Update_Y11_timeconstant( mfiber, mult*ns);//_y11_decaytime );
+
 }
+
+void
+LYSimDetectorConstruction::SetY11attenu( const double mult )
+{
+  Update_EJ200_AbsLength( mfiber, mult );
+}
+
+void
+LYSimDetectorConstruction::SetGaprefrac_index( const double mult )
+{
+  Update_refrac_index(fholemat,mult);
+}
+
 void
 LYSimDetectorConstruction::SetWrapReflect( const double r )
 {
@@ -789,6 +814,7 @@ LYSimDetectorConstruction::SetWrapReflect( const double r )
     table->AddProperty( "REFLECTIVITY", phoE, reflectivity, nentries );
     fESROpSurface->SetMaterialPropertiesTable( table );
   }
+
   G4MaterialPropertiesTable* table2 = fTiO2Surface->GetMaterialPropertiesTable();
   if( table2 ){
     table2->RemoveProperty( "REFLECTIVITY" );
@@ -796,9 +822,9 @@ LYSimDetectorConstruction::SetWrapReflect( const double r )
   } else {
     table2 = new G4MaterialPropertiesTable();
     table2->AddProperty( "REFLECTIVITY", phoE, reflectivity, nentries );
-    fTiO2Surface->SetMaterialPropertiesTable( table );
+    fTiO2Surface->SetMaterialPropertiesTable( table2 );
   }
-  
+
 }
 
 void
@@ -819,7 +845,17 @@ LYSimDetectorConstruction::SetSiPMReflect( const double r )
     table->AddProperty( "EFFICIENCY", phoE, efficiency, nentries );
     fSiPMSurface3->SetMaterialPropertiesTable( table );
   }
-
+/*
+  G4MaterialPropertiesTable* table4 = fSiPMSurface4->GetMaterialPropertiesTable();
+  if( table4 ){
+    table4->RemoveProperty( "EFFICIENCY" );
+    table4->AddProperty( "EFFICIENCY", phoE, efficiency, nentries );
+  } else {
+    table4 = new G4MaterialPropertiesTable();
+    table4->AddProperty( "EFFICIENCY", phoE, efficiency, nentries );
+    fSiPMSurface4->SetMaterialPropertiesTable( table4 );
+  }
+*/
 }
 
 

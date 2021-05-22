@@ -101,6 +101,10 @@ public:
   double
   GetY11decaytime() const { return _y11_decaytime; }
 
+  void SetY11attenu( const double x );
+
+  void SetGaprefrac_index( const double x );
+
   void SetWrapReflect( const double x );
   inline double
   GetWrapReflect() const { return _wrap_reflect; }

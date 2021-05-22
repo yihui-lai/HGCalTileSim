@@ -244,8 +244,8 @@ LYSimPhysicsList::ConstructOp()
     G4ProcessManager* pmanager     = particle->GetProcessManager();
     G4String particleName          = particle->GetParticleName();
     if( theCerenkovProcess->IsApplicable( *particle ) ){
-      pmanager->AddProcess( theCerenkovProcess );
-      pmanager->SetProcessOrdering( theCerenkovProcess, idxPostStep );
+      //pmanager->AddProcess( theCerenkovProcess );
+      //pmanager->SetProcessOrdering( theCerenkovProcess, idxPostStep );
     }
     if( theScintillationProcess->IsApplicable( *particle ) ){
       pmanager->AddProcess( theScintillationProcess );

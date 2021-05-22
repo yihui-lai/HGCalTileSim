@@ -83,7 +83,7 @@ G4Material*
 Make_Resin()
 {
   static double photonE[flatentries]    = {minenergy, maxenergy};
-  static double refrac_idx[flatentries] = {1.52, 1.52};
+  static double refrac_idx[flatentries] = {1.58, 1.58};
   static double abs_length[flatentries] = {10*m, 10*m};
 
   G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable();
@@ -135,6 +135,18 @@ void Update_Y11_timeconstant(G4Material* material, const double mult)
   G4MaterialPropertiesTable *tabler = material->GetMaterialPropertiesTable();
   tabler->RemoveConstProperty("WLSTIMECONSTANT");
   tabler->AddConstProperty("WLSTIMECONSTANT", mult * ns); //accounts for any time delay which may occur between absorption and re-emission of the photon, defalt delta
+  std::cout<<"Update_Y11_timeconstant to "<<mult* ns<<" ns"<<std::endl;
+}
+void Update_refrac_index(G4Material* material, const double mult)
+{
+
+  static const unsigned nentries = 2;
+  static double photonE[nentries] = {1* eV, 8*eV};
+  static double Normabs_length[nentries] = {mult, mult};
+  G4MaterialPropertiesTable *tabler = material->GetMaterialPropertiesTable();
+  tabler->RemoveProperty("RINDEX");
+  tabler->AddProperty("RINDEX", photonE, Normabs_length, nentries);
+  std::cout<<"Update_refrac_index to "<<mult<<std::endl;
 }
 
 void

@@ -31,7 +31,7 @@
 
 #include <iostream>
 #include <signal.h>
-
+#include <numeric>
 using namespace std;
 using namespace CLHEP;
 
@@ -133,6 +133,8 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
   format->detectphotons3 = 0;
   format->detectphotons4 = 0;
   format->dt_firstphoton = -999;
+  format->dt_rms3 = -999;
+  format->dt_rms4 = -999;
   format->chan3_photon.clear();
   format->chan4_photon.clear();
 }
@@ -231,13 +233,47 @@ LYSimAnalysis::EndOfEvent( const G4Event* event )
   }
 */
 
-      if(format->chan3_photon.size()!=0&&format->chan4_photon.size()!=0){
-          double t_mean1=format->chan3_photon.at(0);
-          double t_mean2=format->chan4_photon.at(0);
+      if(format->chan3_photon.size()!=0 || format->chan4_photon.size()!=0){
+          double t_mean1,t_mean2;
+      if(format->chan3_photon.size()!=0){
+          t_mean1=format->chan3_photon.at(0);
           for( unsigned i=1;i<format->chan3_photon.size();i++ ){if(t_mean1>format->chan3_photon.at(i)) t_mean1=format->chan3_photon.at(i);}
-          for( unsigned i=1;i<format->chan4_photon.size();i++ ){if(t_mean2>format->chan4_photon.at(i)) t_mean2=format->chan4_photon.at(i);}
-          format->dt_firstphoton = t_mean2-t_mean1 ;
+          format->dt_rms3 = t_mean1;
       }
+      if(format->chan4_photon.size()!=0){
+          t_mean2=format->chan4_photon.at(0);
+          for( unsigned i=1;i<format->chan4_photon.size();i++ ){if(t_mean2>format->chan4_photon.at(i)) t_mean2=format->chan4_photon.at(i);}
+          format->dt_rms4 = t_mean2;
+      }
+      if(format->chan3_photon.size()!=0 && format->chan4_photon.size()!=0) format->dt_firstphoton = t_mean2-t_mean1 ;
+      }
+
+/*
+//calculate the std
+double sum,m,accum;
+if(format->chan3_photon.size()>=2){
+  sum = std::accumulate(std::begin(format->chan3_photon), std::end(format->chan3_photon), 0.0);
+  m =  sum / format->chan3_photon.size();
+  accum = 0.0;
+  std::for_each (std::begin(format->chan3_photon), std::end(format->chan3_photon), [&](const double d) {
+      accum += (d - m) * (d - m);
+  });
+
+  format->dt_rms3 = sqrt(accum / (format->chan3_photon.size()-1));
+
+}
+if(format->chan4_photon.size()>=2){
+
+  sum = std::accumulate(std::begin(format->chan4_photon), std::end(format->chan4_photon), 0.0);
+  m =  sum / format->chan4_photon.size();
+  accum = 0.0;
+  std::for_each (std::begin(format->chan4_photon), std::end(format->chan4_photon), [&](const double d) {
+      accum += (d - m) * (d - m);
+  });
+  format->dt_rms4 = sqrt(accum / (format->chan4_photon.size()-1));
+
+}
+*/
 
 #ifdef CMSSW_GIT_HASH
   //format->UpdateHash();
@@ -269,7 +305,8 @@ LYSimAnalysis::EndOfExperiment()
   if( runtree->GetEntries() == 0 ){
     runtree->Fill();
   }
-
+  //format->chan3_time->Write();
+  //format->chan4_time->Write();
   runtree->Write();// NULL, TObject::kOverwrite );
   tree->Write();// NULL, TObject::kOverwrite );
   file->Close();
@@ -328,10 +365,12 @@ void LYSimAnalysis::pushchan3(float t){
   //std::cout<<t<<std::endl;
   format->chan3_photon.push_back(t);
   format->detectphotons3++;
+  //format->chan3_time.Fill(t);
 }
 void LYSimAnalysis::pushchan4(float t){
   format->chan4_photon.push_back(t);
   format->detectphotons4++;
+  //format->chan4_time.Fill(t);
 }
 
 
