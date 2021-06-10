@@ -12,6 +12,7 @@
 
 class LYSimDetectorConstruction;
 class LYSimPrimaryGeneratorAction;
+class LYSimProtonGeneratorAction;
 class LYSimScintillation;
 class LYSimFormat;
 class LYSimRunFormat;
@@ -40,6 +41,8 @@ public:
   void
   SetGeneratorAction( LYSimPrimaryGeneratorAction* genaction )
   { generatorAction = genaction; };
+  void SetProtonGeneratorAction( LYSimProtonGeneratorAction* genaction )
+   { protonAction = genaction; }
 
   void
   SetOutputFile( const std::string& x ){ filename = x;}
@@ -52,6 +55,11 @@ public:
   void EndOfEvent( const G4Event* anEvent );
   void EndOfRun( const G4Run* aRun );
   void EndOfExperiment();
+  void addenergy(double, double);
+  void addgenphoton();
+  bool IsGenProton();
+  void AddTracker(int, double, double, double);
+  void addgenz(double, double);
 
   // Embedded class for RunAction handling
   class RunAction : public G4UserRunAction
@@ -87,6 +95,7 @@ private:
 
   LYSimDetectorConstruction* DetectorConstruction;
   LYSimPrimaryGeneratorAction* generatorAction;
+  LYSimProtonGeneratorAction* protonAction;
 
 public:
   std::string filename;

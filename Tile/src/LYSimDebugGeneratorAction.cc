@@ -45,7 +45,7 @@ LYSimDebugGeneratorAction::LYSimDebugGeneratorAction() :
   // Energy distribution.
   G4SPSEneDistribution* ene = particleSource->GetCurrentSource()->GetEneDist();
   ene->SetEnergyDisType( "Arb" );
-  ene->ArbEnergyHistoFile( project_base + "/data/PhotonSpectrum.dat" );
+  ene->ArbEnergyHistoFile( project_base + "/data/PhotonSpectrum_ej200.dat" );
   ene->ArbInterpolate( "Lin" );
 }
 

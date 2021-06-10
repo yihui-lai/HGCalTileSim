@@ -50,6 +50,11 @@ LYSimPMTSD::ProcessHits_constStep( const G4Step*       aStep,
 
   LYSimPMTHit* hit = new LYSimPMTHit();
 
+G4StepPoint *thePostPointsd = aStep->GetPostStepPoint();
+G4VPhysicalVolume *thePostPVsd = thePostPointsd->GetPhysicalVolume();
+G4String thePostPVNamesd = thePostPVsd->GetName();
+if(!(thePostPVNamesd=="SiPM")){ std::cout<<"Weird SD! "<<thePostPVNamesd<<std::endl;}
+
   hit->AddEnergy( theTrack->GetTotalEnergy() );
   hit->IncPhotonCount();// increment hit for the selected pmt
   hit->SetTime( aStep->GetPostStepPoint()->GetGlobalTime() );

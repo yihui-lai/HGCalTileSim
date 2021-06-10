@@ -42,9 +42,9 @@ LYSimTrajectory::LYSimTrajectory()
   initialMomentum( G4ThreeVector() )
 {
   wls         = false;
-  drawit      = true;
-  forceNoDraw = true;
-  forceDraw   = true;
+  drawit      = false;
+  forceNoDraw = false;
+  forceDraw   = false;
 
   particleDefinition = NULL;
 }
@@ -63,9 +63,9 @@ LYSimTrajectory::LYSimTrajectory( const G4Track* aTrack )
   fpPointsContainer->push_back( new LYSimTrajectoryPoint( aTrack ) );
 
   wls         = false;
-  drawit      = true;
-  forceNoDraw = true;
-  forceDraw   = true;
+  drawit      = false;
+  forceNoDraw = false;
+  forceDraw   = false;
 }
 
 LYSimTrajectory::LYSimTrajectory( LYSimTrajectory & right ) : G4VTrajectory()
@@ -140,8 +140,8 @@ LYSimTrajectory::DrawTrajectory( G4int i_mode ) const
   if( !pVVisManager ){ return;}
 
   const G4double markerSize = std::abs( i_mode )/1000;
-  G4bool lineRequired( true );
-  G4bool markersRequired( true );
+  G4bool lineRequired( i_mode >= 0 );
+  G4bool markersRequired( markerSize > 0. );
 
   G4Polyline trajectoryLine;
   G4Polymarker stepPoints;
@@ -154,8 +154,12 @@ LYSimTrajectory::DrawTrajectory( G4int i_mode ) const
     if( auxiliaries ){
       for( size_t iAux = 0; iAux < auxiliaries->size(); ++iAux ){
         const G4ThreeVector pos( ( *auxiliaries )[iAux] );
-        trajectoryLine.push_back( pos );
-        auxiliaryPoints.push_back( pos );
+        if( lineRequired ){
+          trajectoryLine.push_back( pos );
+        }
+        if( markersRequired ){
+          auxiliaryPoints.push_back( pos );
+        }
       }
     }
     const G4ThreeVector pos( aTrajectoryPoint->GetPosition() );
@@ -167,27 +171,38 @@ LYSimTrajectory::DrawTrajectory( G4int i_mode ) const
     }
   }
 
-  G4VisAttributes trajectoryLineAttribs( G4Colour( 1, 0, 0 ) );
-  trajectoryLineAttribs.SetVisibility( true );
-  trajectoryLine.SetVisAttributes( &trajectoryLineAttribs );
-  auxiliaryPoints.SetMarkerType( G4Polymarker::squares );
-  auxiliaryPoints.SetScreenSize( markerSize );
-  auxiliaryPoints.SetFillStyle( G4VMarker::filled );
-  G4VisAttributes auxiliaryPointsAttribs( G4Colour( 1., 1., 1. ) );// cyan
-  auxiliaryPointsAttribs.SetVisibility( true );
-  auxiliaryPoints.SetVisAttributes( &auxiliaryPointsAttribs );
+  if( lineRequired ){
+    G4Colour colour;
 
-  stepPoints.SetMarkerType( G4Polymarker::circles );
-  stepPoints.SetScreenSize( markerSize );
-  stepPoints.SetFillStyle( G4VMarker::filled );
-  G4VisAttributes stepPointsAttribs( G4Colour( 1., 1., 1. ) );// Magenta
-  stepPointsAttribs.SetVisibility( true );
-  stepPoints.SetVisAttributes( &stepPointsAttribs );
+    if( particleDefinition == G4OpticalPhoton::OpticalPhotonDefinition() ){
+      if( wls ){// WLS photons are red
+        colour = G4Colour( 1., 0., 0. );
+      } else {// Scintillation and Cerenkov photons are green
+        colour = G4Colour( 0., 1., 0. );
+      }
+    } else {// All other particles are blue
+      colour = G4Colour( 0., 0., 1. );
+    }
 
+    G4VisAttributes trajectoryLineAttribs( colour );
+    trajectoryLine.SetVisAttributes( &trajectoryLineAttribs );
+    pVVisManager->Draw( trajectoryLine );
+  }
+  if( markersRequired ){
+    auxiliaryPoints.SetMarkerType( G4Polymarker::squares );
+    auxiliaryPoints.SetScreenSize( markerSize );
+    auxiliaryPoints.SetFillStyle( G4VMarker::filled );
+    G4VisAttributes auxiliaryPointsAttribs( G4Colour( 0., 1., 1. ) );// Magenta
+    auxiliaryPoints.SetVisAttributes( &auxiliaryPointsAttribs );
+    pVVisManager->Draw( auxiliaryPoints );
 
-  pVVisManager->Draw( trajectoryLine );
-  pVVisManager->Draw( auxiliaryPoints );
-  pVVisManager->Draw( stepPoints );
+    stepPoints.SetMarkerType( G4Polymarker::circles );
+    stepPoints.SetScreenSize( markerSize );
+    stepPoints.SetFillStyle( G4VMarker::filled );
+    G4VisAttributes stepPointsAttribs( G4Colour( 1., 1., 0. ) );// Yellow.
+    stepPoints.SetVisAttributes( &stepPointsAttribs );
+    pVVisManager->Draw( stepPoints );
+  }
 }
 
 void

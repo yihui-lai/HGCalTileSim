@@ -21,7 +21,7 @@
 #include "G4Poisson.hh"
 
 // Static helper functions.
-static double CalcNumPhotons( const double thickness );
+static double CalcNumPhotons( const double thickness, const int mm );
 
 LYSimPrimaryGeneratorAction::LYSimPrimaryGeneratorAction( LYSimDetectorConstruction* det ) :
   particleSource( new G4GeneralParticleSource() ),
@@ -70,8 +70,11 @@ LYSimPrimaryGeneratorAction::RandomizePosition()
   const double x = ( 2*G4UniformRand()-1 )*_width + _beamx;
   const double y = ( 2*G4UniformRand()-1 )*_width + _beamy;
   const double z = fDetector->GetTileZ();
+  const double tgap = fDetector->Gettgap();
+  const int tn = fDetector->Gettn();
   const double t = fDetector->LocalTileZ( x, y );
-  const int np   = G4Poisson( _photon_multiplier * CalcNumPhotons( t ) );
+  const int mmaterial = fDetector->GetMaterial();
+  const int np   = G4Poisson( _photon_multiplier * CalcNumPhotons( t, mmaterial ) );
 
   for( int i = 0; i < np; ++i ){
     // Creating a new particle source with just 1 photon
@@ -86,7 +89,7 @@ LYSimPrimaryGeneratorAction::RandomizePosition()
     pos->SetPosDisShape( "Cylinder" );
     pos->SetRadius( 0.0001*CLHEP::mm );
     pos->SetHalfZ( t/2 );
-    pos->SetCentreCoords( G4ThreeVector( x, y, -z/2 + t/2 ) );
+    pos->SetCentreCoords( G4ThreeVector( x, y, -(z*(tn-0.5)/tn + tgap*(tn-1)/2/tn)+ t/2  ) );
 
     // Setting default angular distrution of particle  (isotropic)
     G4SPSAngDistribution* ang = particleSource->GetCurrentSource()->GetAngDist();
@@ -97,7 +100,12 @@ LYSimPrimaryGeneratorAction::RandomizePosition()
     // Energy distribution.
     G4SPSEneDistribution* ene = particleSource->GetCurrentSource()->GetEneDist();
     ene->SetEnergyDisType( "Arb" );
-    ene->ArbEnergyHistoFile( project_base + "/data/PhotonSpectrum.dat" );
+    if(mmaterial==1){
+      ene->ArbEnergyHistoFile( project_base + "/data/PhotonSpectrum_ej200.dat");
+    }else{
+      ene->ArbEnergyHistoFile( project_base + "/data/PhotonSpectrum_scsn81.dat");
+//      ene->ArbEnergyHistoFile( project_base + "/data/PhotonSpectrum_scsn81_new.dat");
+    }
     ene->ArbInterpolate( "Lin" );
 
     // Randomizing the polarization.
@@ -115,7 +123,8 @@ double
 LYSimPrimaryGeneratorAction::NPhotons() const
 {
   const double t = fDetector->LocalTileZ( _beamx, _beamy );
-  return _photon_multiplier * CalcNumPhotons( t );
+  const int mmaterial = fDetector->GetMaterial();
+  return _photon_multiplier * CalcNumPhotons( t, mmaterial );
 }
 
 unsigned
@@ -125,7 +134,18 @@ LYSimPrimaryGeneratorAction::NSources() const
 }
 
 double
-CalcNumPhotons( const double thickness )
+CalcNumPhotons( const double thickness, const int mm )
 {
-  return 6677.0 * thickness/3.0;
+  if(mm==1){
+//    return 2.2219*10000 * thickness/10; //ej200 4GeV Muon
+//    return 2.4031*10000 * thickness/10; //ej200 14GeV Muon
+    return 2.55936*10000 * thickness/10;
+  }else{
+//    return 2.1462*(0.5/0.64)*10000 * thickness/10; //scsn81 4GeV
+//    return 2.3217*(0.5/0.64)*10000 * thickness/10; //scsn81
+    return 2.60866*(0.5/0.64)*10000 * thickness/10;
+  }
 }
+
+
+
