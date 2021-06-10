@@ -2,6 +2,7 @@
 #include "HGCalTileSim/Tile/interface/LYSimDetectorConstruction.hh"
 #include "HGCalTileSim/Tile/interface/LYSimPhysicsList.hh"
 #include "HGCalTileSim/Tile/interface/LYSimPrimaryGeneratorAction.hh"
+#include "HGCalTileSim/Tile/interface/LYSimProtonGeneratorAction.hh"
 #include "HGCalTileSim/Tile/interface/LYSimSteppingAction.hh"
 #include "HGCalTileSim/Tile/interface/LYSimTrackingAction.hh"
 
@@ -59,7 +60,7 @@ main( int argc, char** argv )
   const double pcbref    = args.Arg<double>( "pcbreflect"  );
   const double pcbrad    = args.Arg<double>( "pcbradius"   );
   const unsigned N       = args.Arg<unsigned>( "NEvents" );
-  const bool useProton   = args.HasArg( "useProton" );
+  const int useProton   = args.Arg<int>( "useProton" );
   std::string filename   = args.Arg<std::string>( "output" );
   filename.insert( filename.length()-5, "_" + usr::RandomString( 6 ) );
 
@@ -88,7 +89,7 @@ main( int argc, char** argv )
   runManager->SetUserInitialization( physlist );
 
   // Overriding the generator parameters
-  if( !useProton ){
+  if( useProton==0 ){
     LYSimPrimaryGeneratorAction* genaction
       = new LYSimPrimaryGeneratorAction( detector );
     genaction->SetBeamX( x_center );
@@ -102,7 +103,7 @@ main( int argc, char** argv )
     genaction->SetBeamX( x_center );
     genaction->SetBeamY( y_center );
     genaction->SetWidth( width );
-    LYSimAnalysis::GetInstance()->SetGeneratorAction( genaction );
+    LYSimAnalysis::GetInstance()->SetProtonGeneratorAction( genaction );
     runManager->SetUserAction( genaction );
   }
 

@@ -1,0 +1,4 @@
+<use name="ROOT"/>
+<use name="DataFormats/FWLite"/>
+
+<bin name="DumpLumiCount" file="DumpLumiCount.py"/>

@@ -1,0 +1,8 @@
+<lcgdict>
+   <selection>
+      <class name="usr::Counter" />
+      <class name="edm::Wrapper<usr::Counter>"/>
+   </selection>
+   <exclusion>
+   </exclusion>
+</lcgdict>

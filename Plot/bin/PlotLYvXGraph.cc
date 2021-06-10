@@ -158,7 +158,7 @@ main( int argc, char** argv )
 
     c.PlotGraph( graph,
       usr::plt::PlotType( usr::plt::fittedfunc ),
-      usr::plt::TrackY( usr::plt::tracky::max ),
+      usr::plt::TrackY( usr::plt::TrackY::max ),
       usr::plt::LineColor( color ),
       usr::plt::FillColor( fill ),
       usr::plt::FillStyle( usr::plt::sty::fillsolid ),
@@ -166,14 +166,14 @@ main( int argc, char** argv )
 
     cr.PlotGraph( graph,
       usr::plt::PlotType( usr::plt::fittedfunc ),
-      usr::plt::TrackY( usr::plt::tracky::max ),
+      usr::plt::TrackY( usr::plt::TrackY::max ),
       usr::plt::LineColor( color ),
       usr::plt::FillColor( fill ),
       usr::plt::FillStyle( usr::plt::sty::fillsolid ),
       usr::plt::EntryText( entry ) );
     cr.PlotScale(graph,front,
       usr::plt::PlotType( usr::plt::fittedfunc ),
-      usr::plt::TrackY( usr::plt::tracky::max ),
+      usr::plt::TrackY( usr::plt::TrackY::max ),
       usr::plt::LineColor( color ),
       usr::plt::FillColor( fill ),
       usr::plt::FillStyle( usr::plt::sty::fillsolid ) );
@@ -186,17 +186,17 @@ main( int argc, char** argv )
 
     c_opt_length.PlotHist( opt_len,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::min ),
+      usr::plt::TrackY( usr::plt::TrackY::min ),
       usr::plt::LineColor( color ),
       usr::plt::EntryText( entry ) );
     c_num_ref.PlotHist( num_ref,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::min ),
+      usr::plt::TrackY( usr::plt::TrackY::min ),
       usr::plt::LineColor( color ),
       usr::plt::EntryText( entry ) );
     c_num_pcb.PlotHist( num_pcb,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::min ),
+      usr::plt::TrackY( usr::plt::TrackY::min ),
       usr::plt::LineColor( color ),
       usr::plt::EntryText( entry ) );
     ++idx;

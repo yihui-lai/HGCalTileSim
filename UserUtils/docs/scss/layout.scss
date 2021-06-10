@@ -1,0 +1,76 @@
+#top {
+  max-width: $maxwidth;
+  margin-left: auto;
+  margin-right: auto;
+  .navpath{
+    display: none;
+  }
+}
+
+.header {
+  max-width: $maxwidth;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: $filllight;
+  border-bottom: 1px solid $maincolor;
+
+  .headertitle {
+    padding: 5px 5px 5px 10px;
+    .title {
+      font-size: 1.6em;
+      font-weight: bold;
+      margin: 10px 2px;
+      .ingroups {
+        font-size: 0.6em;
+        width: 50%;
+        text-align: left;
+        a {
+          white-space: nowrap;
+        }
+     }
+    }
+  }
+}
+
+.contents {
+  max-width: $maxwidth;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: justify;
+
+  .plot_example {
+    text-align: center;
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 10px;
+      overflow: hidden;
+      background-color: $maincolor;
+    }
+
+    li {
+      display: inline;
+      width: 10%;
+      float: center;
+    }
+
+    li a {
+      color: white;
+      text-align: center;
+      margin: 10px;
+      padding: 16px;
+      text-decoration: none;
+    }
+    li a:hover{
+      background-color: darken($maincolor,10);
+
+    }
+  }
+}
+
+.footer {
+  max-width: $maxwidth;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -102,23 +102,23 @@ main( int argc, char** argv )
 
     c.PlotHist( det_acc,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::min ),
+      usr::plt::TrackY( usr::plt::TrackY::min ),
       usr::plt::LineColor( usr::plt::col::red ),
       usr::plt::EntryText( "Det. Photons (Remaining)" ) );
     c.PlotHist( det_hist,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::min ),
+      usr::plt::TrackY( usr::plt::TrackY::min ),
       usr::plt::LineColor( usr::plt::col::red ),
       usr::plt::LineStyle( usr::plt::sty::lindensedot ),
       usr::plt::EntryText( "Det. Photons" ) );
     c.PlotHist( all_acc,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::min ),
+      usr::plt::TrackY( usr::plt::TrackY::min ),
       usr::plt::LineColor( usr::plt::col::black ),
       usr::plt::EntryText( "All Photons (Remaining)" ) );
     c.PlotHist( all_hist,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::min ),
+      usr::plt::TrackY( usr::plt::TrackY::min ),
       usr::plt::LineColor( usr::plt::col::black ),
       usr::plt::LineStyle( usr::plt::sty::lindensedot ),
       usr::plt::EntryText( "All Photons" ) );

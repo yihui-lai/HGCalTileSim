@@ -1,0 +1,8 @@
+<use name="roofit"/>
+<use name="UserUtils/Common"/>
+<!---use name="UserUtils/PlotUtils"/-->
+<flags CXXFLAGS="-g"/>
+
+<export>
+   <lib name="1"/>
+</export>

@@ -1,0 +1,244 @@
+.sm {
+  position: relative;
+  z-index: 9999;
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+  direction: ltr;
+  text-align: left;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  ul, li {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+    direction: ltr;
+    text-align: left;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+}
+
+.sm-rtl {
+  direction: rtl;
+  text-align: right;
+
+  ul, li {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+.sm {
+  > li > {
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  ul {
+    display: none;
+  }
+
+  li {
+    position: relative;
+  }
+
+  a {
+    position: relative;
+    display: block;
+
+    &.disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &:after {
+    content: "\00a0";
+    display: block;
+    height: 0;
+    font: 0/0 serif;
+    clear: both;
+    visibility: hidden;
+    overflow: hidden;
+  }
+}
+
+#doc-content {
+  overflow: auto;
+  display: block;
+  padding: 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sm-dox {
+  background: $maincolor;
+  padding: 0 10px;
+  line-height: 2.4em;
+
+  // Tab list
+  a {
+    padding-left: 20px;
+    padding-right: 20px;
+    font-family: $mainfont;
+    font-size: 0.85em;
+    font-weight: bold;
+    line-height: 2.2em;
+    text-decoration: none;
+    color: $background;
+    outline: 0;
+
+    // Downwards arrow.
+    span.sub-arrow {
+      position: absolute;
+      right: 8px;
+      overflow: hidden;
+      font: bold 12px / 28px monospace !important;
+      text-align: center;
+      text-shadow: none;
+      top: 50%;
+      margin-top: -2px;
+      width: 0;
+      height: 0;
+      border-width: 4px;
+      border-style: solid dashed dashed dashed;
+      border-color: $background transparent transparent transparent;
+      background: transparent;
+    }
+
+    // Interactive methods
+    &:focus, &:active, &:hover, &.highlighted {
+      background: darken( $maincolor, 15 );
+      color:lighten( $background, 15);
+    }
+
+    &:hover {
+      span.sub-arrow {
+        border-color: lighten($background, 15) transparent transparent transparent;
+      }
+    }
+
+    &.current {
+      color: #d23600;
+    }
+
+
+    &.highlighted span.sub-arrow:before {
+      display: block;
+      content: '-';
+    }
+
+  }
+
+  // Drop down menu parts
+  ul {
+    border: 1px solid $maincolor;
+    padding: 5px 0;
+    background: $filllight;
+    box-shadow: 0 5px 9px rgba(0, 0, 0, 0.2);
+
+    a {
+      border-left: 8px solid transparent;
+      line-height: 2.4em;
+      background-color: $filllight;
+      color: $maincolor;
+
+      span.sub-arrow {
+        right: 8px;
+        top: 50%;
+        margin-top: -5px;
+        border-width: 5px;
+        border-color: transparent transparent transparent $maincolor;
+        border-style: dashed dashed dashed solid;
+      }
+
+      &:hover, &:focus, &:active, &.highlighted {
+        background-color: $maincolor;
+        color:$background;
+        span.sub-arrow {
+          color: $background;
+        }
+      }
+      &:hover {
+        background-image: darken($maincolor,15);
+        color: white;
+        span.sub-arrow {
+            border-color: transparent transparent transparent white;
+        }
+      }
+    }
+  }
+
+  // Misc styling for tabs... not changing for now.
+  ul {
+      position: absolute;
+      width: 12em;
+   }
+
+  li {
+     float: left;
+  }
+
+  &.sm-rtl li {
+    float: right;
+  }
+
+  ul li, &.sm-rtl ul li, &.sm-vertical li {
+    float: none;
+  }
+
+  a {
+    white-space: nowrap;
+  }
+
+  ul a, &.sm-vertical a {
+    white-space: normal;
+  }
+
+  .sm-nowrap > li > {
+    a, :not(ul) a {
+      white-space: nowrap;
+    }
+  }
+
+  li {
+    border-top: 0;
+  }
+
+  > li > ul {
+    &:before {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 30px;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      border-width: 9px;
+      border-style: dashed dashed solid dashed;
+      border-color: transparent transparent #bbb transparent;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 30px;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      border-width: 9px;
+      border-style: dashed dashed solid dashed;
+      border-color: transparent transparent #bbb transparent;
+      top: -16px;
+      left: 31px;
+      border-width: 8px;
+      border-color: transparent transparent #fff transparent;
+    }
+  }
+}

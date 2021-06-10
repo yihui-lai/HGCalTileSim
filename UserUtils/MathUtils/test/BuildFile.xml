@@ -1,0 +1,10 @@
+<use name="UserUtils/MathUtils"/>
+<use name="UserUtils/Common"/>
+
+<flags CXXFLAGS="-g"/>
+
+<bin name="usrutil_gslstat"                 file="gslstat.cc"                />
+<bin name="usrutil_measurement_format"      file="measurement_format.cc"     />
+<bin name="usrutil_measurement_approxfunc"  file="measurement_approxfunc.cc" />
+<bin name="usrutil_measurement_arithmatics" file="measurement_arithmatics.cc"/>
+<bin name="usrutil_roofit_kstest"           file="roofit_kstest.cc"          />

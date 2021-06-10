@@ -126,7 +126,7 @@ main( int argc, char** argv )
 
     c.PlotHist( hist,
       usr::plt::PlotType( usr::plt::hist ),
-      usr::plt::TrackY( usr::plt::tracky::both ),
+      usr::plt::TrackY( usr::plt::TrackY::both ),
       usr::plt::LineColor( color ),
       usr::plt::EntryText( entry ) );
 
