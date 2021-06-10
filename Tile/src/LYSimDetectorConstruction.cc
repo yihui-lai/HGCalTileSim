@@ -606,7 +606,7 @@ LYSimDetectorConstruction::WorldHalfY() const
 double
 LYSimDetectorConstruction::WorldHalfZ() const
 {
-  return 100 * mm ;
+  return 10000 * mm ;
 }
 
 double

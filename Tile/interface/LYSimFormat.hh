@@ -38,6 +38,7 @@ public:
   int16_t EndY[LYSIMFORMAT_MAX_PHOTONS];
   uint8_t NumPCBReflection[LYSIMFORMAT_MAX_PHOTONS];
   bool IsDetected[LYSIMFORMAT_MAX_PHOTONS];
+  double E_dep_tot;
 
   void
   AddToTree( TTree* tree )
@@ -49,7 +50,7 @@ public:
     tree->Branch( "genphotons",   &genphotons   );
     tree->Branch( "nphotons",     &nphotons     );
     tree->Branch( "savedphotons", &savedphotons );
-
+    tree->Branch( "E_dep_tot",   &E_dep_tot   );
     tree->Branch( "NumWrapReflection"
                 , NumWrapReflection
                 , "NumWrapReflection[savedphotons]/s" );
@@ -80,7 +81,7 @@ public:
     tree->SetBranchAddress( "genphotons",        &genphotons   );
     tree->SetBranchAddress( "nphotons",          &nphotons     );
     tree->SetBranchAddress( "savedphotons",      &savedphotons );
-
+    tree->SetBranchAddress( "E_dep_tot",      &E_dep_tot );
     tree->SetBranchAddress( "NumWrapReflection", NumWrapReflection );
     tree->SetBranchAddress( "OpticalLength",     OpticalLength     );
     tree->SetBranchAddress( "NumPCBReflection",  NumPCBReflection  );

@@ -20,6 +20,7 @@ main( int argc, char** argv )
   desc.add_options()
     ( "beamx,x",       usr::po::defvalue<double>( 0 ),     "x center of beam [mm]" )
     ( "beamy,y",       usr::po::defvalue<double>( 0 ),     "y center of beam [mm]" )
+    ( "tilez,z",       usr::po::defvalue<double>( 3 ),     "thick of tile [mm]" )
     ( "tilewidth,L",   usr::po::defvalue<double>( 30 ),    "Length of tile [mm]" )
     ( "beamwidth,w",   usr::po::defvalue<double>( 1.5 ),   "width of beam [mm]" )
     ( "dimplerad,r",   usr::po::defvalue<double>( 3.0 ),   "Dimple radius [mm]" )
@@ -35,7 +36,7 @@ main( int argc, char** argv )
     ( "pcbreflect,p",  usr::po::defvalue<double>( 0.8 ),   "Average reflectivity of Exposed PCB back plane" )
     ( "pcbradius,b",   usr::po::defvalue<double>( 2.5 ),   "Radius of Exposed PCB back plane" )
     ( "NEvents,N",     usr::po::defvalue<unsigned>( 1 ),   "Number of events to run" )
-    ( "useProton",                                         "Flag to switch the source to a true proton source" )
+    ( "useProton,U",    usr::po::defvalue<int>( 1 ),        "Flag to switch the source to a true proton source" )
     ( "output,o",      usr::po::defvalue<std::string>( "test.root" ), "output file" )
   ;
 
@@ -46,6 +47,7 @@ main( int argc, char** argv )
   const double x_center  = args.Arg<double>( "beamx"       );
   const double y_center  = args.Arg<double>( "beamy"       );
   const double tilewidth = args.Arg<double>( "tilewidth"   );
+  const double tilez = args.Arg<double>( "tilez"   );
   const double width     = args.Arg<double>( "beamwidth"   );
   const double dimplerad = args.Arg<double>( "dimplerad"   );
   const double dimpleind = args.Arg<double>( "dimpleind"   );
@@ -74,6 +76,7 @@ main( int argc, char** argv )
   detector->SetDimpleType( dimpletype );
   detector->SetTileX( tilewidth );
   detector->SetTileY( tilewidth );
+  detector->SetTileZ( tilez );
   detector->SetTileAbsMult( absmult );
   detector->SetWrapReflect( wrapref );
   detector->SetTileAlpha( tilealpha );

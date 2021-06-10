@@ -55,6 +55,7 @@ public:
   void EndOfEvent( const G4Event* anEvent );
   void EndOfRun( const G4Run* aRun );
   void EndOfExperiment();
+  void addenergy(double, double);
 
   // Embedded class for RunAction handling
   class RunAction : public G4UserRunAction

@@ -37,6 +37,19 @@ LYSimSteppingAction::~LYSimSteppingAction()
 void
 LYSimSteppingAction::UserSteppingAction( const G4Step* step )
 {
+
+  G4StepPoint *thePrePoint = step->GetPreStepPoint();
+  G4StepPoint *thePostPoint = step->GetPostStepPoint();
+  G4VPhysicalVolume *thePrePV = thePrePoint->GetPhysicalVolume();
+  G4VPhysicalVolume *thePostPV = thePostPoint->GetPhysicalVolume();
+  G4String thePrePVName = "";
+  if (thePrePV) thePrePVName = thePrePV->GetName();
+  G4String thePostPVName = "";
+  if (thePostPV) thePostPVName = thePostPV->GetName();
+  if (thePrePVName.contains("Tile"))
+  LYSimAnalysis::GetInstance()->addenergy(step->GetTotalEnergyDeposit()/ GeV, step->GetNonIonizingEnergyDeposit()/ GeV);
+
+
   G4OpBoundaryProcessStatus boundaryStatus = Undefined;
   static G4OpBoundaryProcess* boundary     = NULL;
 

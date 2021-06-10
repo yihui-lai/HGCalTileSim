@@ -1,4 +1,6 @@
 #!/bin/bash
+-z 3 -L 50 -w 50  -N 10000 -b 25 -o HGCALTile_Gamma1p33MeV.root
+-d 1.6 -r 3 -W 1.4 -R 0.4 -S 0.3 -a 1.0 -b 25 -w 50 -N 100
 
 # Geometry stuff
 

@@ -29,7 +29,7 @@ public:
 
   // Get/Set functions of tile geometry parameters
   inline void
-  SetTileZ ( const G4double x ){ _tilez = x;}
+  SetTileZ ( const G4double z ){ _tilez = z;}
   inline G4double
   GetTileZ() const {return _tilez;}
   inline void

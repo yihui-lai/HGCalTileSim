@@ -127,6 +127,7 @@ LYSimAnalysis::PrepareNewEvent( const G4Event* event )
   format->beam_x   = event->GetPrimaryVertex()->GetX0();
   format->beam_y   = event->GetPrimaryVertex()->GetY0();
   format->run_hash = runformat->run_hash;
+  format->E_dep_tot = 0;
 }
 
 void
@@ -147,7 +148,9 @@ LYSimAnalysis::EndOfEvent( const G4Event* event )
     G4TransportationManager::GetTransportationManager()
     ->GetNavigator( "World" );
 
+  if( generatorAction ){
   assert( format->genphotons == trajectory_list->size() );
+  }
 
   unsigned nhits     = format->nphotons;
   unsigned saveindex = 0;
@@ -297,3 +300,10 @@ IsSiPMTrajectory( G4Navigator* nav, const G4ThreeVector& endpoint )
     return false;
   }
 }
+
+void LYSimAnalysis::addenergy(double tot, double nonion){
+  format->E_dep_tot +=tot;
+}
+
+
+
