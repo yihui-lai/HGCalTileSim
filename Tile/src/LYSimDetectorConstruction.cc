@@ -60,14 +60,14 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
 
   _tilex        = 50*mm;
   _tiley        = 20*mm;
-  _tilez        = 900.0*mm;  //200*mm
+  _tilez        = 9.0*mm;  //200*mm
   _tile_x1      = 0.0*mm;
   _tile_x2      = 0.0*mm;
   wrapgap       = 0.1*mm;
   wrapthickness = 0.1*mm;
 
   _absmult      = 1000; //SetTileAbsMult to 1m
-  _ScintiN      = 10; //Set scintillation to 10 /keV
+  _ScintiN      = 1; //Set scintillation to 10 /keV
   _wrap_reflect = 0.985;
   _tile_alpha   = 0.01;
   _dimple_alpha = 0.1;
@@ -115,12 +115,12 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
 //wls
 _handwrap   = true;
 
-_hole_radius = 1.0*mm;
+_hole_radius = 1.5*mm;//1.0*mm;
 _hole_x1 = 0;//-12.5*mm;
 _hole_x2 = 12.5*mm;
 
-_WLSfiberR = 0.7*mm;
-_WLSfiber_clad_thick = 0.05*mm;
+_WLSfiberR = 0.7*mm; //0.7*mm;
+_WLSfiber_clad_thick = 0.4*mm;
 
 _WLSfiberZ = 5.2*m;
 _WLS_zoff = 1.7*m;
@@ -203,7 +203,7 @@ LYSimDetectorConstruction::Construct()
   G4VSolid* solidWrap = new G4SubtractionSolid( "solidWrap"
                             , solidWrap1, solidHoleBound
                             , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
-
+  logicWrap = new G4LogicalVolume( solidWrap, fEpoxy,  "Wrap" );
 */
 
   logicWrap = new G4LogicalVolume( solidWrap1, fEpoxy,  "Wrap" );
@@ -259,6 +259,9 @@ LYSimDetectorConstruction::Construct()
     = new G4SubtractionSolid( "TileSolid_Bulk"
                             , tileBulk1, solidHoleBound
                             , 0, G4ThreeVector( _hole_x2, 0, 0 ) );
+  G4LogicalVolume* logicTileBulk = new G4LogicalVolume( tileBulk
+                                                      , fEJ200
+                                                      , "TileBulkLogic" );
 */
   G4LogicalVolume* logicTileBulk = new G4LogicalVolume( tileBulk1
                                                       , fEJ200
@@ -301,133 +304,24 @@ LYSimDetectorConstruction::Construct()
                                                       , false
                                                       , 0
                                                       , checkOverlaps );
-  //TODO: surface properties   
-/*
-  //seems weird, add this surface will give low reflection
-        new G4LogicalBorderSurface("surfaceClad1Out", physWLSfiber,
-                                   physWLSfiber_clad, opSurface);
-        new G4LogicalBorderSurface("surfaceClad1in", physWLSfiber_clad,
-                                   physWLSfiber, opSurface);
-  G4LogicalSkinSurface* FiberSurface =
-    new G4LogicalSkinSurface( "FiberSurface"
-                              , logicWLSfiber_clad, fTiO2Surface );  
 
+  //TODO: surface properties   
+
+  //surface between fiber and clad
+        new G4LogicalBorderSurface("surfacefiber1Out", physWLSfiber,
+                                   physWLSfiber_clad, opSurface);
+        new G4LogicalBorderSurface("surfacefiber1in", physWLSfiber_clad,
+                                   physWLSfiber, opSurface);
+                                   
+  //surface between clad and hole
         new G4LogicalBorderSurface("surfaceClad1Out", physWLSfiber_clad,
-                                   physWorld, opSurface);
-        new G4LogicalBorderSurface("surfaceClad1In", physWorld, physWLSfiber_clad,
+                                   fPhysiHole, opSurface);
+        new G4LogicalBorderSurface("surfaceClad1In", fPhysiHole, physWLSfiber_clad,
                                    opSurface);
-*/                                   
+                               
   ///////////////////////////////////////////////////////////////////////////////
   // realistic SiPM
   ///////////////////////////////////////////////////////////////////////////////
-  
-  /*
-  G4Box* solidSiPMDead = new G4Box( "SiPMDead"
-                                  , 0.5*_sipm_deadwidth, 0.5*_sipm_deadwidth
-                                  , _sipm_z );
-
-  G4Box* solidSiPMInnerBox = new G4Box( "SiPMInnerBox"
-                                      , 0.5*_sipm_x, 0.5*_sipm_y,  0.8*_sipm_z );
-
-  G4Box* solidSiPMOuter = new G4Box( "SiPMOuter"
-                                   , 0.5*_sipm_x + _sipm_rimwidth
-                                   , 0.5*_sipm_y + _sipm_rimwidth
-                                   , 0.5*_sipm_z );
-  G4Box* solidSiPMStand
-    = new G4Box( "SiPMStand"
-               , 0.5*_sipm_x+_sipm_rimwidth + _sipm_glasswidth
-               , 0.5*_sipm_y+_sipm_rimwidth + _sipm_glasswidth
-               , 0.5*_sipm_standz );
-
-  G4Box* solidSiPMResinOuter
-    = new G4Box( "SiPMResinOuter"
-               , 0.5*_sipm_x + _sipm_rimwidth + _sipm_glasswidth
-               , 0.5*_sipm_y + _sipm_rimwidth + _sipm_glasswidth
-               , 0.5*_sipm_z + _sipm_glasswidth );
-
-  G4VSolid* solidSiPMSubtract
-    = new G4SubtractionSolid( "SiPMSubtract"
-                            ,  solidSiPMInnerBox, solidSiPMDead
-                            ,   0, G4ThreeVector( 0, 0, 0 ) );
-  G4VSolid* solidSiPMCase
-    = new G4SubtractionSolid( "SiPMCase"
-                            , solidSiPMOuter, solidSiPMSubtract
-                            , 0
-                            , G4ThreeVector( 0, 0, -0.65 * _sipm_z ) );
-
-  G4VSolid* solidSiPMInner
-    = new G4IntersectionSolid( "SiPMInner"
-                             , solidSiPMOuter, solidSiPMSubtract
-                             , 0
-                             , G4ThreeVector( 0, 0, -0.65*_sipm_z ) );
-
-  G4VSolid* solidSiPMResin
-    = new G4SubtractionSolid( "SiPMResin"
-                            , solidSiPMResinOuter, solidSiPMOuter
-                            ,  0
-                            , G4ThreeVector( 0, 0, _sipm_glasswidth ) );
-
-
-  G4LogicalVolume* logicSiPM = new G4LogicalVolume( solidSiPMInner
-                                                  , fBialkali,  "SiPM" );
-
-  G4LogicalVolume* logicSiPMCase = new G4LogicalVolume( solidSiPMCase
-                                                      , fEpoxy, "SiPMBack" );
-
-  G4LogicalVolume* logicSiPMResin = new G4LogicalVolume( solidSiPMResin
-                                                       , fResin, "SiPMResin" );
-
-  G4LogicalVolume* logicSiPMStand = new G4LogicalVolume( solidSiPMStand
-                                                       , fEpoxy, "SiPMStand" );
-  
-  double Resinz = _WLSfiberZ - _WLS_zoff + 0.5*_sipm_z + _sipm_glasswidth;
-  const G4ThreeVector ResinOffset( _hole_x1, 0, Resinz );
-
-  const G4ThreeVector SiPMOffset( _hole_x1, 0, Resinz + _sipm_glasswidth);
-  const G4ThreeVector StandOffset( _hole_x1, 0, Resinz + 0.5*_sipm_z + 0.5*_sipm_standz + _sipm_glasswidth);
-
-  G4VPhysicalVolume* physSiPMStand = new G4PVPlacement( 0, StandOffset
-                                                      , logicSiPMStand
-                                                      , "SiPMStand"
-                                                      , logicWorld
-                                                      , false
-                                                      , 0
-                                                      , checkOverlaps );
-
-  G4VPhysicalVolume* physSiPMCase = new G4PVPlacement( 0, SiPMOffset
-                                                     , logicSiPMCase
-                                                     , "Case"
-                                                     , logicWorld
-                                                     , false
-                                                     , 0
-                                                     , checkOverlaps );
-
-  G4VPhysicalVolume* physSiPMResin = new G4PVPlacement( 0, ResinOffset
-                                                      , logicSiPMResin
-                                                      , "SiPMResin"
-                                                      , logicWorld
-                                                      , false
-                                                      , 0
-                                                      , checkOverlaps  );
-
-  G4VPhysicalVolume* physSiPM = new G4PVPlacement( 0, SiPMOffset
-                                                 , logicSiPM
-                                                 , "SiPM"
-                                                 , logicWorld
-                                                 , false
-                                                 , 0
-                                                 , checkOverlaps );
-
-  G4LogicalSkinSurface* CaseSurface
-    = new G4LogicalSkinSurface( "SiPMCaseSurface"
-                              , logicSiPMCase, fIdealWhiteOpSurface );
-  G4LogicalSkinSurface* StandSurface
-    = new G4LogicalSkinSurface( "SiPMStandSurface"
-                              , logicSiPMStand, fIdealWhiteOpSurface );
-  
-  G4LogicalSkinSurface* PCBSurface
-    = new G4LogicalSkinSurface( "PCBSurface", logicPCB, fPCBSurface );
-  */
   
   ///////////////////////////////////////////////////////////////////////////////
   // Simple version of SiPM
@@ -484,13 +378,15 @@ LYSimDetectorConstruction::Construct()
 
   // Visual attributes
   logicWorld->SetVisAttributes( G4VisAttributes::Invisible );
+  fLogicHole->SetVisAttributes( G4VisAttributes::Invisible );
 
   // Avoid Colours Green and Yellow, since these are defaulted to the optical
   // Photons (I don't know how to change this)
   G4VisAttributes* SiPMVisAtt = new G4VisAttributes( G4Colour( 0, 0, 0 ) );
   SiPMVisAtt->SetForceSolid( true );
   SiPMVisAtt->SetVisibility( true );
-  logicSiPM->SetVisAttributes( SiPMVisAtt );
+  //logicSiPM->SetVisAttributes( SiPMVisAtt );
+  logicSiPM->SetVisAttributes( G4VisAttributes::Invisible );
 
   G4VisAttributes* CaseVisAtt = new G4VisAttributes( G4Colour( 0.8, 0.8, 0.8 ) );
   CaseVisAtt->SetForceSolid( true );
@@ -508,13 +404,16 @@ LYSimDetectorConstruction::Construct()
   TileVisAtt->SetVisibility( true );
   logicTileBulk->SetVisAttributes( TileVisAtt );
 
-  G4VisAttributes* fiberVisAtt = new G4VisAttributes( G4Colour( 0.5, 0.5, 0 ) );
+  G4VisAttributes* fiberVisAtt = new G4VisAttributes( G4Colour( 1, 0, 0) );
   fiberVisAtt->SetForceWireframe( true );
   fiberVisAtt->SetVisibility( true );
   fiberVisAtt->SetForceAuxEdgeVisible( true );
-  //fiberVisAtt->SetForceLineSegmentsPerCircle( 30 );
   logicWLSfiber->SetVisAttributes( fiberVisAtt );
-  logicWLSfiber_clad->SetVisAttributes( fiberVisAtt );
+  G4VisAttributes* fiberVisAtt2 = new G4VisAttributes( G4Colour( 0.5, 0.5, 0  ) );
+  fiberVisAtt2->SetForceWireframe( true );
+  fiberVisAtt2->SetVisibility( true );
+  fiberVisAtt2->SetForceAuxEdgeVisible( true );
+  logicWLSfiber_clad->SetVisAttributes( fiberVisAtt2 );
 
   G4VisAttributes* WrapVisAtt = new G4VisAttributes( G4Colour( 0.5, 0.5, 1.0 ) );
   WrapVisAtt->SetForceWireframe( true );

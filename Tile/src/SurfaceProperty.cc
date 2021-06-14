@@ -172,13 +172,10 @@ MakeS_Polished()
 G4OpticalSurface*
 MakeS_IdealPolished()
 {
-  //////////////////////////////////
-  // Ideal polished surface
-  //////////////////////////////////
-  G4OpticalSurface* surface = new G4OpticalSurface( "IdealOpSurface" );
-  surface->SetType( dielectric_dielectric );
-  surface->SetModel( glisur );
-  surface->SetFinish( polished );
+  //Set the Surface Roughness between Cladding 1 and WLS fiber
+  // Pre: 0 < roughness <= 1
+  G4OpticalSurface* surface = new G4OpticalSurface("IdealPolished", glisur, ground,
+                                     dielectric_dielectric, 1);
 
   return surface;
 }
