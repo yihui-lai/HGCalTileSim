@@ -379,7 +379,7 @@ MakeS_PCBSurface()
 {
   // PCB is a flat gray surface for now
   double phoE2[flatentries]        = {minenergy, maxenergy };
-  double reflectivity[flatentries] = {0.5, 0.5};
+  double reflectivity[flatentries] = {1, 1};
 
   G4OpticalSurface* surface = new G4OpticalSurface( "PCB_Surface" );
   surface->SetType( dielectric_metal );

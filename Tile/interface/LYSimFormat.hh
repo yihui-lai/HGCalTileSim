@@ -3,7 +3,7 @@
 
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "TTree.h"
-
+#include "TH1F.h"
 #include <cstdint>
 
 #ifdef CMSSW_GIT_HASH
@@ -37,8 +37,8 @@ public:
   double dt_rms4;
   std::vector<float> chan3_photon;
   std::vector<float> chan4_photon;
-  //TH1F* chan3_time=new TH1F("chan3_time","",1000,0,100);
-  //TH1F* chan4_time=new TH1F("chan4_time","",1000,0,100);
+  //TH1F* chan3_time=new TH1F("chan3_time","",5000,0,500);
+  //TH1F* chan4_time=new TH1F("chan4_time","",5000,0,500);
 /*
   unsigned savedphotons;
   uint16_t NumWrapReflection[LYSIMFORMAT_MAX_PHOTONS];
@@ -62,8 +62,8 @@ public:
     tree->Branch( "dt_firstphoton",     &dt_firstphoton     );
     tree->Branch( "dt_rms3",     &dt_rms3     );
     tree->Branch( "dt_rms4",     &dt_rms4     );
-    //tree->Branch( "chan3_photon",     &chan3_photon     );
-    //tree->Branch( "chan4_photon",     &chan4_photon     );
+    tree->Branch( "chan3_photon",     &chan3_photon     );
+    tree->Branch( "chan4_photon",     &chan4_photon     );
 /*
     tree->Branch( "NumWrapReflection"
                 , NumWrapReflection
@@ -99,8 +99,8 @@ public:
     tree->SetBranchAddress( "dt_firstphoton",          &dt_firstphoton     );
     tree->SetBranchAddress( "dt_rms3",          &dt_rms3     );
     tree->SetBranchAddress( "dt_rms4",          &dt_rms4     );
-    //tree->SetBranchAddress( "chan3_photon",     &chan3_photon     );
-    //tree->SetBranchAddress( "chan4_photon",     &chan4_photon     );
+    tree->SetBranchAddress( "chan3_photon",     &chan3_photon     );
+    tree->SetBranchAddress( "chan4_photon",     &chan4_photon     );
 /*
     tree->SetBranchAddress( "NumWrapReflection", NumWrapReflection );
     tree->SetBranchAddress( "OpticalLength",     OpticalLength     );

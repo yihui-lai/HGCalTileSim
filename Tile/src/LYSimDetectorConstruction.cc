@@ -92,7 +92,6 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
   _pcb_radius       = 2.5;
   _sipm_eff = 1;
 
-
   // Defining material list.
   fBialkali = Make_Bialkali();
   fEpoxy    = Make_Epoxy();
@@ -133,7 +132,6 @@ mfiber_clad = Make_Pethylene();
 fcoating = Make_Coating();
 fTiO2Surface = MakeS_TiO2Surface();
 opSurface =  MakeS_IdealPolished();
-//opSurface = MakeS_Mirror();
 //fholemat = Make_Custom_Air();
 fholemat = Make_Resin();
 SetWrapReflect( _wrap_reflect );
@@ -303,12 +301,13 @@ LYSimDetectorConstruction::Construct()
                                                       , false
                                                       , 0
                                                       , checkOverlaps );
-  //TODO: surface properties    
+  //TODO: surface properties   
+/*
+  //seems weird, add this surface will give low reflection
         new G4LogicalBorderSurface("surfaceClad1Out", physWLSfiber,
                                    physWLSfiber_clad, opSurface);
         new G4LogicalBorderSurface("surfaceClad1in", physWLSfiber_clad,
                                    physWLSfiber, opSurface);
-/*
   G4LogicalSkinSurface* FiberSurface =
     new G4LogicalSkinSurface( "FiberSurface"
                               , logicWLSfiber_clad, fTiO2Surface );  

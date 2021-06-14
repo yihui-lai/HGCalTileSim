@@ -117,9 +117,9 @@ Make_EJ200()
   table->AddProperty("FASTCOMPONENT", FAST_Energy, FAST_COMPONENT, NUMENTRIES_1);
   table->AddConstProperty("SCINTILLATIONYIELD", 10. / keV);
   table->AddConstProperty("RESOLUTIONSCALE", 1.0);
-  table->AddConstProperty("FASTTIMECONSTANT", 2.5 * ns);
+  table->AddConstProperty("FASTTIMECONSTANT", 0.01 * ns); //2.5
   table->AddConstProperty("YIELDRATIO", 1.0);
-  table->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.5 * ns);
+  table->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.01 * ns); //0.5
 
   material->SetMaterialPropertiesTable( table );
 
