@@ -34,6 +34,7 @@ main( int argc, char** argv )
     ( "NEvents,N",     usr::po::defvalue<unsigned>( 1 ),   "Number of events to run" )
     ( "useProton,P",     usr::po::defvalue<int>( 1 ),  "Flag to switch the source to a true proton source" )
     ( "handwrap,H",      usr::po::defvalue<int>( 0 ),    "Flag to switch to handwrap" )
+    ( "cladlayer,c",      usr::po::defvalue<unsigned>( 1 ),    "Number of cladlayers" )
     ( "output,o",      usr::po::defvalue<std::string>( "test.root" ), "output file" )
   ;
 
@@ -54,15 +55,18 @@ main( int argc, char** argv )
   const double yield   = args.Arg<double>( "yield"     );
   const double wrapref   = args.Arg<float>( "wrapreflect" );
   const double Y11decayTime   = args.Arg<double>( "Y11decayTime" );
-  //const double tilealpha = args.Arg<double>( "tilealpha"   );
-  //const double dimpalpha = args.Arg<double>( "dimplealpha" );
   const double sipmeff    = args.Arg<double>( "sipmeff"  );
-  //const double pcbrad    = args.Arg<double>( "pcbradius"   );
   const unsigned N       = args.Arg<unsigned>( "NEvents" );
   const bool useProton   = args.Arg<int>( "useProton" );
   const bool handwrap   = args.Arg<int>( "handwrap" );
+  const unsigned cladlayer   = args.Arg<unsigned>( "cladlayer" );
   std::string filename   = args.Arg<std::string>( "output" );
   filename.insert( filename.length()-5, "_" + usr::RandomString( 6 ) );
+
+  if(cladlayer!=1 && cladlayer!=2){
+     std::cout<<"only 1 or 2 layers of clad are supported"<<std::endl;
+     return 0; 
+  }
 
   // Must initialize Run Manager first
   G4RunManager* runManager   = new G4RunManager;
@@ -77,11 +81,12 @@ main( int argc, char** argv )
   detector->SetTileY( tileY );
   detector->SetFiberZ( fiberZ );
   detector->SetFiberZoff( fiberZshift );
+  detector->SetFiberClad( cladlayer );
   detector->SetTileAbsMult( absmult );
   detector->SetTileScintillation(yield);
   detector->SetY11decaytime(Y11decayTime);
   detector->SetY11attenu( absY11 );
-  detector->SetGaprefrac_index(1);
+  //detector->SetGaprefrac_index(1);
   detector->SetWrapReflect( wrapref );
   //detector->SetTileAlpha( tilealpha );
   //detector->SetDimpleAlpha( dimpalpha );

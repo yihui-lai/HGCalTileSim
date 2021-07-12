@@ -59,6 +59,12 @@ parser.add_argument('--absmult',
                     nargs='+',
                     default=[1000.],
                     help='List of tile absorption length')
+parser.add_argument('--Y11abs',
+                    '-b',
+                    type=float,
+                    nargs='+',
+                    default=[100.],
+                    help='List of tile Y11 absorption length')
 parser.add_argument('--LY',
                     '-y',
                     type=float,
@@ -77,6 +83,12 @@ parser.add_argument('--Y11decayTime',
                     nargs='+',
                     default=[11.5],
                     help='Y11 time constant')
+parser.add_argument('--sipmeff',
+                    '-e',
+                    type=float,
+                    nargs='+',
+                    default=[1],
+                    help='SiPM eff')
 parser.add_argument('--NEvents',
                     '-N',
                     type=int,
@@ -92,6 +104,11 @@ parser.add_argument('--handwrap',
                     type=int,
                     default=1,
                     help='handwrap')
+parser.add_argument('--cladlayer',
+                    '-c',
+                    type=int,
+                    default=1,
+                    help='cladlayer')
 parser.add_argument('--prefix',
                     type=str,
                     default='',
@@ -101,7 +118,7 @@ args = parser.parse_args()
 
 BASE_DIR = os.path.abspath(os.environ['CMSSW_BASE'] + '/src/' +
                            '/HGCalTileSim/condor/')
-DATA_DIR = os.path.abspath(BASE_DIR + '/test_paper5_/')
+DATA_DIR = os.path.abspath(BASE_DIR + '/FNALNew_trial0712_test/')
 
 CONDOR_JDL_TEMPLATE = """
 universe              = vanilla
@@ -115,12 +132,12 @@ Output                = {1}.$(ClusterId).stdout
 Error                 = {1}.$(ClusterId).$(ProcId).stderr
 Log                   = {1}.$(ClusterId).condor
 Arguments             = {2}
-Queue 10
+Queue 1
 """
 #Requirements = TARGET.Machine =!= "r510-0-1.privnet" && TARGET.Machine =!= "r510-0-10.privnet" && TARGET.Machine =!= "r510-0-11.privnet" && TARGET.Machine =!= "r510-0-4.privnet" && TARGET.Machine =!= "r510-0-5.privnet" && TARGET.Machine =!= "r510-0-6.privnet" && TARGET.Machine =!= "r510-0-9.privnet" && TARGET.Machine =!= "r540-0-20.privnet" && TARGET.Machine =!= "r540-0-21.privnet" && TARGET.Machine =!= "r720-0-1.privnet" && TARGET.Machine =!= "r720-0-2.privnet" && TARGET.Machine =!= "compute-0-11.privnet" && TARGET.Machine =!= "compute-0-5.privnet" &&  TARGET.Machine =!= "compute-0-7.privnet" &&  TARGET.Machine =!= "hepcms-namenode2.umd.edu"
 
-for x, z,X,Y, l, w, f, s, a, y, m, d, in [
-    (x, z,X,Y, l, w, f, s, a, y, m, d,) for x in args.beamx
+for x, z,X,Y, l, w, f, s, a, b, y, m, d,e in [
+    (x, z,X,Y, l, w, f, s, a, b, y, m, d,e) for x in args.beamx
     for z in args.beamz 
     for X in args.TileX
     for Y in args.TileY
@@ -129,31 +146,38 @@ for x, z,X,Y, l, w, f, s, a, y, m, d, in [
     for f in args.fiberZ
     for s in args.fiberZshift
     for a in args.absmult
+    for b in args.Y11abs
     for y in args.LY
     for m in args.wrapreflect 
     for d in args.Y11decayTime
+    for e in args.sipmeff
 ]:
 
   def make_str(prefix):
     args_string = '_'.join([
         'beamx{0:.1f}'.format(x), 'beamz{0:.1f}'.format(z), 'beamw{0:.1f}'.format(w),
-        'Tilel{0:.1f}'.format(l), 'TileX{0:.1f}'.format(X),'TileY{0:.1f}'.format(Y),'FiberL{0:.1f}'.format(f), 
-        'FiberShift{0:.1f}'.format(s),
-        'abs{0:.1f}'.format(a), 'LY{0:.1f}'.format(y),
-        'handwrap{0:.0f}'.format(args.handwrap), 
-        'wrapref{0:.1f}'.format(m), 'Y11Time{0:.1f}'.format(d),
-        'useP{0:.0f}'.format(args.useProton), 
+        'TileL{0:.1f}'.format(l), 'TileX{0:.1f}'.format(X),'TileY{0:.1f}'.format(Y),
+        'FiberS{0:.1f}'.format(s),'FiberL{0:.1f}'.format(f),'FiberAbs{0:.1f}'.format(b),
+        'TileAbs{0:.1f}'.format(a), 'TileLY{0:.1f}'.format(y),
+        'WrapType{0:.0f}'.format(args.handwrap), 'Clad{0:.0f}'.format(args.cladlayer),
+        'WrapRef{0:.1f}'.format(m), 'FiberDecay{0:.1f}'.format(d),'SipmEff{0:.2f}'.format(e),
+        'beamType{0:.0f}'.format(args.useProton), 
     ])
     return prefix + args.prefix + '_' + args_string.replace('.', 'p')
 
-  save_filename = os.path.abspath('/data3/yihuilai/' + '/' + #DATA_DIR + '/root/' + '/' +
-                                  make_str('extruded_') + '.root')
+  usehn2=True
+  if usehn2:
+      save_filename = os.path.abspath('/data3/yihuilai/' + '/' + 
+                                      make_str('extruded_') + '.root')
+  else:
+      save_filename = os.path.abspath(DATA_DIR + '/root/' + '/' +
+                                      make_str('extruded_') + '.root')
 
   condor_args = ' '.join([
       '-x {}'.format(x), '-z {}'.format(z), '-X {}'.format(X),'-Y {}'.format(Y),
       '-l {}'.format(l), '-w {}'.format(w), '-f {}'.format(f), '-s {}'.format(s),
-      '-a {}'.format(a), '-y {}'.format(y), '-m {}'.format(m),  '-d {}'.format(d),
-      '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), 
+      '-a {}'.format(a), '-b {}'.format(b), '-y {}'.format(y), '-m {}'.format(m),  '-d {}'.format(d), '-e {}'.format(e),
+      '-P {}'.format(args.useProton), '-H {}'.format(args.handwrap), '-c {}'.format(args.cladlayer), 
       '-N {}'.format(args.NEvents), '-o {}'.format(
           os.path.abspath(save_filename)),
   ])
@@ -172,6 +196,7 @@ for x, z,X,Y, l, w, f, s, a, y, m, d, in [
   os.makedirs(DATA_DIR + '/log/', exist_ok=True)
 
   ## Making directory for output files
-  os.makedirs(os.path.dirname(save_filename), exist_ok=True)
+  if not usehn2:
+      os.makedirs(os.path.dirname(save_filename), exist_ok=True)
 
   print(jdl_filename)

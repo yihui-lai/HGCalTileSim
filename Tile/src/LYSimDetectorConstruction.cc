@@ -114,26 +114,39 @@ LYSimDetectorConstruction::LYSimDetectorConstruction()
 
 //wls
 _handwrap   = true;
-
-_hole_radius = 1.5*mm;//1.0*mm;
-_hole_x1 = 0;//-12.5*mm;
-_hole_x2 = 12.5*mm;
+_cladlayer  = 1;
 
 _WLSfiberR = 0.7*mm; //0.7*mm;
-_WLSfiber_clad_thick = 0.4*mm;
+_WLSfiber_clad_thick = _WLSfiberR*2*0.03;
+_WLSfiber_clad2_thick = _WLSfiberR*2*0.01;
+
+_hole_radius = (_WLSfiberR+_WLSfiber_clad_thick+_WLSfiber_clad2_thick)*1.5; //1.0*mm;
+_hole_x1 = 0;//-12.5*mm;
+_hole_x2 = 12.5*mm;
 
 _WLSfiberZ = 5.2*m;
 _WLS_zoff = 1.7*m;
 
 _WLSfiberZ = _tilez*1.1;
 _WLS_zoff = 0;
-mfiber  = Make_Y11();
-mfiber_clad = Make_Pethylene();
+//---------------
+//material
+//---------------
+//mfiber  = Make_Y11();
+mfiber  = Make_sgc();
+//mfiber_clad = Make_Pethylene(); //cald 1
+mfiber_clad = Make_acrylic(); //cald 1
+mfiber_clad2 = Make_Fluor_acrylic(); //clad 2
+
 fcoating = Make_Coating();
+//fholemat = Make_Resin();
+
+//---------------
+//surface
+//---------------
 fTiO2Surface = MakeS_TiO2Surface();
 opSurface =  MakeS_IdealPolished();
 //fholemat = Make_Custom_Air();
-fholemat = Make_Resin();
 SetWrapReflect( _wrap_reflect );
 _y11_decaytime = 11.5;//ns
 SetY11decaytime( _y11_decaytime );
@@ -278,11 +291,11 @@ LYSimDetectorConstruction::Construct()
   ///////////////////////////////////////////////////////////////////////////////
   // fiber. single layer clad
   ///////////////////////////////////////////////////////////////////////////////
-  assert(_hole_radius>=_WLSfiberR+_WLSfiber_clad_thick); 
+  assert(_hole_radius>=_WLSfiberR+_WLSfiber_clad_thick+_WLSfiber_clad2_thick); 
   //fiber hole
-  G4VSolid* solidHole = new G4Tubs("Hole", _WLSfiberR+_WLSfiber_clad_thick, _hole_radius, _tilez*0.5, 0. * deg, 360. * deg);
-  G4LogicalVolume* fLogicHole = new G4LogicalVolume(solidHole, fholemat, "Hole");
-  G4VPhysicalVolume* fPhysiHole = new G4PVPlacement(0, G4ThreeVector(_hole_x1, 0, 0), fLogicHole, "Hole", logicWorld, false, 0);
+  //G4VSolid* solidHole = new G4Tubs("Hole", _WLSfiberR+_WLSfiber_clad_thick+_WLSfiber_clad2_thick, _hole_radius, _tilez*0.5, 0. * deg, 360. * deg);
+  //G4LogicalVolume* fLogicHole = new G4LogicalVolume(solidHole, fholemat, "Hole");
+  //G4VPhysicalVolume* fPhysiHole = new G4PVPlacement(0, G4ThreeVector(_hole_x1, 0, 0), fLogicHole, "Hole", logicWorld, false, 0);
 
   G4VSolid* solidWLSfiber = new G4Tubs("WLSFiber", 0., _WLSfiberR, _WLSfiberZ*0.5, 0., 2*pi);
   G4VSolid* solidWLSfiber_clad = new G4Tubs("WLSFiber_clad", _WLSfiberR, _WLSfiberR+_WLSfiber_clad_thick, _WLSfiberZ*0.5, 0., 2*pi);
@@ -305,20 +318,48 @@ LYSimDetectorConstruction::Construct()
                                                       , 0
                                                       , checkOverlaps );
 
-  //TODO: surface properties   
+  ///////////////////////////////////////////////////////////////////////////////
+  // fiber. second layer clad
+  ///////////////////////////////////////////////////////////////////////////////
+  G4LogicalVolume* logicWLSfiber_clad2;
+  G4VSolid* solidWLSfiber_clad2;
+  G4VPhysicalVolume* physWLSfiber_clad2;
+  if(_cladlayer==2){
+  solidWLSfiber_clad2 = new G4Tubs("WLSFiber_clad2", _WLSfiberR+_WLSfiber_clad_thick, _WLSfiberR+_WLSfiber_clad_thick+_WLSfiber_clad2_thick, _WLSfiberZ*0.5, 0., 2*pi);
+  logicWLSfiber_clad2 = new G4LogicalVolume( solidWLSfiber_clad2 , mfiber_clad2,  "logicWLSfiber_clad2" );
+  physWLSfiber_clad2 = new G4PVPlacement( 0, G4ThreeVector(_hole_x1, 0, -_WLS_zoff)
+                                                      , logicWLSfiber_clad2
+                                                      , "PhyhWLSfiber_cald2"
+                                                      , logicWorld
+                                                      , false
+                                                      , 0
+                                                      , checkOverlaps );
 
-  //surface between fiber and clad
+        new G4LogicalBorderSurface("surfacefiberOut", physWLSfiber,
+                                   physWLSfiber_clad, opSurface);
+        new G4LogicalBorderSurface("surfacefiberin", physWLSfiber_clad,
+                                   physWLSfiber, opSurface);
+        new G4LogicalBorderSurface("surfaceclad1Out", physWLSfiber_clad,
+                                   physWLSfiber_clad2, opSurface);
+        new G4LogicalBorderSurface("surfaceclad1in", physWLSfiber_clad2,
+                                   physWLSfiber_clad, opSurface);
+        new G4LogicalBorderSurface("surfaceClad2Out", physWLSfiber_clad2,
+                                   physWorld, opSurface);
+        new G4LogicalBorderSurface("surfaceClad2In", physWorld, physWLSfiber_clad2,
+                                   opSurface);
+  }else{
+
         new G4LogicalBorderSurface("surfacefiber1Out", physWLSfiber,
                                    physWLSfiber_clad, opSurface);
         new G4LogicalBorderSurface("surfacefiber1in", physWLSfiber_clad,
                                    physWLSfiber, opSurface);
-                                   
-  //surface between clad and hole
         new G4LogicalBorderSurface("surfaceClad1Out", physWLSfiber_clad,
-                                   fPhysiHole, opSurface);
-        new G4LogicalBorderSurface("surfaceClad1In", fPhysiHole, physWLSfiber_clad,
+                                   physWorld, opSurface);
+        new G4LogicalBorderSurface("surfaceClad1In", physWorld, physWLSfiber_clad,
                                    opSurface);
-                               
+
+  }
+
   ///////////////////////////////////////////////////////////////////////////////
   // realistic SiPM
   ///////////////////////////////////////////////////////////////////////////////
@@ -328,7 +369,10 @@ LYSimDetectorConstruction::Construct()
   ///////////////////////////////////////////////////////////////////////////////
   const G4ThreeVector SiPMOffset_chan3( _hole_x1, 0, _WLSfiberZ*0.5 - _WLS_zoff + 0.5*_sipm_z);  
   const G4ThreeVector SiPMOffset_chan4( _hole_x1, 0, -_WLSfiberZ*0.5 - _WLS_zoff - 0.5*_sipm_z);
-  G4Tubs* solidSiPMInnerBox = new G4Tubs( "solidSiPMInnerBox", 0., _WLSfiberR+_WLSfiber_clad_thick, _sipm_z*0.5, 0., 2*pi);
+  G4Tubs* solidSiPMInnerBox;
+  if(_cladlayer==2) solidSiPMInnerBox = new G4Tubs( "solidSiPMInnerBox", 0., _WLSfiberR+_WLSfiber_clad_thick+_WLSfiber_clad2_thick, _sipm_z*0.5, 0., 2*pi);
+  else solidSiPMInnerBox = new G4Tubs( "solidSiPMInnerBox", 0., _WLSfiberR+_WLSfiber_clad_thick, _sipm_z*0.5, 0., 2*pi);
+
   G4LogicalVolume* logicSiPM = new G4LogicalVolume( solidSiPMInnerBox
                                                   , fBialkali,  "SiPM" );
                                                   
@@ -378,7 +422,7 @@ LYSimDetectorConstruction::Construct()
 
   // Visual attributes
   logicWorld->SetVisAttributes( G4VisAttributes::Invisible );
-  fLogicHole->SetVisAttributes( G4VisAttributes::Invisible );
+  //fLogicHole->SetVisAttributes( G4VisAttributes::Invisible );
 
   // Avoid Colours Green and Yellow, since these are defaulted to the optical
   // Photons (I don't know how to change this)
@@ -414,12 +458,12 @@ LYSimDetectorConstruction::Construct()
   fiberVisAtt2->SetVisibility( true );
   fiberVisAtt2->SetForceAuxEdgeVisible( true );
   logicWLSfiber_clad->SetVisAttributes( fiberVisAtt2 );
+  if(_cladlayer==2) logicWLSfiber_clad2->SetVisAttributes( fiberVisAtt2 );
 
   G4VisAttributes* WrapVisAtt = new G4VisAttributes( G4Colour( 0.5, 0.5, 1.0 ) );
   WrapVisAtt->SetForceWireframe( true );
   WrapVisAtt->SetVisibility( true );
   logicWrap->SetVisAttributes( WrapVisAtt );
-
 
   G4VisAttributes* PCBVisAtt = new G4VisAttributes( G4Colour( 0.0, 0.4, 0.1 ) );
   PCBVisAtt->SetForceSolid( true );
@@ -743,7 +787,7 @@ LYSimDetectorConstruction::SetSiPMReflect( const double r )
     table->AddProperty( "EFFICIENCY", phoE, efficiency, nentries );
     fSiPMSurface3->SetMaterialPropertiesTable( table );
   }
-/*
+
   G4MaterialPropertiesTable* table4 = fSiPMSurface4->GetMaterialPropertiesTable();
   if( table4 ){
     table4->RemoveProperty( "EFFICIENCY" );
@@ -753,7 +797,7 @@ LYSimDetectorConstruction::SetSiPMReflect( const double r )
     table4->AddProperty( "EFFICIENCY", phoE, efficiency, nentries );
     fSiPMSurface4->SetMaterialPropertiesTable( table4 );
   }
-*/
+
 }
 
 

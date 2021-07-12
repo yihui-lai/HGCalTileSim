@@ -15,9 +15,13 @@ extern void        Update_refrac_index( G4Material*, const double x );
 extern G4Material* Make_Custom_Air();
 
 //wls
-extern G4Material* Make_PMMA();
+extern G4Material* Make_sgc();
+extern G4Material* Make_acrylic();
+extern G4Material* Make_Fluor_acrylic();
+
+//extern G4Material* Make_PMMA();
 extern G4Material* Make_Y11();
-extern G4Material* Make_Pethylene();
+extern G4Material* Make_Pethylene();//clad 1
 extern G4Material* Make_FPethylene();
 extern G4Material* Make_Polystyrene();
 extern G4Material* Make_Silicone();

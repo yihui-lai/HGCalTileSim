@@ -154,6 +154,9 @@ public:
   SetFiberR( const double x ){ _WLSfiberR = x; }
   inline double
   GetFiberR() const { return _WLSfiberR; }
+  void SetFiberClad(const unsigned x){ _cladlayer = x; } 
+  inline unsigned GetFibeClad() const { return _cladlayer; }
+
   void
   SetFiber_clad_thick( const double x ){ _WLSfiber_clad_thick = x; }
   inline double
@@ -261,12 +264,15 @@ private:
   double _hole_x2;
   double _WLSfiberR;
   double _WLSfiberZ;
+  int _cladlayer;
   double _WLSfiber_clad_thick;
+  double _WLSfiber_clad2_thick;
   double _WLS_zoff;
   double _ScintiN;
   double _y11_decaytime;
   G4Material* mfiber;
   G4Material* mfiber_clad;
+  G4Material* mfiber_clad2;
   G4Material* fcoating;
   G4Material* fholemat;
   G4OpticalSurface* fTiO2Surface;
